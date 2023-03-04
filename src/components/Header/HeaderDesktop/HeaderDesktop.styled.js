@@ -11,7 +11,7 @@ export const StyledHeaderDesktop = styled.header`
     position: relative;
     width: 100%;
     display: block;
-    height: 50px;
+    height: 60px;
     background-color: ${(props) => props.theme.headerDesktop};
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
     z-index: 10;
@@ -118,7 +118,7 @@ export const StyledHeaderDesktop = styled.header`
         flex: 1;
 
         .search-bar {
-          max-width: 400px;
+          max-width: 600px;
           width: 100%;
           height: 35px;
           background-color: ${(props) => props.theme.soft}31;
@@ -126,7 +126,7 @@ export const StyledHeaderDesktop = styled.header`
           overflow: hidden;
           display: flex;
           align-items: center;
-          margin: 0 auto;
+          margin: 0 0 0 400px;
 
           input {
             flex: 1;

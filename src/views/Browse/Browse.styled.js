@@ -87,14 +87,14 @@ export const StyledBrowse = styled.div`
           align-items: center;
 
           span {
-            font-size: 13px;
+            font-size: 15px;
             font-weight: 600;
             width: 80px;
           }
         }
 
         .filter {
-          width: 250px;
+          width: 350px;
           display: flex;
           align-items: center;
           font-size: 13px;

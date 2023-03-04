@@ -27,7 +27,7 @@ const Browse = () => {
       <StyledBrowse>
         <div className="browse-mobile">
           <div className="browse-box">
-            <h1>Browse</h1>
+            <h1>Duyệt</h1>
             <div className="navigation">
               <div
                 onClick={() => setCategoriesButton(true)}
@@ -35,7 +35,7 @@ const Browse = () => {
                   categoriesButton ? "nav-active" : ""
                 }`}
               >
-                Categories
+                Danh mục
               </div>
               <div
                 onClick={() => setCategoriesButton(false)}
@@ -43,7 +43,7 @@ const Browse = () => {
                   !categoriesButton ? "nav-active" : ""
                 }`}
               >
-                Live Channels
+                Kênh trực tiếp
               </div>
             </div>
             {categoriesButton ? (
@@ -61,28 +61,28 @@ const Browse = () => {
         </div>
         <div className="browse-desktop">
           <div className="browse-box">
-            <h1 className="page-title">Browse</h1>
+            <h1 className="page-title">Duyệt</h1>
             <Tags />
 
             <div className="nav">
               <ul>
                 <li>
-                  <MyLink to="/browse" title="Categories" />
+                  <MyLink to="/browse" title="Danh mục" />
                 </li>
                 <li>
-                  <MyLink to="/browse/all" title="Live Channels" />
+                  <MyLink to="/browse/all" title="Kênh trực tiếp" />
                 </li>
               </ul>
             </div>
             <div className="search-filter">
               <div className="search-box">
-                <span>Filter by</span>
-                <Search placeholder="Search Tags" />
+                <span>Lọc theo</span>
+                <Search placeholder="Tìm kiếm thẻ" />
               </div>
               <div className="filter">
-                <span>Sort by</span>
-                <div className="sort">
-                  Recommended For You
+                <span style={{fontSize: '15px', width: '100px'}}>Sắp xếp theo</span>
+                <div className="sort" style={{fontSize: '15px', width: '160px'}}>
+                  Đề xuất cho bạn
                   <div className="sort-icon">
                     <BiChevronDown />
                   </div>

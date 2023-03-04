@@ -36,24 +36,24 @@ const HeaderDesktop = ({ mySize }) => {
                 </li>
                 <li className={pathname.includes("following") ? "active" : ""}>
                   <Link to="/following" className="link">
-                    <div className="item">Following</div>
+                    <div className="item" style={{width: '150px'}}>Đang theo dõi</div>
                   </Link>
                 </li>
                 <li className={pathname.includes("browse") ? "active" : ""}>
-                  <Link to="/browse" className="link">
-                    <div className="item">Browse</div>
+                  <Link to="/browse" className="link" >
+                    <div className="item">Duyệt</div>
                   </Link>
                 </li>
-                <li>
-                  <div className="item">
-                    <FaEllipsisV className="item-icon" />
-                  </div>
-                </li>
+                {/*<li>*/}
+                {/*  <div className="item">*/}
+                {/*    <FaEllipsisV className="item-icon" />*/}
+                {/*  </div>*/}
+                {/*</li>*/}
               </ul>
             </div>
             <div className="bottom">
               <div className="search-bar">
-                <input type="text" placeholder="Search" />
+                <input type="text" placeholder="Tìm kiếm" />
                 <div className="search-icon">
                   <BiSearch />
                 </div>
@@ -62,19 +62,19 @@ const HeaderDesktop = ({ mySize }) => {
             <div className="right">
               <div className="right-icons">
                 <ul>
-                  <li>
-                    <CgCrown />
-                  </li>
-                  <li>
-                    <BiArchive />
-                  </li>
-                  <li>
-                    <BiMessageAlt />
-                  </li>
-                  <li className="bits">
-                    <BsSuitDiamondFill />
-                    <span>Get Bits</span>
-                  </li>
+                  {/*<li>*/}
+                  {/*  <CgCrown />*/}
+                  {/*</li>*/}
+                  {/*<li>*/}
+                  {/*  <BiArchive />*/}
+                  {/*</li>*/}
+                  {/*<li>*/}
+                  {/*  <BiMessageAlt />*/}
+                  {/*</li>*/}
+                  {/*<li className="bits">*/}
+                  {/*  <BsSuitDiamondFill />*/}
+                  {/*  <span>Get Bits</span>*/}
+                  {/*</li>*/}
                 </ul>
               </div>
             </div>

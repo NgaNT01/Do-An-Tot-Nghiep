@@ -4,13 +4,13 @@ const PageAllLive = () => {
   return (
     <>
       <ChannelsDesktop />
-      <ChannelsDesktop />
-      <ChannelsDesktop />
-      <ChannelsDesktop />
-      <ChannelsDesktop />
-      <ChannelsDesktop />
-      <ChannelsDesktop />
-      <ChannelsDesktop />
+      {/*<ChannelsDesktop />*/}
+      {/*<ChannelsDesktop />*/}
+      {/*<ChannelsDesktop />*/}
+      {/*<ChannelsDesktop />*/}
+      {/*<ChannelsDesktop />*/}
+      {/*<ChannelsDesktop />*/}
+      {/*<ChannelsDesktop />*/}
     </>
   );
 };

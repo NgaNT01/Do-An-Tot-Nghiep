@@ -7,7 +7,7 @@ const Tags = () => {
         <ul>
           <li>
             <div className="item">
-              <span>Games</span>
+              <span>Trò chơi</span>
               <div className="icon">
                 <img
                   src="https://static.twitchcdn.net/assets/gaming-e9019587744b56b11b43.svg"
@@ -29,7 +29,7 @@ const Tags = () => {
           </li>
           <li>
             <div className="item">
-              <span>Music</span>
+              <span>Âm nhạc</span>
               <div className="icon">
                 <img
                   src="https://static.twitchcdn.net/assets/music-5fb4595a30d04d991e24.svg"
@@ -40,7 +40,7 @@ const Tags = () => {
           </li>
           <li>
             <div className="item">
-              <span>Esports</span>
+              <span>Thể thao</span>
               <div className="icon">
                 <img
                   src="https://static.twitchcdn.net/assets/esports-7a078acca57531d11e29.svg"
@@ -51,7 +51,7 @@ const Tags = () => {
           </li>
           <li>
             <div className="item">
-              <span>Creative</span>
+              <span>Sáng tạo</span>
               <div className="icon">
                 <img
                   src="https://static.twitchcdn.net/assets/creative-6423fb5fbcf31fadee38.svg"
