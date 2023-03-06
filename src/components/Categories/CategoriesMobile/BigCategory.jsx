@@ -9,7 +9,7 @@ const BigCategory = ({ game }) => {
         </div>
         <div className="game-info">
           <div className="name">{game.name}</div>
-          <div className="viewers">{game.viewer} Viewers</div>
+          <div className="viewers">{game.viewer} người xem</div>
           <div className="tags">
             <ul>
               <li>Shooter</li>

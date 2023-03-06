@@ -15,7 +15,7 @@ const CategoryDesktop = ({ game }) => {
             <FaEllipsisV />
           </div>
         </div>
-        <div className="game-viewers">{game.viewer} viewers</div>
+        <div className="game-viewers">{game.viewer} người xem</div>
         <div className="tags">
           <div className="tag">English</div>
         </div>

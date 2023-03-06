@@ -13,11 +13,14 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
+    "react-player": "^2.11.2",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.2",
+    "react-twitch-embed-video": "^3.0.3",
     "react-websocket": "^2.1.0",
     "redux": "^4.1.2",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.3",
+    "video-react": "^0.16.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^1.0.7",

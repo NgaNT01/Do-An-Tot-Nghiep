@@ -26,21 +26,21 @@ const Following = () => {
         </div>
         <div className="follow-desktop">
           <div className="follow-box">
-            <h1 className="page-title">Following</h1>
+            <h1 className="page-title">Đang theo dõi</h1>
 
             <div className="nav">
               <ul>
                 <li>
-                  <MyLink to="/following" title="Overview" />
+                  <MyLink to="/following" title="Tổng quan" />
                 </li>
                 <li>
-                  <MyLink to="/following/live" title="Live" />
+                  <MyLink to="/following/live" title="Trực tiếp" />
                 </li>
                 <li>
                   <MyLink to="/following/videos" title="Videos" />
                 </li>
                 <li>
-                  <MyLink to="/following/categories" title="Categories" />
+                  <MyLink to="/following/categories" title="Danh mục" />
                 </li>
               </ul>
             </div>

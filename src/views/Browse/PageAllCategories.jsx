@@ -4,10 +4,6 @@ const PageAllCategories = () => {
   return (
     <>
       <CategoriesDesktop />
-      <CategoriesDesktop />
-      <CategoriesDesktop />
-      <CategoriesDesktop />
-      <CategoriesDesktop />
     </>
   );
 };
