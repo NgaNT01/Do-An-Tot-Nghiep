@@ -4,9 +4,16 @@ import { FaEllipsisV } from "react-icons/fa";
 import {Link} from "react-router-dom";
 
 const ChannelDesktop = ({ user, imageId, video }) => {
+
+  const onViewStream = () => {
+    const message = {
+
+    }
+  }
+
   return (
     <StyledChannelDesktop>
-      <div className="channel-box" onClick={() => {}}>
+      <div className="channel-box" onClick={onViewStream}>
         <div className="live-screen">
           <Link to={`/stream/${user.title}`}>
             <img src={user.liveScreen} alt="" />

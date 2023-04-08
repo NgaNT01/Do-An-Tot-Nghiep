@@ -69,57 +69,8 @@ const ProfileDesktop = () => {
                 </li>
                 <li>
                   <div className="item">
-                    <VscSettings /> <span>Video Producer</span>
+                    <VscSettings /> <span>Live Stream</span>
                   </div>
-                </li>
-                <li>
-                  <div className="item">
-                    <BsFileBarGraph /> <span>Creator Dashboard</span>
-                  </div>
-                </li>
-                <li>
-                  <div className="item">
-                    <FiShield /> <span>Safety</span>
-                  </div>
-                </li>
-                <hr />
-                <li>
-                  <div className="item">
-                    <FiUsers /> <span>Friends</span>
-                  </div>
-                </li>
-                <li>
-                  <div className="item">
-                    <AiOutlineStar /> <span>Subscriptions</span>
-                  </div>
-                </li>
-                <li>
-                  <div className="item">
-                    <BsInbox /> <span>Drops</span>
-                  </div>
-                </li>
-                <li>
-                  <div className="item">
-                    <BiWallet /> <span>Wallet</span>
-                  </div>
-                </li>
-                <hr />
-                <li>
-                  <div className="item">
-                    <RiSettings2Line /> <span>Settings</span>
-                  </div>
-                </li>
-                <li>
-                  <div className="item">
-                    <FiTwitch style={{ transform: "rotate(180deg)" }} />{" "}
-                    <span>BetterTTV Settings</span>
-                  </div>
-                </li>
-                <li>
-                  <div className="item">
-                    <MdLanguage /> <span>Language</span>
-                  </div>
-                  <RiArrowRightSLine />
                 </li>
                 <li>
                   <div className="item">
