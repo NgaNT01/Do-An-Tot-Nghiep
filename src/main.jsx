@@ -11,10 +11,10 @@ import { Provider } from "react-redux";
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <HashRouter>
-        <ScrollToTop />
-        <App />
-      </HashRouter>
+      <BrowserRouter>
+            <ScrollToTop />
+            <App />
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")

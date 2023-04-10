@@ -4,11 +4,10 @@ import { FaEllipsisV } from "react-icons/fa";
 import {Link} from "react-router-dom";
 
 const ChannelDesktop = ({ user, imageId, video }) => {
+  let webRtcPeer;
 
   const onViewStream = () => {
-    const message = {
 
-    }
   }
 
   return (

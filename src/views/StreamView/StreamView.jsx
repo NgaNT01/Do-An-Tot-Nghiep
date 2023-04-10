@@ -1,68 +1,103 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {StyledStreamView} from "./StreamView.styled";
-import { WebRtcPeer } from 'kurento-utils';
-import { initializeApp } from "firebase/app" ;
-import { getAnalytics } from "firebase/analytics" ;
-
-const firebaseConfig = {
-    apiKey : "AIzaSyBUomILMa_ENMoF-8S38LIg6BAXiF2Y2R4" ,
-    authDomain : "uit-streaming.firebaseapp.com" ,
-    projectId : "uit-streaming" ,
-    storageBucket : "uit-streaming.appspot.com" ,
-    messagingSenderId : "571386888996" ,
-    appId : "1:571386888996:web:a7508b4331dcc2511029b1" ,
-    measurementId : "G-X0LNFL1XD2"
-};
-
-// Initialize Firebase
-const app = initializeApp ( firebaseConfig );
-const analytics = getAnalytics ( app );
+import {useNavigate} from 'react-router-dom';
 
 const StreamView = () => {
+    const navigate = useNavigate();
 
-    const [video, setVideo] = useState(null);
+    const refVideo = useRef();
+    const [mediaStream, setMediaStream] = useState(null);
+    let webRtcPeer;
 
     var ws = new WebSocket('wss://localhost:8443/call');
 
-    useEffect(() => {
-        setVideo(document.getElementById('video'));
-
-    },[]);
-
     ws.onopen = () => {
-        console.log(video);
     }
 
-    ws.onmessage = (data) => {
-        console.log(data.data);
+    ws.onmessage = (message) => {
+        let parsedMessage = JSON.parse(message.data);
+        console.info('Received message: ' + message.data);
+
+        switch (parsedMessage.id) {
+            case 'viewerResponse':
+                viewerResponse(parsedMessage);
+                break;
+            case 'iceCandidate':
+                webRtcPeer.addIceCandidate(parsedMessage.candidate, function(error) {
+                    if (error)
+                        return console.error('Error adding candidate: ' + error);
+                });
+                break;
+            case 'stopCommunication':
+                dispose();
+                break;
+            default:
+                console.error('Unrecognized message', parsedMessage);
+        }
     }
 
     ws.onclose = () => {
-        console.log("da dong");
-        var message1 = {
-            id : 'stop',
+    }
+
+    function onOfferViewer(error, offerSdp) {
+        if (error)
+            return console.error('Error generating the offer');
+        console.info('Invoking SDP offer callback function ' + location.host);
+        let message = {
+            id : 'viewer',
+            sdpOffer : offerSdp
         }
-        var jsonMessage1 = JSON.stringify(message1);
-        ws.send(jsonMessage1);
+        sendMessage(message);
+    }
+
+    const onIceCandidate = (candidate) => {
+        console.log("Local candidate" + JSON.stringify(candidate));
+
+        let message = {
+            id : 'onIceCandidate',
+            candidate : candidate
+        };
+        sendMessage(message);
+    }
+
+    const sendMessage = (message) => {
+        let jsonMessage = JSON.stringify(message);
+        console.log('Sending message: ' + jsonMessage);
+        ws.send(jsonMessage);
+    }
+
+    function viewerResponse(message) {
+        if (message.response != 'accepted') {
+            var errorMsg = message.message ? message.message : 'Unknow error';
+            console.info('Call not accepted for the following reason: ' + errorMsg);
+            dispose();
+        } else {
+            webRtcPeer.processAnswer(message.sdpAnswer, function(error) {
+                if (error)
+                    return console.error(error);
+            });
+        }
+    }
+
+    function dispose() {
+        if (webRtcPeer) {
+            webRtcPeer.dispose();
+            webRtcPeer = null;
+        }
     }
 
     const onClick = () => {
-        var message = {
-            id : 'test',
-        }
-        var jsonMessage = JSON.stringify(message);
 
-        ws.send(jsonMessage);
     }
 
     return (
 
         <StyledStreamView>
             <div className="stream-view">
-                <video id="video" autoPlay width="640px" height="480px" controls playsInline></video>
+                <a onClick={onClick}>Click to view</a>
+                <video ref={refVideo} autoPlay width="640px" height="480px" controls playsInline></video>
             </div>
             <div className="user-info">
-                <a style={{color: 'blue'}} onClick={onClick}>alo1234</a>
                 <div className="left">
                     <div className="pp">
                         <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="" />

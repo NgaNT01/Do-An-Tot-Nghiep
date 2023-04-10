@@ -5,7 +5,7 @@ import { lightTheme, darkTheme } from "./assets/styles/Theme";
 
 // React
 import { useEffect, useState } from "react";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate, BrowserRouter as Redirect} from "react-router-dom";
 import { useSelector } from "react-redux";
 
 // Components
@@ -22,11 +22,23 @@ import PageLive from "./views/Following/PageLive";
 import PageVideos from "./views/Following/PageVideos";
 import PageCategories from "./views/Following/PageCategories";
 import StreamView from "./views/StreamView/StreamView";
+import LiveStreamModal from "./views/LiveStream/LiveStreamModal";
+import LiveStreamPage from "./views/LiveStream/LiveStreamPage";
 
 const App = () => {
   const { darkStatus, sideBarStatus } = useSelector((state) => state.site);
   const [mySize, setMySize] = useState(window.innerWidth);
   let navigate = useNavigate();
+
+  const [showModal, setShowModal] = useState(true);
+  const [roomName, setRoomName] = useState('');
+  const [streamTitle, setStreamTitle] = useState('');
+
+  const handleModalClose = (roomName, streamTitle) => {
+    setShowModal(false);
+    setRoomName(roomName);
+    setStreamTitle(streamTitle);
+  };
 
   useEffect(() => {
     if (mySize < 768) {
@@ -49,21 +61,21 @@ const App = () => {
             sideBarStatus && mySize > 1199 ? "sidebar-open" : ""
           }`}
         >
-          <Routes>
-            <Route path="*" element={<Navigate to="/" replace />} />
-            <Route path="/" element={<Home />} />
-            <Route path="/stream/:username" element={<StreamView/>}></Route>
-            <Route path="/following/" element={<Following />}>
-              <Route index element={<PageOverview />} />
-              <Route path="live" element={<PageLive />} />
-              <Route path="videos" element={<PageVideos />} />
-              <Route path="categories" element={<PageCategories />} />
-            </Route>
-            <Route path="/browse/" element={<Browse />}>
-              <Route index element={<PageAllCategories />} />
-              <Route path="all" element={<PageAllLive />} />
-            </Route>
-          </Routes>
+            <Routes>
+              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/stream/:username" element={<StreamView/>}></Route>
+              <Route path="/following/" element={<Following />}>
+                <Route index element={<PageOverview />} />
+                <Route path="live" element={<PageLive />} />
+                <Route path="videos" element={<PageVideos />} />
+                <Route path="categories" element={<PageCategories />} />
+              </Route>
+              <Route path="/browse/" element={<Browse />}>
+                <Route index element={<PageAllCategories />} />
+                <Route path="all" element={<PageAllLive />} />
+              </Route>
+            </Routes>
         </div>
       </div>
     </ThemeProvider>
