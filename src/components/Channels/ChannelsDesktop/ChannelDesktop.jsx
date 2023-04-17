@@ -4,7 +4,6 @@ import { FaEllipsisV } from "react-icons/fa";
 import {Link} from "react-router-dom";
 
 const ChannelDesktop = ({ user, imageId, video }) => {
-  let webRtcPeer;
 
   const onViewStream = () => {
 
@@ -14,7 +13,7 @@ const ChannelDesktop = ({ user, imageId, video }) => {
     <StyledChannelDesktop>
       <div className="channel-box" onClick={onViewStream}>
         <div className="live-screen">
-          <Link to={`/stream/${user.title}`}>
+          <Link to={`/stream/${user.username}`}>
             <img src={user.liveScreen} alt="" />
             <div className={`live ${video ? "invisible" : ""}`}>trực tiếp</div>
             <div className={`viewers ${video ? "invisible" : ""}`}>

@@ -1,101 +1,98 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {StyledStreamView} from "./StreamView.styled";
-import {useNavigate} from 'react-router-dom';
+import { WebRTCAdaptor } from '@antmedia/webrtc_adaptor';
+import {useParams} from "react-router-dom";
 
 const StreamView = () => {
-    const navigate = useNavigate();
+    let webRTCAdaptor = null;
 
-    const refVideo = useRef();
-    const [mediaStream, setMediaStream] = useState(null);
-    let webRtcPeer;
+    const [mediaConstraints,setMediaConstraints] = useState({video: false, audio: false});
+    const [streamName,setStreamName] = useState(useParams().username);
+    const [token, setToken] = useState('');
+    const [pc_config] = useState({'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]})
+    const [sdpConstraints,setSdpConstraints] = useState({OfferToReceiveAudio: true,OfferToReceiveVideo: true})
+    const [websocketURL,setWebsocketURL] = useState("wss://tannga.space:5443/WebRTCAppEE/websocket");
+    const [isShow, setIsShow] = useState(false);
 
-    var ws = new WebSocket('wss://localhost:8443/call');
+    useEffect(() => {
+        webRTCAdaptor = initiateWebrtc();
+        setIsShow(true);
 
-    ws.onopen = () => {
-    }
-
-    ws.onmessage = (message) => {
-        let parsedMessage = JSON.parse(message.data);
-        console.info('Received message: ' + message.data);
-
-        switch (parsedMessage.id) {
-            case 'viewerResponse':
-                viewerResponse(parsedMessage);
-                break;
-            case 'iceCandidate':
-                webRtcPeer.addIceCandidate(parsedMessage.candidate, function(error) {
-                    if (error)
-                        return console.error('Error adding candidate: ' + error);
-                });
-                break;
-            case 'stopCommunication':
-                dispose();
-                break;
-            default:
-                console.error('Unrecognized message', parsedMessage);
+        return () => {
         }
+    },[]);
+
+    function initiateWebrtc() {
+        return new WebRTCAdaptor({
+            websocket_url: websocketURL,
+            mediaConstraints: mediaConstraints,
+            peerconnection_config: pc_config,
+            sdp_constraints: sdpConstraints,
+            remoteVideoId: "video",
+            isPlayMode: true,
+            debug: true,
+            candidateTypes: ["tcp", "udp"],
+            callback: function (info, obj) {
+                if (info === "initialized") {
+                    console.log("initialized");
+                    onStartPlaying(streamName);
+
+                } else if (info === "play_started") {
+                    //joined the stream
+                    console.log("play started");
+
+
+                } else if (info === "play_finished") {
+                    //leaved the stream
+                    console.log("play finished");
+
+                } else if (info === "closed") {
+                    //console.log("Connection closed");
+                    if (typeof obj != "undefined") {
+                        console.log("Connecton closed: "
+                            + JSON.stringify(obj));
+                    }
+                } else if (info === "streamInformation") {
+
+
+                } else if (info === "ice_connection_state_changed") {
+                    console.log("iceConnectionState Changed: ", JSON.stringify(obj));
+                } else if (info === "updated_stats") {
+                    console.log("Average incoming kbits/sec: " + obj.averageIncomingBitrate
+                        + " Current incoming kbits/sec: " + obj.currentIncomingBitrate
+                        + " packetLost: " + obj.packetsLost
+                        + " fractionLost: " + obj.fractionLost
+                        + " audio level: " + obj.audioLevel);
+
+                } else if (info === "data_received") {
+                    console.log("Data received: " + obj.event.data + " type: " + obj.event.type + " for stream: " + obj.streamId);
+                } else if (info === "bitrateMeasurement") {
+                    console.log(info + " notification received");
+
+                    console.log(obj);
+                } else {
+                    console.log(info + " notification received");
+                }
+            },
+            callbackError: function (error) {
+                //some of the possible errors, NotFoundError, SecurityError,PermissionDeniedError
+
+                console.log("error callback: " + JSON.stringify(error));
+                // alert(JSON.stringify(error));
+                alert("stream nay khong ton tai");
+            }
+        });
     }
 
-    ws.onclose = () => {
-    }
-
-    function onOfferViewer(error, offerSdp) {
-        if (error)
-            return console.error('Error generating the offer');
-        console.info('Invoking SDP offer callback function ' + location.host);
-        let message = {
-            id : 'viewer',
-            sdpOffer : offerSdp
-        }
-        sendMessage(message);
-    }
-
-    const onIceCandidate = (candidate) => {
-        console.log("Local candidate" + JSON.stringify(candidate));
-
-        let message = {
-            id : 'onIceCandidate',
-            candidate : candidate
-        };
-        sendMessage(message);
-    }
-
-    const sendMessage = (message) => {
-        let jsonMessage = JSON.stringify(message);
-        console.log('Sending message: ' + jsonMessage);
-        ws.send(jsonMessage);
-    }
-
-    function viewerResponse(message) {
-        if (message.response != 'accepted') {
-            var errorMsg = message.message ? message.message : 'Unknow error';
-            console.info('Call not accepted for the following reason: ' + errorMsg);
-            dispose();
-        } else {
-            webRtcPeer.processAnswer(message.sdpAnswer, function(error) {
-                if (error)
-                    return console.error(error);
-            });
-        }
-    }
-
-    function dispose() {
-        if (webRtcPeer) {
-            webRtcPeer.dispose();
-            webRtcPeer = null;
-        }
-    }
-
-    const onClick = () => {
-
+    const onStartPlaying = (streamName) => {
+        webRTCAdaptor.play(streamName, token);
     }
 
     return (
 
         <StyledStreamView>
             <div className="stream-view">
-                <a onClick={onClick}>Click to view</a>
-                <video ref={refVideo} autoPlay width="640px" height="480px" controls playsInline></video>
+                <video id="video" autoPlay width="640px" height="480px" controls playsInline></video>
             </div>
             <div className="user-info">
                 <div className="left">

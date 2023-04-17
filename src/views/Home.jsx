@@ -8,12 +8,7 @@ import {
   IoMicOutline,
 } from "react-icons/io5";
 
-// Mobile Components
-import BigChannels from "../components/Channels/ChannelsMobile/BigChannels";
-import SmallCategories from "../components/Categories/CategoriesMobile/SmallCategories";
-
 // Desktop Components
-import Slide from "../components/Share/Slide";
 import ChannelsDesktop from "../components/Channels/ChannelsDesktop/ChannelsDesktop";
 import CategoriesDesktop from "../components/Categories/CategoriesDesktop/CategoriesDekstop";
 import Tags from "../components/Share/Tags";
@@ -25,7 +20,6 @@ const Home = () => {
       <StyledHome>
         <div className="home-desktop">
           <div className="home-box">
-            <Slide />
             <ChannelsDesktop channelTitle="Kênh trực tiếp có thể bạn sẽ thích" />
             <ShowMore title="Show more" />
             <CategoriesDesktop
@@ -34,17 +28,6 @@ const Home = () => {
             />
             <ShowMore />
             <Tags />
-            {/*<ChannelsDesktop channelTitle="Recommended smaller communities" />*/}
-            {/*<ShowMore title="Show more" />*/}
-            {/*<ChannelsDesktop channelTitle="All aboard the Hype Train!" />*/}
-            {/*<ShowMore title="Show more" />*/}
-            {/*<ChannelsDesktop channelTitle="Women's History Month" />*/}
-            {/*<ShowMore title="Show more" />*/}
-            {/*<ChannelsDesktop channelTitle="Recommended smaller communities" />*/}
-            {/*<ShowMore title="Show more" />*/}
-            {/*<ChannelsDesktop channelTitle="All aboard the Hype Train!" />*/}
-            {/*<ShowMore title="Show more" />*/}
-            {/*<ChannelsDesktop channelTitle="Women's History Month" />*/}
           </div>
         </div>
       </StyledHome>

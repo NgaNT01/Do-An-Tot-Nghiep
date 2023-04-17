@@ -22,8 +22,6 @@ import PageLive from "./views/Following/PageLive";
 import PageVideos from "./views/Following/PageVideos";
 import PageCategories from "./views/Following/PageCategories";
 import StreamView from "./views/StreamView/StreamView";
-import LiveStreamModal from "./views/LiveStream/LiveStreamModal";
-import LiveStreamPage from "./views/LiveStream/LiveStreamPage";
 
 const App = () => {
   const { darkStatus, sideBarStatus } = useSelector((state) => state.site);
@@ -33,23 +31,6 @@ const App = () => {
   const [showModal, setShowModal] = useState(true);
   const [roomName, setRoomName] = useState('');
   const [streamTitle, setStreamTitle] = useState('');
-
-  const handleModalClose = (roomName, streamTitle) => {
-    setShowModal(false);
-    setRoomName(roomName);
-    setStreamTitle(streamTitle);
-  };
-
-  useEffect(() => {
-    if (mySize < 768) {
-      navigate("/");
-    }
-    const changeSideBar = () => {
-      return setMySize(window.innerWidth);
-    };
-    window.addEventListener("resize", changeSideBar);
-    return () => window.removeEventListener("resize", changeSideBar);
-  }, [mySize]);
 
   return (
     <ThemeProvider theme={darkStatus ? darkTheme : lightTheme}>

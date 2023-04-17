@@ -22,35 +22,35 @@ const HeaderDesktop = ({ mySize }) => {
       <>
         <div className="header-box">
           <header>
-            <div className="left">
-              <ul>
-                <li>
-                  <div className="item">
-                    <Link to="/">
-                      <div className="logo">
-                        <div className="logo-bg" />
-                        <BsTwitch />
-                      </div>
-                    </Link>
-                  </div>
-                </li>
-                <li className={pathname.includes("following") ? "active" : ""}>
-                  <Link to="/following" className="link">
-                    <div className="item" style={{width: '150px'}}>Đang theo dõi</div>
-                  </Link>
-                </li>
-                <li className={pathname.includes("browse") ? "active" : ""}>
-                  <Link to="/browse" className="link" >
-                    <div className="item">Duyệt</div>
-                  </Link>
-                </li>
-                {/*<li>*/}
-                {/*  <div className="item">*/}
-                {/*    <FaEllipsisV className="item-icon" />*/}
-                {/*  </div>*/}
-                {/*</li>*/}
-              </ul>
-            </div>
+            {/*<div className="left">*/}
+            {/*  <ul>*/}
+            {/*    <li>*/}
+            {/*      <div className="item">*/}
+            {/*        <Link to="/">*/}
+            {/*          <div className="logo">*/}
+            {/*            <div className="logo-bg" />*/}
+            {/*            <BsTwitch />*/}
+            {/*          </div>*/}
+            {/*        </Link>*/}
+            {/*      </div>*/}
+            {/*    </li>*/}
+            {/*    <li className={pathname.includes("following") ? "active" : ""}>*/}
+            {/*      <Link to="/following" className="link">*/}
+            {/*        <div className="item" style={{width: '150px'}}>Đang theo dõi</div>*/}
+            {/*      </Link>*/}
+            {/*    </li>*/}
+            {/*    <li className={pathname.includes("browse") ? "active" : ""}>*/}
+            {/*      <Link to="/browse" className="link" >*/}
+            {/*        <div className="item">Duyệt</div>*/}
+            {/*      </Link>*/}
+            {/*    </li>*/}
+            {/*    /!*<li>*!/*/}
+            {/*    /!*  <div className="item">*!/*/}
+            {/*    /!*    <FaEllipsisV className="item-icon" />*!/*/}
+            {/*    /!*  </div>*!/*/}
+            {/*    /!*</li>*!/*/}
+            {/*  </ul>*/}
+            {/*</div>*/}
             <div className="bottom">
               <div className="search-bar">
                 <input type="text" placeholder="Tìm kiếm" />
@@ -83,9 +83,9 @@ const HeaderDesktop = ({ mySize }) => {
             </div>
           </header>
         </div>
-        <div className="left-bar">
-          <SideBar mySize={mySize} />
-        </div>
+        {/*<div className="left-bar">*/}
+        {/*  <SideBar mySize={mySize} />*/}
+        {/*</div>*/}
       </>
     </StyledHeaderDesktop>
   );
