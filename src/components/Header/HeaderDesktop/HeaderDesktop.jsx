@@ -13,9 +13,12 @@ import { CgCrown } from "react-icons/cg";
 // Components
 import ProfileDesktop from "./ProfileDesktop";
 import SideBar from "./SideBar";
+import {useSelector} from "react-redux";
+import {Button} from "antd";
 
 const HeaderDesktop = ({ mySize }) => {
   const { pathname } = useLocation();
+  const {isLoggedIn} = useSelector(state => state.user);
 
   return (
     <StyledHeaderDesktop>
@@ -78,9 +81,15 @@ const HeaderDesktop = ({ mySize }) => {
                 </ul>
               </div>
             </div>
-            <div className="profile-desktop">
-              <ProfileDesktop />
-            </div>
+            {isLoggedIn ?
+                <div className="profile-desktop">
+                  <ProfileDesktop />
+                </div> :
+                <div className="auth-button">
+                  <Button style={{marginRight: '20px'}} size="large">Đăng ký</Button>
+                  <Button style={{marginRight: '20px'}} size="large" type="primary">Đăng nhập</Button>
+                </div>
+            }
           </header>
         </div>
         {/*<div className="left-bar">*/}

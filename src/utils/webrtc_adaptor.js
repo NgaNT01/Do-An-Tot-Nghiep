@@ -3,20 +3,20 @@
  * @returns
  */
 
-
+"use strict";
 import adapter from 'webrtc-adapter';
-// let pc_config = {
-//     'iceServers' : [ {
-//         'urls' : 'stun:stun.l.google.com:19302'
-//     } ]
-// };
-//
-// let sdpConstraints = {
-//     OfferToReceiveAudio : true,
-//     OfferToReceiveVideo : true
-//
-// };
-let mediaConstraints = {
+var pc_config = {
+    'iceServers' : [ {
+        'urls' : 'stun:stun.l.google.com:19302'
+    } ]
+};
+
+var sdpConstraints = {
+    OfferToReceiveAudio : true,
+    OfferToReceiveVideo : true
+
+};
+var mediaConstraints = {
     video : false,
     audio : false
 };
@@ -66,7 +66,7 @@ export default function WebRTCAdaptor(initialValues)
         set currentTime(timestamp) {
             this.lastTime = this.currentTimestamp;
             this.currentTimestamp = timestamp;
-            if (this.startTime === 0) {
+            if (this.startTime == 0) {
                 this.startTime = timestamp-1; // do not have zero division error
             }
         }
@@ -74,7 +74,7 @@ export default function WebRTCAdaptor(initialValues)
         set totalBytesReceived(bytesReceived) {
             this.lastBytesReceived = this.totalBytesReceivedCount;
             this.totalBytesReceivedCount = bytesReceived;
-            if (this.firstBytesReceivedCount === 0) {
+            if (this.firstBytesReceivedCount == 0) {
                 this.firstBytesReceivedCount = bytesReceived;
             }
         }
@@ -82,25 +82,25 @@ export default function WebRTCAdaptor(initialValues)
         set totalBytesSent(bytesSent) {
             this.lastBytesSent = this.totalBytesSentCount;
             this.totalBytesSentCount = bytesSent;
-            if (this.firstByteSentCount === 0) {
+            if (this.firstByteSentCount == 0) {
                 this.firstByteSentCount = bytesSent;
             }
         }
 
     }
 
-    let thiz = this;
+    var thiz = this;
     thiz.peerconnection_config = null;
     thiz.sdp_constraints = null;
-    thiz.remotePeerConnection = [];
-    thiz.remotePeerConnectionStats = [];
-    thiz.remoteDescriptionSet = [];
-    thiz.iceCandidateList = [];
+    thiz.remotePeerConnection = new Array();
+    thiz.remotePeerConnectionStats = new Array();
+    thiz.remoteDescriptionSet = new Array();
+    thiz.iceCandidateList = new Array();
     thiz.webSocketAdaptor = null;
     thiz.roomName = null;
     thiz.videoTrackSender = null;
     thiz.audioTrackSender = null;
-    thiz.playStreamId = [];
+    thiz.playStreamId = new Array();
     thiz.micGainNode = null;
     thiz.localStream = null;
     thiz.bandwidth = 900; //default bandwidth kbps
@@ -141,7 +141,7 @@ export default function WebRTCAdaptor(initialValues)
      */
     thiz.camera_percent = 15;
 
-    for(let key in initialValues) {
+    for(var key in initialValues) {
         if(initialValues.hasOwnProperty(key)) {
             this[key] = initialValues[key];
         }
@@ -151,13 +151,13 @@ export default function WebRTCAdaptor(initialValues)
     thiz.remoteVideo = document.getElementById(thiz.remoteVideoId);
 
     // It should be compatible with previous version
-    if(thiz.mediaConstraints.video === "camera") {
+    if(thiz.mediaConstraints.video == "camera") {
         thiz.publishMode="camera";
     }
-    else if(thiz.mediaConstraints.video === "screen") {
+    else if(thiz.mediaConstraints.video == "screen") {
         thiz.publishMode="screen";
     }
-    else if(thiz.mediaConstraints.video === "screen+camera") {
+    else if(thiz.mediaConstraints.video == "screen+camera") {
         thiz.publishMode="screen+camera";
     }
 
@@ -167,7 +167,7 @@ export default function WebRTCAdaptor(initialValues)
         return;
     }
 
-    if (typeof navigator.mediaDevices == "undefined" && thiz.isPlayMode === false) {
+    if (typeof navigator.mediaDevices == "undefined" && thiz.isPlayMode == false) {
         console.log("Cannot open camera and mic because of unsecure context. Please Install SSL(https)");
         thiz.callbackError("UnsecureContext");
         return;
@@ -181,24 +181,24 @@ export default function WebRTCAdaptor(initialValues)
             .then(function(cameraStream) {
 
                 //create a canvas element
-                let canvas = document.createElement("canvas");
-                let canvasContext = canvas.getContext("2d");
+                var canvas = document.createElement("canvas");
+                var canvasContext = canvas.getContext("2d");
 
                 //create video element for screen
-                //let screenVideo = document.getElementById('sourceVideo');
-                let screenVideo = document.createElement('video');
+                //var screenVideo = document.getElementById('sourceVideo');
+                var screenVideo = document.createElement('video');
                 //TODO: check audio track
                 screenVideo.srcObject = stream;
                 screenVideo.play();
                 //create video element for camera
-                let cameraVideo = document.createElement('video');
+                var cameraVideo = document.createElement('video');
                 //TODO: check audio track
                 cameraVideo.srcObject = cameraStream;
                 cameraVideo.play();
-                let canvasStream = canvas.captureStream(15);
+                var canvasStream = canvas.captureStream(15);
                 canvasStream.addTrack(audioStream.getAudioTracks()[0]);
 
-                if(thiz.localStream === null){
+                if(thiz.localStream == null){
                     stream.addTrack(audioStream.getAudioTracks()[0]);
                     thiz.gotStream(canvasStream);
                 }
@@ -213,13 +213,13 @@ export default function WebRTCAdaptor(initialValues)
                     canvas.height = screenVideo.videoHeight;
                     canvasContext.drawImage(screenVideo, 0, 0, canvas.width, canvas.height);
 
-                    let cameraWidth = screenVideo.videoWidth * (thiz.camera_percent/100);
-                    let cameraHeight = (cameraVideo.videoHeight/cameraVideo.videoWidth)*cameraWidth
+                    var cameraWidth = screenVideo.videoWidth * (thiz.camera_percent/100);
+                    var cameraHeight = (cameraVideo.videoHeight/cameraVideo.videoWidth)*cameraWidth
 
-                    let positionX = (canvas.width - cameraWidth) - thiz.camera_margin;
-                    let positionY;
+                    var positionX = (canvas.width - cameraWidth) - thiz.camera_margin;
+                    var positionY;
 
-                    if (thiz.camera_location === "top") {
+                    if (thiz.camera_location == "top") {
                         positionY = thiz.camera_margin;
                     }
                     else { //if not top, make it bottom
@@ -239,27 +239,27 @@ export default function WebRTCAdaptor(initialValues)
     this.prepareStreamTracks = function (mediaConstraints,audioConstraint,stream,streamId) {
 
         //this trick, getting audio and video separately, make us add or remove tracks on the fly
-        let audioTrack = stream.getAudioTracks();
+        var audioTrack = stream.getAudioTracks();
         if (audioTrack.length > 0) {
             stream.removeTrack(audioTrack[0]);
         }
 
         //now get only audio to add this stream
-        if (audioConstraint !== "undefined" && audioConstraint !== false) {
-            let media_audio_constraint = { audio: audioConstraint};
+        if (audioConstraint != "undefined" && audioConstraint != false) {
+            var media_audio_constraint = { audio: audioConstraint};
             navigator.mediaDevices.getUserMedia(media_audio_constraint)
                 .then(function(audioStream) {
                     //add callback if desktop is sharing
 
-                    let onended = function(event) {
+                    var onended = function(event) {
                         thiz.callback("screen_share_stopped");
                         thiz.setVideoCameraSource(streamId, mediaConstraints, null, true);
                     }
 
-                    if(thiz.publishMode === "screen"){
+                    if(thiz.publishMode == "screen"){
                         thiz.updateVideoTrack(stream,streamId,mediaConstraints,onended,true);
                     }
-                    else if(thiz.publishMode === "screen+camera" ){
+                    else if(thiz.publishMode == "screen+camera" ){
                         thiz.setDesktopwithCameraSource(stream,streamId,audioStream,onended);
                     }
                     else{
@@ -284,7 +284,7 @@ export default function WebRTCAdaptor(initialValues)
     this.getUserMedia = function (mediaConstraints, audioConstraint, streamId) {
         console.log("GET USER MEDIA WORK");
         // Check Media Constraint video value screen or screen + camera
-        if(thiz.publishMode === "screen+camera" || thiz.publishMode === "screen"){
+        if(thiz.publishMode == "screen+camera" || thiz.publishMode == "screen"){
 
             navigator.mediaDevices.getDisplayMedia(mediaConstraints)
                 .then(function(stream){
@@ -297,9 +297,9 @@ export default function WebRTCAdaptor(initialValues)
                         thiz.callbackError("ScreenSharePermissionDenied");
 
                         // Redirect Default Stream Camera
-                        if(thiz.localStream === null){
+                        if(thiz.localStream == null){
 
-                            let mediaConstraints = {
+                            var mediaConstraints = {
                                 video : true,
                                 audio : true
                             };
@@ -338,8 +338,8 @@ export default function WebRTCAdaptor(initialValues)
     this.openStream = function(mediaConstraints) {
 
         thiz.mediaConstraints = mediaConstraints;
-        let audioConstraint = false;
-        if (typeof mediaConstraints.audio != "undefined" && mediaConstraints.audio !== false) {
+        var audioConstraint = false;
+        if (typeof mediaConstraints.audio != "undefined" && mediaConstraints.audio != false) {
             audioConstraint = mediaConstraints.audio;
         }
 
@@ -390,9 +390,9 @@ export default function WebRTCAdaptor(initialValues)
     /*
      * Below lines are executed as well when this class is created
      */
-    if (!this.isPlayMode && typeof thiz.mediaConstraints !== "undefined" && this.localStream === null)
+    if (!this.isPlayMode && typeof thiz.mediaConstraints != "undefined" && this.localStream == null)
     {
-        if (typeof thiz.mediaConstraints.video != "undefined" && thiz.mediaConstraints.video !== false)
+        if (typeof thiz.mediaConstraints.video != "undefined" && thiz.mediaConstraints.video != false)
         {
             // if it is not play mode and media constraint is defined, try to get user media
             if (thiz.mediaConstraints.audio.mandatory)
@@ -405,19 +405,19 @@ export default function WebRTCAdaptor(initialValues)
                         {
                             //console.debug("audio stream track count: " + audioStream.getAudioTracks().length);
 
-                            let audioContext = new AudioContext();
-                            let desktopSoundGainNode = audioContext.createGain();
+                            var audioContext = new AudioContext();
+                            var desktopSoundGainNode = audioContext.createGain();
 
                             desktopSoundGainNode.gain.value = 1;
 
-                            let audioDestionation = audioContext.createMediaStreamDestination();
-                            let audioSource = audioContext.createMediaStreamSource(stream);
+                            var audioDestionation = audioContext.createMediaStreamDestination();
+                            var audioSource = audioContext.createMediaStreamSource(stream);
 
                             audioSource.connect(desktopSoundGainNode);
 
                             thiz.micGainNode = audioContext.createGain();
                             thiz.micGainNode.gain.value = 1;
-                            let audioSource2 = audioContext.createMediaStreamSource(micStream);
+                            var audioSource2 = audioContext.createMediaStreamSource(micStream);
                             audioSource2.connect(thiz.micGainNode);
 
                             desktopSoundGainNode.connect(audioDestionation);
@@ -445,7 +445,7 @@ export default function WebRTCAdaptor(initialValues)
         }
         else {
             // get only audio
-            let media_audio_constraint = { audio: thiz.mediaConstraints.audio };
+            var media_audio_constraint = { audio: thiz.mediaConstraints.audio };
             navigator.mediaDevices.getUserMedia(media_audio_constraint)
                 .then(function(stream) {
                     thiz.gotStream(stream);
@@ -458,7 +458,7 @@ export default function WebRTCAdaptor(initialValues)
     else {
 
         //just playing, it does not open any stream
-        if (thiz.webSocketAdaptor === null || thiz.webSocketAdaptor.isConnected() === false) {
+        if (thiz.webSocketAdaptor == null || thiz.webSocketAdaptor.isConnected() == false) {
             thiz.webSocketAdaptor = new WebSocketAdaptor();
         }
     }
@@ -476,12 +476,12 @@ export default function WebRTCAdaptor(initialValues)
 
     this.publish = function (streamId, token) {
         console.error("here",thiz);
-        let jsCmd = {
+        var jsCmd = {
             command : "publish",
             streamId : streamId,
             token : token,
-            video: thiz.localStream.getVideoTracks().length > 0,
-            audio: thiz.localStream.getAudioTracks().length > 0,
+            video: thiz.localStream.getVideoTracks().length > 0 ? true : false,
+            audio: thiz.localStream.getAudioTracks().length > 0 ? true : false,
         };
 
         thiz.webSocketAdaptor.send(JSON.stringify(jsCmd));
@@ -491,7 +491,7 @@ export default function WebRTCAdaptor(initialValues)
     this.joinRoom = function (roomName, streamId) {
         thiz.roomName = roomName;
 
-        let jsCmd = {
+        var jsCmd = {
             command : "joinRoom",
             room: roomName,
             streamId: streamId,
@@ -503,7 +503,7 @@ export default function WebRTCAdaptor(initialValues)
 
     this.play = function (streamId, token, roomId, enableTracks) {
         thiz.playStreamId.push(streamId);
-        let jsCmd =
+        var jsCmd =
             {
                 command : "play",
                 streamId : streamId,
@@ -518,7 +518,7 @@ export default function WebRTCAdaptor(initialValues)
     this.stop = function(streamId) {
         thiz.closePeerConnection(streamId);
 
-        let jsCmd = {
+        var jsCmd = {
             command : "stop",
             streamId: streamId,
         };
@@ -527,10 +527,10 @@ export default function WebRTCAdaptor(initialValues)
     }
 
     this.join = function(streamId) {
-        let jsCmd = {
+        var jsCmd = {
             command : "join",
             streamId : streamId,
-            multiPeer : thiz.isMultiPeer && thiz.multiPeerStreamId === null,
+            multiPeer : thiz.isMultiPeer && thiz.multiPeerStreamId == null,
             mode : thiz.isPlayMode ? "play" : "both",
         };
 
@@ -539,7 +539,7 @@ export default function WebRTCAdaptor(initialValues)
 
     this.leaveFromRoom = function(roomName) {
         thiz.roomName = roomName;
-        let jsCmd = {
+        var jsCmd = {
             command : "leaveFromRoom",
             room: roomName,
         };
@@ -555,7 +555,7 @@ export default function WebRTCAdaptor(initialValues)
 
     this.leave = function (streamId) {
 
-        let jsCmd = {
+        var jsCmd = {
             command : "leave",
             streamId: thiz.isMultiPeer && thiz.multiPeerStreamId != null ? thiz.multiPeerStreamId : streamId,
         };
@@ -566,7 +566,7 @@ export default function WebRTCAdaptor(initialValues)
     }
 
     this.getStreamInfo = function(streamId) {
-        let jsCmd = {
+        var jsCmd = {
             command : "getStreamInfo",
             streamId: streamId,
         };
@@ -575,7 +575,7 @@ export default function WebRTCAdaptor(initialValues)
 
     this.getRoomInfo = function(roomName,streamId) {
         thiz.roomTimerId = setInterval(() => {
-            let jsCmd = {
+            var jsCmd = {
                 command : "getRoomInfo",
                 streamId : streamId,
                 room: roomName,
@@ -585,7 +585,7 @@ export default function WebRTCAdaptor(initialValues)
     }
 
     this.enableTrack = function(mainTrackId, trackId, enabled) {
-        let jsCmd = {
+        var jsCmd = {
             command : "enableTrack",
             streamId : mainTrackId,
             trackId : trackId,
@@ -596,7 +596,7 @@ export default function WebRTCAdaptor(initialValues)
 
     this.getTracks = function(streamId, token) {
         thiz.playStreamId.push(streamId);
-        let jsCmd =
+        var jsCmd =
             {
                 command : "getTrackList",
                 streamId : streamId,
@@ -610,15 +610,15 @@ export default function WebRTCAdaptor(initialValues)
     {
         thiz.localStream = stream;
         thiz.localVideo.srcObject = stream;
-        if (thiz.webSocketAdaptor === null || thiz.webSocketAdaptor.isConnected() === false) {
+        if (thiz.webSocketAdaptor == null || thiz.webSocketAdaptor.isConnected() == false) {
             thiz.webSocketAdaptor = new WebSocketAdaptor();
         }
 
         navigator.mediaDevices.enumerateDevices().then(function(devices) {
-            let deviceArray = [];
+            let deviceArray = new Array();
 
             devices.forEach(function(device) {
-                if (device.kind === "audioinput" || device.kind === "videoinput") {
+                if (device.kind == "audioinput" || device.kind == "videoinput") {
                     deviceArray.push(device);
                 }
             });
@@ -632,7 +632,7 @@ export default function WebRTCAdaptor(initialValues)
 
     this.switchAudioInputSource = function(streamId, deviceId) {
         //stop the track because in some android devices need to close the current camera stream
-        let audioTrack = thiz.localStream.getAudioTracks()[0];
+        var audioTrack = thiz.localStream.getAudioTracks()[0];
         if (audioTrack) {
             audioTrack.stop();
         }
@@ -648,7 +648,7 @@ export default function WebRTCAdaptor(initialValues)
 
     this.switchVideoCameraCapture = function(streamId, deviceId) {
         //stop the track because in some android devices need to close the current camera stream
-        let videoTrack = thiz.localStream.getVideoTracks()[0];
+        var videoTrack = thiz.localStream.getVideoTracks()[0];
         if (videoTrack) {
             videoTrack.stop();
         }
@@ -668,8 +668,8 @@ export default function WebRTCAdaptor(initialValues)
         console.log("switchDesktopCapture");
         thiz.publishMode = "screen";
 
-        let audioConstraint = false;
-        if (typeof mediaConstraints.audio != "undefined" && mediaConstraints.audio !== false) {
+        var audioConstraint = false;
+        if (typeof mediaConstraints.audio != "undefined" && mediaConstraints.audio != false) {
             audioConstraint = mediaConstraints.audio;
         }
 
@@ -680,8 +680,8 @@ export default function WebRTCAdaptor(initialValues)
 
         thiz.publishMode = "screen+camera";
 
-        let audioConstraint = false;
-        if (typeof mediaConstraints.audio != "undefined" && mediaConstraints.audio !== false) {
+        var audioConstraint = false;
+        if (typeof mediaConstraints.audio != "undefined" && mediaConstraints.audio != false) {
             audioConstraint = mediaConstraints.audio;
         }
         thiz.getUserMedia(mediaConstraints, audioConstraint, streamId);
@@ -693,7 +693,7 @@ export default function WebRTCAdaptor(initialValues)
      */
     thiz.updateLocalAudioStream = function(stream, onEndedCallback) {
 
-        let audioTrack = thiz.localStream.getAudioTracks()[0];
+        var audioTrack = thiz.localStream.getAudioTracks()[0];
         thiz.localStream.removeTrack(audioTrack);
         audioTrack.stop();
         thiz.localStream.addTrack(stream.getAudioTracks()[0]);
@@ -716,7 +716,7 @@ export default function WebRTCAdaptor(initialValues)
             thiz.desktopStream.getVideoTracks()[0].stop();
         }
 
-        let videoTrack = thiz.localStream.getVideoTracks()[0];
+        var videoTrack = thiz.localStream.getVideoTracks()[0];
         thiz.localStream.removeTrack(videoTrack);
         videoTrack.stop();
         thiz.localStream.addTrack(stream.getVideoTracks()[0]);
@@ -762,8 +762,8 @@ export default function WebRTCAdaptor(initialValues)
     this.updateAudioTrack = function (stream, streamId, mediaConstraints, onEndedCallback) {
 
         if (thiz.remotePeerConnection[streamId] != null) {
-            let audioTrackSender = thiz.remotePeerConnection[streamId].getSenders().find(function(s) {
-                return s.track.kind === "audio";
+            var audioTrackSender = thiz.remotePeerConnection[streamId].getSenders().find(function(s) {
+                return s.track.kind == "audio";
             });
 
             if (audioTrackSender) {
@@ -786,8 +786,8 @@ export default function WebRTCAdaptor(initialValues)
     this.updateVideoTrack = function (stream, streamId, mediaConstraints, onEndedCallback, stopDesktop) {
 
         if (thiz.remotePeerConnection[streamId] != null) {
-            let videoTrackSender = thiz.remotePeerConnection[streamId].getSenders().find(function(s) {
-                return s.track.kind === "video";
+            var videoTrackSender = thiz.remotePeerConnection[streamId].getSenders().find(function(s) {
+                return s.track.kind == "video";
             });
 
             if (videoTrackSender) {
@@ -818,7 +818,7 @@ export default function WebRTCAdaptor(initialValues)
             }
         }
         else {
-            let dataObj = {
+            var dataObj = {
                 stream: event.streams[0],
                 track: event.track,
                 streamId: streamId
@@ -831,14 +831,14 @@ export default function WebRTCAdaptor(initialValues)
     this.iceCandidateReceived = function(event, streamId) {
         if (event.candidate) {
 
-            let protocolSupported = false;
+            var protocolSupported = false;
 
-            if (event.candidate.candidate === "") {
+            if (event.candidate.candidate == "") {
                 //event candidate can be received and its value can be "".
                 //don't compare the protocols
                 protocolSupported = true;
             }
-            else if (typeof event.candidate.protocol === "undefined") {
+            else if (typeof event.candidate.protocol == "undefined") {
                 thiz.candidateTypes.forEach(element => {
                     if (event.candidate.candidate.toLowerCase().includes(element)) {
                         protocolSupported = true;
@@ -852,7 +852,7 @@ export default function WebRTCAdaptor(initialValues)
 
             if (protocolSupported) {
 
-                let jsCmd = {
+                var jsCmd = {
                     command : "takeCandidate",
                     streamId : streamId,
                     label : event.candidate.sdpMLineIndex,
@@ -861,14 +861,14 @@ export default function WebRTCAdaptor(initialValues)
                 };
 
                 if (thiz.debug) {
-                    console.log("sending ice candidate for stream Id " + streamId );
+                    console.log("sending ice candiate for stream Id " + streamId );
                     console.log(JSON.stringify(event.candidate));
                 }
                 thiz.webSocketAdaptor.send(JSON.stringify(jsCmd));
             }
             else {
                 console.log("Candidate's protocol(full sdp: "+ event.candidate.candidate +") is not supported. Supported protocols: " + thiz.candidateTypes);
-                if (event.candidate.candidate !== "") { //
+                if (event.candidate.candidate != "") { //
                     thiz.callbackError("protocol_not_supported", "Support protocols: " + thiz.candidateTypes.toString() + " candidate: " + event.candidate.candidate);
                 }
             }
@@ -882,18 +882,18 @@ export default function WebRTCAdaptor(initialValues)
     this.initDataChannel = function(streamId, dataChannel) {
         dataChannel.onerror = (error) => {
             console.log("Data Channel Error:", error );
-            let obj = {
+            var obj = {
                 streamId: streamId,
                 error: error
             };
             console.log("channel status: ", dataChannel.readyState);
-            if (dataChannel.readyState !== "closed") {
+            if (dataChannel.readyState != "closed") {
                 thiz.callbackError("data_channel_error", obj);
             }
         };
 
         dataChannel.onmessage = (event) => {
-            let obj = {
+            var obj = {
                 streamId: streamId,
                 event: event,
             };
@@ -915,13 +915,13 @@ export default function WebRTCAdaptor(initialValues)
 
     // data channel mode can be "publish" , "play" or "peer" based on this it is decided which way data channel is created
     this.initPeerConnection = function(streamId, dataChannelMode) {
-        if (thiz.remotePeerConnection[streamId] === null)
+        if (thiz.remotePeerConnection[streamId] == null)
         {
-            let closedStreamId = streamId;
+            var closedStreamId = streamId;
             console.log("stream id in init peer connection: " + streamId + " close stream id: " + closedStreamId);
             thiz.remotePeerConnection[streamId] = new RTCPeerConnection(thiz.peerconnection_config);
             thiz.remoteDescriptionSet[streamId] = false;
-            thiz.iceCandidateList[streamId] = [];
+            thiz.iceCandidateList[streamId] = new Array();
             if (!thiz.playStreamId.includes(streamId))
             {
                 if(thiz.localStream != null) {
@@ -935,20 +935,20 @@ export default function WebRTCAdaptor(initialValues)
                 thiz.onTrack(event, closedStreamId);
             }
 
-            if (dataChannelMode === "publish") {
+            if (dataChannelMode == "publish") {
                 //open data channel if it's publish mode peer connection
                 const dataChannelOptions = {
                     ordered: true,
                 };
                 if (thiz.remotePeerConnection[streamId].createDataChannel) {
-                    let dataChannel = thiz.remotePeerConnection[streamId].createDataChannel(streamId, dataChannelOptions);
+                    var dataChannel = thiz.remotePeerConnection[streamId].createDataChannel(streamId, dataChannelOptions);
                     thiz.initDataChannel(streamId, dataChannel);
                 }
                 else {
                     console.warn("CreateDataChannel is not supported");
                 }
 
-            } else if(dataChannelMode === "play") {
+            } else if(dataChannelMode == "play") {
                 //in play mode, server opens the data channel
                 thiz.remotePeerConnection[streamId].ondatachannel = function(ev) {
                     thiz.initDataChannel(streamId, ev.channel);
@@ -962,7 +962,7 @@ export default function WebRTCAdaptor(initialValues)
 
                 if (thiz.remotePeerConnection[streamId].createDataChannel)
                 {
-                    let dataChannelPeer = thiz.remotePeerConnection[streamId].createDataChannel(streamId, dataChannelOptions);
+                    var dataChannelPeer = thiz.remotePeerConnection[streamId].createDataChannel(streamId, dataChannelOptions);
                     thiz.initDataChannel(streamId, dataChannelPeer);
 
                     thiz.remotePeerConnection[streamId].ondatachannel = function(ev) {
@@ -975,11 +975,11 @@ export default function WebRTCAdaptor(initialValues)
             }
 
             thiz.remotePeerConnection[streamId].oniceconnectionstatechange = function (event) {
-                let obj = {state:thiz.remotePeerConnection[streamId].iceConnectionState, streamId:streamId};
+                var obj = {state:thiz.remotePeerConnection[streamId].iceConnectionState, streamId:streamId};
                 thiz.callback("ice_connection_state_changed",obj);
 
                 if (!thiz.isPlayMode) {
-                    if (thiz.remotePeerConnection[streamId].iceConnectionState === "connected") {
+                    if (thiz.remotePeerConnection[streamId].iceConnectionState == "connected") {
 
                         thiz.changeBandwidth(thiz.bandwidth, streamId).then(() => {
                             console.log("Bandwidth is changed to " + thiz.bandwidth);
@@ -999,12 +999,12 @@ export default function WebRTCAdaptor(initialValues)
             if (thiz.remotePeerConnection[streamId].dataChannel != null) {
                 thiz.remotePeerConnection[streamId].dataChannel.close();
             }
-            if (thiz.remotePeerConnection[streamId].signalingState !== "closed") {
+            if (thiz.remotePeerConnection[streamId].signalingState != "closed") {
                 thiz.remotePeerConnection[streamId].close();
                 thiz.remotePeerConnection[streamId] = null;
                 delete thiz.remotePeerConnection[streamId];
-                let playStreamIndex = thiz.playStreamId.indexOf(streamId);
-                if (playStreamIndex !== -1)
+                var playStreamIndex = thiz.playStreamId.indexOf(streamId);
+                if (playStreamIndex != -1)
                 {
                     thiz.playStreamId.splice(playStreamIndex, 1);
                 }
@@ -1042,7 +1042,7 @@ export default function WebRTCAdaptor(initialValues)
             .then(function(responose)  {
                 console.debug("Set local description successfully for stream Id " + streamId);
 
-                let jsCmd = {
+                var jsCmd = {
                     command : "takeConfiguration",
                     streamId : streamId,
                     type : configuration.type,
@@ -1066,7 +1066,7 @@ export default function WebRTCAdaptor(initialValues)
     this.turnOffLocalCamera = function() {
         if (thiz.remotePeerConnection != null) {
 
-            let track = thiz.localStream.getVideoTracks()[0];
+            var track = thiz.localStream.getVideoTracks()[0];
             track.enabled = false;
         }
         else {
@@ -1076,7 +1076,7 @@ export default function WebRTCAdaptor(initialValues)
 
     this.turnOnLocalCamera = function() {
         if (thiz.remotePeerConnection != null) {
-            let track = thiz.localStream.getVideoTracks()[0];
+            var track = thiz.localStream.getVideoTracks()[0];
             track.enabled = true;
         }
         else {
@@ -1086,7 +1086,7 @@ export default function WebRTCAdaptor(initialValues)
 
     this.muteLocalMic = function() {
         if (thiz.remotePeerConnection != null) {
-            let track = thiz.localStream.getAudioTracks()[0];
+            var track = thiz.localStream.getAudioTracks()[0];
             track.enabled = false;
         }
         else {
@@ -1099,7 +1099,7 @@ export default function WebRTCAdaptor(initialValues)
      */
     this.unmuteLocalMic = function() {
         if (thiz.remotePeerConnection != null) {
-            let track = thiz.localStream.getAudioTracks()[0];
+            var track = thiz.localStream.getAudioTracks()[0];
             track.enabled = true;
         }
         else {
@@ -1109,12 +1109,12 @@ export default function WebRTCAdaptor(initialValues)
 
     this.takeConfiguration = function (idOfStream, configuration, typeOfConfiguration)
     {
-        let streamId = idOfStream
-        let type = typeOfConfiguration;
-        let conf = configuration;
-        let isTypeOffer = (type === "offer");
+        var streamId = idOfStream
+        var type = typeOfConfiguration;
+        var conf = configuration;
+        var isTypeOffer = (type == "offer");
 
-        let dataChannelMode = "publish";
+        var dataChannelMode = "publish";
         if(isTypeOffer) {
             dataChannelMode = "play";
         }
@@ -1127,15 +1127,15 @@ export default function WebRTCAdaptor(initialValues)
         })).then(function(response)  {
 
             if (thiz.debug) {
-                console.debug("set remote description is successful with response: " + response + " for stream : "
+                console.debug("set remote description is succesfull with response: " + response + " for stream : "
                     + streamId + " and type: " + type);
                 console.debug(conf);
             }
 
             thiz.remoteDescriptionSet[streamId] = true;
-            let length = thiz.iceCandidateList[streamId].length;
+            var length = thiz.iceCandidateList[streamId].length;
             console.debug("Ice candidate list size to be added: " + length);
-            for (let i = 0; i < length; i++) {
+            for (var i = 0; i < length; i++) {
                 thiz.addIceCandidate(streamId, thiz.iceCandidateList[streamId][i]);
             }
             thiz.iceCandidateList[streamId] = [];
@@ -1173,19 +1173,19 @@ export default function WebRTCAdaptor(initialValues)
 
 
     this.takeCandidate = function(idOfTheStream, tmpLabel, tmpCandidate) {
-        let streamId = idOfTheStream;
-        let label = tmpLabel;
-        let candidateSdp = tmpCandidate;
+        var streamId = idOfTheStream;
+        var label = tmpLabel;
+        var candidateSdp = tmpCandidate;
 
-        let candidate = new RTCIceCandidate({
+        var candidate = new RTCIceCandidate({
             sdpMLineIndex : label,
             candidate : candidateSdp
         });
 
-        let dataChannelMode = "peer";
+        var dataChannelMode = "peer";
         thiz.initPeerConnection(streamId, dataChannelMode);
 
-        if (thiz.remoteDescriptionSet[streamId] === true) {
+        if (thiz.remoteDescriptionSet[streamId] == true) {
             thiz.addIceCandidate(streamId, candidate);
         }
         else {
@@ -1196,13 +1196,13 @@ export default function WebRTCAdaptor(initialValues)
 
     this.addIceCandidate = function(streamId, candidate)
     {
-        let protocolSupported = false;
-        if (candidate.candidate === "") {
+        var protocolSupported = false;
+        if (candidate.candidate == "") {
             //candidate can be received and its value can be "".
             //don't compare the protocols
             protocolSupported = true;
         }
-        else if (typeof candidate.protocol === "undefined") {
+        else if (typeof candidate.protocol == "undefined") {
             thiz.candidateTypes.forEach(element => {
                 if (candidate.candidate.toLowerCase().includes(element)) {
                     protocolSupported = true;
@@ -1236,7 +1236,7 @@ export default function WebRTCAdaptor(initialValues)
     };
 
     this.startPublishing = function(idOfStream) {
-        let streamId = idOfStream;
+        var streamId = idOfStream;
 
         thiz.initPeerConnection(streamId, "publish");
 
@@ -1254,7 +1254,7 @@ export default function WebRTCAdaptor(initialValues)
      */
     this.getVideoSender = function(streamId) {
 
-        let videoSender = null;
+        var videoSender = null;
         if ((adapter.browserDetails.browser === 'chrome' ||
                 (adapter.browserDetails.browser === 'firefox' &&
                     adapter.browserDetails.version >= 64)) &&
@@ -1264,7 +1264,7 @@ export default function WebRTCAdaptor(initialValues)
             const senders = thiz.remotePeerConnection[streamId].getSenders();
 
             for (let i = 0; i < senders.length; i++) {
-                if (senders[i].track != null && senders[i].track.kind === "video") {
+                if (senders[i].track != null && senders[i].track.kind == "video") {
                     videoSender = senders[i];
                     break;
                 }
@@ -1279,9 +1279,9 @@ export default function WebRTCAdaptor(initialValues)
      */
     this.changeBandwidth = function(bandwidth, streamId) {
 
-        let errorDefinition = "";
+        var errorDefinition = "";
 
-        let videoSender = thiz.getVideoSender(streamId);
+        var videoSender = thiz.getVideoSender(streamId);
 
         if (videoSender != null) {
             const parameters = videoSender.getParameters();
@@ -1310,28 +1310,28 @@ export default function WebRTCAdaptor(initialValues)
     {
         thiz.remotePeerConnection[streamId].getStats(null).then(stats =>
         {
-            let bytesReceived = 0;
-            let packetsLost = 0;
-            let fractionLost = 0;
-            let currentTime = 0;
-            let bytesSent = 0;
-            let audioLevel = -1;
+            var bytesReceived = 0;
+            var packetsLost = 0;
+            var fractionLost = 0;
+            var currentTime = 0;
+            var bytesSent = 0;
+            var audioLevel = -1;
 
             stats.forEach(value => {
 
-                if (value.type === "inbound-rtp")
+                if (value.type == "inbound-rtp")
                 {
                     bytesReceived += value.bytesReceived;
                     packetsLost += value.packetsLost;
                     fractionLost += value.fractionLost;
                     currentTime = value.timestamp;
                 }
-                else if (value.type === "outbound-rtp")
+                else if (value.type == "outbound-rtp")
                 {
                     bytesSent += value.bytesSent
                     currentTime = value.timestamp
                 }
-                else if (value.type === "track" && typeof value.kind != "undefined" && value.kind === "audio") {
+                else if (value.type == "track" && typeof value.kind != "undefined" && value.kind == "audio") {
                     if (typeof value.audioLevel != "undefined") {
                         audioLevel = value.audioLevel;
                     }
@@ -1365,16 +1365,16 @@ export default function WebRTCAdaptor(initialValues)
      * Because all streams are closed on server side as well when websocket connection is closed.
      */
     this.closeWebSocket = function() {
-        for (let key in thiz.remotePeerConnection) {
+        for (var key in thiz.remotePeerConnection) {
             thiz.remotePeerConnection[key].close();
         }
         //free the remote peer connection by initializing again
-        thiz.remotePeerConnection = [];
+        thiz.remotePeerConnection = new Array();
         thiz.webSocketAdaptor.close();
     }
 
     this.peerMessage = function (streamId, definition, data) {
-        let jsCmd = {
+        var jsCmd = {
             command : "peerMessageCommand",
             streamId : streamId,
             definition : definition,
@@ -1385,7 +1385,7 @@ export default function WebRTCAdaptor(initialValues)
     }
 
     this.forceStreamQuality = function (streamId, resolution) {
-        let jsCmd = {
+        var jsCmd = {
             command : "forceStreamQuality",
             streamId : streamId,
             streamHeight : resolution
@@ -1395,19 +1395,19 @@ export default function WebRTCAdaptor(initialValues)
 
 
     this.sendData = function(streamId, message) {
-        let dataChannel = thiz.remotePeerConnection[streamId].dataChannel;
+        var dataChannel = thiz.remotePeerConnection[streamId].dataChannel;
         dataChannel.send(message);
     }
 
     function WebSocketAdaptor() {
-        let wsConn = new WebSocket(thiz.websocket_url);
+        var wsConn = new WebSocket(thiz.websocket_url);
 
-        let connected = false;
+        var connected = false;
 
-        let pingTimerId = -1;
+        var pingTimerId = -1;
 
-        let clearPingTimer = function() {
-            if (pingTimerId !== -1) {
+        var clearPingTimer = function() {
+            if (pingTimerId != -1) {
                 if (thiz.debug) {
                     console.debug("Clearing ping message timer");
                 }
@@ -1416,8 +1416,8 @@ export default function WebRTCAdaptor(initialValues)
             }
         }
 
-        let sendPing = function() {
-            let jsCmd = {
+        var sendPing = function() {
+            var jsCmd = {
                 command : "ping"
             };
             wsConn.send(JSON.stringify(jsCmd));
@@ -1442,7 +1442,7 @@ export default function WebRTCAdaptor(initialValues)
 
         this.send = function(text) {
 
-            if (wsConn.readyState === 0 || wsConn.readyState === 2 || wsConn.readyState === 3) {
+            if (wsConn.readyState == 0 || wsConn.readyState == 2 || wsConn.readyState == 3) {
                 thiz.callbackError("WebSocketNotConnected");
                 return;
             }
@@ -1455,9 +1455,9 @@ export default function WebRTCAdaptor(initialValues)
         }
 
         wsConn.onmessage = function(event) {
-            let obj = JSON.parse(event.data);
+            var obj = JSON.parse(event.data);
 
-            if (obj.command === "start")
+            if (obj.command == "start")
             {
                 //this command is received first, when publishing so playmode is false
 
@@ -1467,7 +1467,7 @@ export default function WebRTCAdaptor(initialValues)
 
                 thiz.startPublishing(obj.streamId);
             }
-            else if (obj.command === "takeCandidate") {
+            else if (obj.command == "takeCandidate") {
 
                 if (thiz.debug) {
                     console.debug("received ice candidate for stream id " + obj.streamId);
@@ -1476,7 +1476,7 @@ export default function WebRTCAdaptor(initialValues)
 
                 thiz.takeCandidate(obj.streamId, obj.label, obj.candidate);
 
-            } else if (obj.command === "takeConfiguration") {
+            } else if (obj.command == "takeConfiguration") {
 
                 if (thiz.debug) {
                     console.log("received remote description type for stream id: " + obj.streamId + " type: " + obj.type );
@@ -1484,42 +1484,42 @@ export default function WebRTCAdaptor(initialValues)
                 thiz.takeConfiguration(obj.streamId, obj.sdp, obj.type);
 
             }
-            else if (obj.command === "stop") {
+            else if (obj.command == "stop") {
                 console.debug("Stop command received");
                 thiz.closePeerConnection(obj.streamId);
             }
-            else if (obj.command === "error") {
+            else if (obj.command == "error") {
                 thiz.callbackError(obj.definition);
             }
-            else if (obj.command === "notification") {
+            else if (obj.command == "notification") {
                 thiz.callback(obj.definition, obj);
-                if (obj.definition === "play_finished" || obj.definition === "publish_finished") {
+                if (obj.definition == "play_finished" || obj.definition == "publish_finished") {
                     thiz.closePeerConnection(obj.streamId);
                 }
             }
-            else if (obj.command === "streamInformation") {
+            else if (obj.command == "streamInformation") {
                 thiz.callback(obj.command, obj);
             }
-            else if (obj.command === "roomInformation") {
+            else if (obj.command == "roomInformation") {
                 thiz.callback(obj.command, obj);
             }
-            else if (obj.command === "pong") {
+            else if (obj.command == "pong") {
                 thiz.callback(obj.command);
             }
-            else if (obj.command === "trackList") {
+            else if (obj.command == "trackList") {
                 thiz.callback(obj.command, obj);
             }
-            else if (obj.command === "connectWithNewId") {
+            else if (obj.command == "connectWithNewId") {
                 thiz.multiPeerStreamId = obj.streamId;
                 thiz.join(obj.streamId);
             }
-            else if (obj.command === "peerMessageCommand") {
+            else if (obj.command == "peerMessageCommand") {
                 thiz.callback(obj.command, obj);
             }
         }
 
         wsConn.onerror = function(error) {
-            console.log(" error occurred: " + JSON.stringify(error));
+            console.log(" error occured: " + JSON.stringify(error));
             clearPingTimer();
             thiz.callbackError(error)
         }

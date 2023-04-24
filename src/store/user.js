@@ -1,83 +1,106 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import userApi from "../api/userApi";
 
-export const user = createSlice({
-  name: "user",
-  initialState: {
-    users: [
-      {
-        username: "CosmoKramer",
-        title: "Rapid Chess Championship!",
-        game: "Chess",
-        tag: "Chatting",
-        pp: "https://i.pravatar.cc/",
-        liveScreen: "./images/games/game-chees.jpg",
-        viewers: "17.1K",
-      },
-      {
-        username: "Soprano",
-        title: "Im back",
-        game: "Dota 2",
-        tag: "Turkish",
-        pp: "https://i.pravatar.cc/",
-        liveScreen: "./images/games/game-dota.jpg",
-        viewers: "395",
-      },
-      {
-        username: "Seinfeld",
-        title: "Reduce Ping & Avoid Lags",
-        game: "PUBG",
-        tag: "English",
-        pp: "https://i.pravatar.cc/",
-        liveScreen: "./images/games/game-pubg.jpg",
-        viewers: "5.4K",
-      },
-      {
-        username: "Darlene",
-        title: "FPS soon? OMEGALUL",
-        game: "Counter Strike",
-        tag: "English",
-        pp: "https://i.pravatar.cc/",
-        liveScreen: "./images/games/game-cs.jpg",
-        viewers: "117",
-      },
-      {
-        username: "Cersei",
-        title: "Live Bitcoin Trading Infos 24/7",
-        game: "Crypto",
-        tag: "Chatting",
-        pp: "https://i.pravatar.cc/",
-        liveScreen: "./images/games/game-crypto.jpg",
-        viewers: "88",
-      },
-      {
-        username: "Jacob",
-        title: "LVL 70 - Tracksuit Grind",
-        game: "Escape From Tarkov",
-        tag: "Turkish",
-        pp: "https://i.pravatar.cc/",
-        liveScreen: "./images/games/game-eft.jpg",
-        viewers: "733",
-      },
-      {
-        username: "Skyler",
-        title: "Tourney Run Kollo",
-        game: "Mortal Kombat",
-        tag: "English",
-        pp: "https://i.pravatar.cc/",
-        liveScreen: "./images/games/game-mortal.jpg",
-        viewers: "231",
-      },
-      {
-        username: "Schillinger",
-        title: "Day 12 of the Game of Year ?",
-        game: "Elder Ring",
-        tag: "English",
-        pp: "https://i.pravatar.cc/",
-        liveScreen: "./images/games/game-elder.jpg",
-        viewers: "3.7K",
-      },
-    ],
-  },
+export const signIn = createAsyncThunk(
+    'auth/signIn',
+    async (payload, thunkAPI) => {
+      const response = await userApi.signIn(payload);
+
+      // Save access token to storage
+      const accessToken = response.data.data.accessToken;
+      localStorage.setItem('access_token', accessToken);
+    }
+);
+
+export const getListUsers = createAsyncThunk('auth/getListUsers',async () => {
+  const response = await userApi.getListUsers();
+  return response.data.data;
 });
 
-export default user.reducer;
+export const getUserById = createAsyncThunk('auth/getUserById',async (payload, thunkAPI) => {
+  const response = await userApi.getUserById(payload);
+  console.log("user",response.data.data);
+  return response.data.data;
+});
+
+export const findUser = createAsyncThunk('auth/findUser',async (payload) => {
+  const response = await userApi.findUser(payload);
+  return response.data.data;
+});
+
+const initialState = {
+  isLoggedIn: false,
+  isLoading: false,
+  inputSearch: '',
+  currentListUser: [
+      {
+          username: "stream2",
+          streamName: "stream2"
+      }
+  ],
+  currentUser: {}
+}
+
+const userSlice = createSlice({
+    name: "user",
+    initialState,
+    reducers: {
+        signOut(state) {
+            localStorage.removeItem('access_token');
+            console.log("token",localStorage.getItem('access_token'));
+            // alert('asasd');
+            // state.auth.isLoggedIn = false;
+            // state.auth.isLoading = false;
+            // state.auth.current = {};
+        }
+    },
+    extraReducers: {
+        [signIn.pending.type]: (state) => {
+            state.isLoading = true;
+        },
+        [signIn.fulfilled.type]: (state, payload) => {
+            state.isLoading = false;
+            if (payload) {
+                state.isLoggedIn = true;
+                state.current = { ...payload.meta.arg };
+            }
+        },
+        [signIn.rejected.type]: (state) => {
+            state.isLoading = false;
+        },
+        [getListUsers.pending.type]: (state) => {
+            state.isLoading = true;
+        },
+        [getListUsers.fulfilled.type]: (state,action) => {
+            state.isLoading = false;
+            state.current = action.payload;
+        },
+        [getListUsers.rejected.type]: (state) => {
+            state.isLoading = false;
+        },
+        [getUserById.pending.type]: (state) => {
+            state.isLoading = true;
+        },
+        [getUserById.fulfilled.type]: (state,action) => {
+            state.isLoading = false;
+            state.currentUser = action.payload;
+        },
+        [getUserById.rejected.type]: (state) => {
+            state.isLoading = false;
+        },
+        [findUser.pending.type]: (state) => {
+            state.isLoading = true;
+        },
+        [findUser.fulfilled.type]: (state,action) => {
+            state.isLoading = false;
+            state.current = action.payload;
+        },
+        [findUser.rejected.type]: (state) => {
+            state.isLoading = false;
+        },
+    },
+});
+
+const {actions,reducer: authReducer } = userSlice;
+export const {signOut} = actions
+export default authReducer;

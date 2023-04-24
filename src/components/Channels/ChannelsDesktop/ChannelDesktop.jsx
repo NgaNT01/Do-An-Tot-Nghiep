@@ -1,19 +1,16 @@
 import { StyledChannelDesktop } from "./ChannelDesktop.styled";
 
 import { FaEllipsisV } from "react-icons/fa";
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 
 const ChannelDesktop = ({ user, imageId, video }) => {
 
-  const onViewStream = () => {
-
-  }
-
   return (
     <StyledChannelDesktop>
-      <div className="channel-box" onClick={onViewStream}>
+      <NavLink to={`/live/${user.username}`}>
+      <div className="channel-box">
         <div className="live-screen">
-          <Link to={`/stream/${user.username}`}>
+
             <img src={user.liveScreen} alt="" />
             <div className={`live ${video ? "invisible" : ""}`}>trực tiếp</div>
             <div className={`viewers ${video ? "invisible" : ""}`}>
@@ -24,7 +21,6 @@ const ChannelDesktop = ({ user, imageId, video }) => {
               <div className="video-tag bottom-right">4 hours ago</div>
               <div className="video-tag bottom">188 lượt xem</div>
             </div>
-          </Link>
         </div>
         <div className="channel-info">
           <div className="left">
@@ -46,6 +42,7 @@ const ChannelDesktop = ({ user, imageId, video }) => {
           </div>
         </div>
       </div>
+     </NavLink>
     </StyledChannelDesktop>
   );
 };

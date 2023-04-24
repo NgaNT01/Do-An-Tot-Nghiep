@@ -126,7 +126,7 @@ export const StyledHeaderDesktop = styled.header`
           overflow: hidden;
           display: flex;
           align-items: center;
-          margin: 0 0 0 400px;
+          margin: 0 0 0 600px;
 
           input {
             flex: 1;

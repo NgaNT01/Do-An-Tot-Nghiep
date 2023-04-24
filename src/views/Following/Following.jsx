@@ -1,10 +1,7 @@
 import { StyledFollowing } from "../Following/Following.styled";
 
-import { useLocation, Outlet } from "react-router-dom";
+import { useLocation} from "react-router-dom";
 
-// Mobile Components
-import Channels from "../../components/Channels/ChannelsMobile/Channels";
-import OfflineChannels from "../../components/Channels/ChannelsMobile/OfflineChannels";
 
 // Components
 import MyLink from "../../components/Share/LinkItem";
@@ -45,7 +42,6 @@ const Following = () => {
               </ul>
             </div>
             <div className="page">
-              <Outlet />
             </div>
           </div>
         </div>

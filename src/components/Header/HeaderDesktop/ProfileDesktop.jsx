@@ -45,36 +45,25 @@ const ProfileDesktop = () => {
               <div className="info">
                 <div className="username">khaleesi</div>
                 <div className="status">
-                  <div
-                    className={`status-icon ${onlineStatus ? "online" : ""}`}
-                  >
-                    <FaCircle />
-                  </div>
-                  <span>{!onlineStatus ? "Offline" : "Online"}</span>
                 </div>
               </div>
-            </div>
-
-            <div className="status-button">
-              <span>Online</span>
-              <DarkAndStatus whichStatus="online" changeStatus={changeStatus} />
             </div>
             <hr />
             <div className="menu-list">
               <ul>
                 <li>
                   <div className="item">
-                    <FiUserMinus /> <span>Channel</span>
+                    <FiUserMinus /> <span>Thông tin cá nhân</span>
                   </div>
                 </li>
                 <li>
                   <div className="item">
-                    <VscSettings /> <span>Live Stream</span>
+                    <VscSettings /> <span>Tạo Stream</span>
                   </div>
                 </li>
                 <li>
                   <div className="item">
-                    <MdOutlineDarkMode /> <span>Dark Theme</span>
+                    <MdOutlineDarkMode /> <span>Giao diện tối</span>
                   </div>
                   <DarkAndStatus whichStatus="darkmode" />
                 </li>
@@ -82,7 +71,7 @@ const ProfileDesktop = () => {
                 <li>
                   <div className="item">
                     <MdOutlineLogout style={{ transform: "rotate(180deg)" }} />{" "}
-                    <span>Log Out</span>
+                    <span>Đăng xuất</span>
                   </div>
                 </li>
               </ul>

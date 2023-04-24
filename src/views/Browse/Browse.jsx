@@ -4,9 +4,6 @@ import { StyledBrowse } from "./Browse.styled";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 
-// Mobile Components
-import BigChannel from "../../components/Channels/ChannelsMobile/BigChannel";
-import BigCategories from "../../components/Categories/CategoriesMobile/BigCategories";
 
 // Desktop Components
 import Tags from "../../components/Share/Tags";
@@ -15,7 +12,6 @@ import Search from "../../components/Share/Search";
 
 // React icons
 import { BiChevronDown } from "react-icons/bi";
-import { Outlet } from "react-router-dom";
 import PageAllCategories from "./PageAllCategories";
 
 const Browse = () => {
@@ -89,7 +85,6 @@ const Browse = () => {
                 </div>
               </div>
             </div>
-            <Outlet />
           </div>
         </div>
       </StyledBrowse>

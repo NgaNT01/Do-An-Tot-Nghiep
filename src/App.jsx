@@ -2,10 +2,11 @@
 import GlobalStyles from "./assets/styles/Global";
 import { ThemeProvider } from "styled-components";
 import { lightTheme, darkTheme } from "./assets/styles/Theme";
+import {Provider} from 'react-redux';
 
 // React
 import { useEffect, useState } from "react";
-import { Routes, Route, Navigate, useNavigate, BrowserRouter as Redirect} from "react-router-dom";
+import {Route,Switch, BrowserRouter} from "react-router-dom";
 import { useSelector } from "react-redux";
 
 // Components
@@ -22,44 +23,47 @@ import PageLive from "./views/Following/PageLive";
 import PageVideos from "./views/Following/PageVideos";
 import PageCategories from "./views/Following/PageCategories";
 import StreamView from "./views/StreamView/StreamView";
+import store from "./store";
 
 const App = () => {
   const { darkStatus, sideBarStatus } = useSelector((state) => state.site);
   const [mySize, setMySize] = useState(window.innerWidth);
-  let navigate = useNavigate();
 
   const [showModal, setShowModal] = useState(true);
   const [roomName, setRoomName] = useState('');
   const [streamTitle, setStreamTitle] = useState('');
 
   return (
-    <ThemeProvider theme={darkStatus ? darkTheme : lightTheme}>
-      <GlobalStyles />
-      <div className="app">
-        <Header mySize={mySize} />
-        <div
-          className={`main ${
-            sideBarStatus && mySize > 1199 ? "sidebar-open" : ""
-          }`}
-        >
-            <Routes>
-              <Route path="*" element={<Navigate to="/" replace />} />
-              <Route path="/" element={<Home />} />
-              <Route path="/stream/:username" element={<StreamView/>}></Route>
-              <Route path="/following/" element={<Following />}>
-                <Route index element={<PageOverview />} />
-                <Route path="live" element={<PageLive />} />
-                <Route path="videos" element={<PageVideos />} />
-                <Route path="categories" element={<PageCategories />} />
-              </Route>
-              <Route path="/browse/" element={<Browse />}>
-                <Route index element={<PageAllCategories />} />
-                <Route path="all" element={<PageAllLive />} />
-              </Route>
-            </Routes>
+    <Provider store={store}>
+      <ThemeProvider theme={darkStatus ? darkTheme : lightTheme}>
+        <GlobalStyles />
+        <div className="app">
+          <Header mySize={mySize} />
+          <div
+              className={`main ${
+                  sideBarStatus && mySize > 1199 ? "sidebar-open" : ""
+              }`}
+          >
+            <BrowserRouter>
+              <Switch>
+                <Route exact path="/" component={Home} />
+                <Route path="/live/:username" component={StreamView}/>
+                <Route path="/following/" component={Following}>
+                  <Route index component={PageOverview} />
+                  <Route path="live" component={PageLive} />
+                  <Route path="videos" component={PageVideos} />
+                  <Route path="categories" component={PageCategories} />
+                </Route>
+                <Route path="/browse/" component={Browse}>
+                  <Route index component={PageAllCategories} />
+                  <Route path="all" component={PageAllLive} />
+                </Route>
+              </Switch>
+            </BrowserRouter>
+          </div>
         </div>
-      </div>
-    </ThemeProvider>
+      </ThemeProvider>
+    </Provider>
   );
 };
 

@@ -5,14 +5,14 @@ import { useSelector } from "react-redux";
 import ChannelDesktop from "./ChannelDesktop";
 
 const ChannelsDesktop = ({ channelTitle, video }) => {
-  const { users } = useSelector((state) => state.user);
+  const { currentListUser } = useSelector((state) => state.user);
 
   return (
     <StyledChannelsDesktop>
       <div className="channels-box">
         {channelTitle && <h1>{channelTitle}</h1>}
         <div className="list">
-          {users.map((user, index) => {
+          {currentListUser.map((user, index) => {
             if (index < 6)
               return (
                 <ChannelDesktop
