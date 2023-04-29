@@ -60,7 +60,7 @@ export const StyledHome = styled.div`
   /* Home Desktop */
   .home-desktop {
     display: none;
-
+    margin: 0 20px 0 20px;
     .home-box {
       display: block;
     }

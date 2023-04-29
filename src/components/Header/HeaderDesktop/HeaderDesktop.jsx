@@ -15,6 +15,7 @@ import ProfileDesktop from "./ProfileDesktop";
 import SideBar from "./SideBar";
 import {useSelector} from "react-redux";
 import {Button} from "antd";
+import {getCurrentUser, getToken} from "../../../utils/auth";
 
 const HeaderDesktop = ({ mySize }) => {
   const { pathname } = useLocation();
@@ -81,13 +82,17 @@ const HeaderDesktop = ({ mySize }) => {
                 </ul>
               </div>
             </div>
-            {isLoggedIn ?
+            {(getCurrentUser() !== null && getToken() !== "") ?
                 <div className="profile-desktop">
                   <ProfileDesktop />
                 </div> :
                 <div className="auth-button">
-                  <Button style={{marginRight: '20px'}} size="large">Đăng ký</Button>
-                  <Button style={{marginRight: '20px'}} size="large" type="primary">Đăng nhập</Button>
+                  <Link to="/auth/sign-up">
+                    <Button style={{marginRight: '20px'}} size="large">Đăng ký</Button>
+                  </Link>
+                  <Link to="/auth/sign-in">
+                    <Button style={{marginRight: '20px'}} size="large" type="primary">Đăng nhập</Button>
+                  </Link>
                 </div>
             }
           </header>

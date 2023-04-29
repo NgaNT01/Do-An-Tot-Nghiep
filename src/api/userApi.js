@@ -1,13 +1,22 @@
 import axiosClient from "./axiosClient";
+import axiosClientAnt from "./axiosClientAnt";
 
 const userApi = {
     signIn: (payload) => {
         const url = '/auth/sign-in';
         return axiosClient.post(url, payload);
     },
+    signUp: (payload) => {
+        const url = '/auth/sign-up';
+        return axiosClient.post(url,payload);
+    },
     getListUsers: () => {
         const url = '/user/list';
         return axiosClient.get(url);
+    },
+    getListUsersStreaming: () => {
+      const url = '/broadcasts/list/0/5';
+      return axiosClientAnt.get(url);
     },
     getUserById: (params) => {
         const url = `/user/profile/${params}`;

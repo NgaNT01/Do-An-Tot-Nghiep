@@ -6,6 +6,7 @@ export const StyledHeaderDesktop = styled.header`
   top: 0px;
   z-index: 20;
   width: 100%;
+  background-color: rgb(232,232,232);
 
   .header-box {
     position: relative;

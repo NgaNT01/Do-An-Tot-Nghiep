@@ -1,14 +1,33 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import userApi from "../api/userApi";
 
 export const signIn = createAsyncThunk(
     'auth/signIn',
     async (payload, thunkAPI) => {
       const response = await userApi.signIn(payload);
+      console.log("ket qua", response);
 
-      // Save access token to storage
-      const accessToken = response.data.data.accessToken;
+
+      // Save access token and user info to storage
+      const accessToken = response.data.accessToken;
+      const currentUser = {
+          username: response.data.username,
+          email: response.data.email
+      };
       localStorage.setItem('access_token', accessToken);
+      localStorage.setItem('current_user',JSON.stringify(currentUser));
+
+      return response.data;
+    }
+);
+
+export const signUp = createAsyncThunk(
+    'auth/signUp',
+    async (payload, thunkAPI) => {
+        const response = await userApi.signUp(payload);
+        console.log("ket qua", response.data);
+
+        return response.data;
     }
 );
 
@@ -17,10 +36,21 @@ export const getListUsers = createAsyncThunk('auth/getListUsers',async () => {
   return response.data.data;
 });
 
+export const getListUsersStreaming = createAsyncThunk('auth/getListUsersStreaming',async () => {
+    console.log("call api ant get list");
+    const response = await userApi.getListUsersStreaming();
+    return response.data;
+});
+
 export const getUserById = createAsyncThunk('auth/getUserById',async (payload, thunkAPI) => {
   const response = await userApi.getUserById(payload);
   console.log("user",response.data.data);
   return response.data.data;
+});
+
+export const cleanUsersStreamList = createAsyncThunk('auth/cleanUsersStreamList', (payload, thunkAPI) => {
+    state.currentListUser = [];
+    console.log("hello",state.currentListUser);
 });
 
 export const findUser = createAsyncThunk('auth/findUser',async (payload) => {
@@ -32,12 +62,7 @@ const initialState = {
   isLoggedIn: false,
   isLoading: false,
   inputSearch: '',
-  currentListUser: [
-      {
-          username: "stream2",
-          streamName: "stream2"
-      }
-  ],
+  currentListUser: [],
   currentUser: {}
 }
 
@@ -47,7 +72,9 @@ const userSlice = createSlice({
     reducers: {
         signOut(state) {
             localStorage.removeItem('access_token');
+            localStorage.removeItem('current_user');
             console.log("token",localStorage.getItem('access_token'));
+            state.isLoggedIn = false;
             // alert('asasd');
             // state.auth.isLoggedIn = false;
             // state.auth.isLoading = false;
@@ -58,14 +85,23 @@ const userSlice = createSlice({
         [signIn.pending.type]: (state) => {
             state.isLoading = true;
         },
-        [signIn.fulfilled.type]: (state, payload) => {
+        [signIn.fulfilled.type]: (state, action) => {
             state.isLoading = false;
-            if (payload) {
+            if (action) {
                 state.isLoggedIn = true;
-                state.current = { ...payload.meta.arg };
+                state.currentUser = action.payload;
             }
         },
         [signIn.rejected.type]: (state) => {
+            state.isLoading = false;
+        },
+        [signUp.pending.type]: (state) => {
+            state.isLoading = true;
+        },
+        [signUp.fulfilled.type]: (state, action) => {
+            state.isLoading = false;
+        },
+        [signUp.rejected.type]: (state) => {
             state.isLoading = false;
         },
         [getListUsers.pending.type]: (state) => {
@@ -77,6 +113,31 @@ const userSlice = createSlice({
         },
         [getListUsers.rejected.type]: (state) => {
             state.isLoading = false;
+        },
+        [getListUsersStreaming.pending.type]: (state) => {
+            state.isLoading = true;
+        },
+        [getListUsersStreaming.fulfilled.type]: (state,action) => {
+            state.isLoading = false;
+            // state.currentListUser = action.payload;
+            action.payload.map((stream,index) => {
+                const streamChangeToUser = {
+                    username: stream.streamId,
+                    streamName: stream.streamId,
+                    viewerCount: stream.webRTCViewerCount,
+                };
+                console.log(streamChangeToUser);
+                state.currentListUser.push(streamChangeToUser);
+            });
+        },
+        [getListUsersStreaming.rejected.type]: (state) => {
+            state.isLoading = false;
+        },
+        [cleanUsersStreamList.pending.type]: (state) => {
+            state.currentListUser = [];
+        },
+        [cleanUsersStreamList.fulfilled.type]: (state) => {
+            state.currentListUser = [];
         },
         [getUserById.pending.type]: (state) => {
             state.isLoading = true;

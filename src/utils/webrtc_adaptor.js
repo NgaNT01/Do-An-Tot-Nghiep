@@ -476,13 +476,15 @@ export default function WebRTCAdaptor(initialValues)
 
     this.publish = function (streamId, token) {
         console.error("here",thiz);
+        console.log("here video", thiz.localStream.getVideoTracks());
         var jsCmd = {
             command : "publish",
             streamId : streamId,
             token : token,
-            video: thiz.localStream.getVideoTracks().length > 0 ? true : false,
-            audio: thiz.localStream.getAudioTracks().length > 0 ? true : false,
+            video: thiz.localStream.getVideoTracks().length > 0,
+            audio: thiz.localStream.getAudioTracks().length > 0,
         };
+
 
         thiz.webSocketAdaptor.send(JSON.stringify(jsCmd));
     }
@@ -1076,6 +1078,7 @@ export default function WebRTCAdaptor(initialValues)
 
     this.turnOnLocalCamera = function() {
         if (thiz.remotePeerConnection != null) {
+            console.log("remote ne",thiz.remotePeerConnection);
             var track = thiz.localStream.getVideoTracks()[0];
             track.enabled = true;
         }

@@ -24,30 +24,27 @@ import PageVideos from "./views/Following/PageVideos";
 import PageCategories from "./views/Following/PageCategories";
 import StreamView from "./views/StreamView/StreamView";
 import store from "./store";
+import LogIn from "./views/Auth/LogIn";
+import PublishStream from "./views/StreamView/PublishStream";
+import SignUp from "./views/Auth/SignUp";
+import {getToken} from "./utils/auth";
 
 const App = () => {
-  const { darkStatus, sideBarStatus } = useSelector((state) => state.site);
-  const [mySize, setMySize] = useState(window.innerWidth);
-
-  const [showModal, setShowModal] = useState(true);
-  const [roomName, setRoomName] = useState('');
-  const [streamTitle, setStreamTitle] = useState('');
+  const { darkStatus} = useSelector((state) => state.site);
+  const {isLoggedIn} = useSelector(state => state.user);
 
   return (
     <Provider store={store}>
       <ThemeProvider theme={darkStatus ? darkTheme : lightTheme}>
         <GlobalStyles />
         <div className="app">
-          <Header mySize={mySize} />
-          <div
-              className={`main ${
-                  sideBarStatus && mySize > 1199 ? "sidebar-open" : ""
-              }`}
-          >
             <BrowserRouter>
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route path="/live/:username" component={StreamView}/>
+                <Route path="/publish/:streamName" component={isLoggedIn || getToken() !== "" ? PublishStream : LogIn}/>
+                <Route path="/auth/sign-in" component={LogIn}/>
+                <Route path="/auth/sign-up" component={SignUp}/>
                 <Route path="/following/" component={Following}>
                   <Route index component={PageOverview} />
                   <Route path="live" component={PageLive} />
@@ -61,7 +58,6 @@ const App = () => {
               </Switch>
             </BrowserRouter>
           </div>
-        </div>
       </ThemeProvider>
     </Provider>
   );

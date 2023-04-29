@@ -2,19 +2,25 @@ import { StyledChannelDesktop } from "./ChannelDesktop.styled";
 
 import { FaEllipsisV } from "react-icons/fa";
 import {Link, NavLink} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {cleanUsersStreamList} from "../../../store/user";
 
 const ChannelDesktop = ({ user, imageId, video }) => {
+    const dispatch = useDispatch();
+    const onCleanListUser = () => {
+        dispatch(cleanUsersStreamList());
+    }
 
   return (
     <StyledChannelDesktop>
-      <NavLink to={`/live/${user.username}`}>
+      <NavLink to={`/live/${user.username}`} onClick={onCleanListUser}>
       <div className="channel-box">
         <div className="live-screen">
 
-            <img src={user.liveScreen} alt="" />
+            <img src="../../../../public/images/games/game-elder.jpg" alt="" />
             <div className={`live ${video ? "invisible" : ""}`}>trực tiếp</div>
             <div className={`viewers ${video ? "invisible" : ""}`}>
-              333 người xem
+                {user.viewerCount} người xem
             </div>
             <div className={`video ${video ? "video-visible" : ""}`}>
               <div className="video-tag top">11:44</div>

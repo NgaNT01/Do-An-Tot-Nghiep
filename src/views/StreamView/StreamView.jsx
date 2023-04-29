@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {StyledStreamView} from "./StreamView.styled";
 import WebRTCAdaptor from "../../utils/webrtc_adaptor";
 import {useParams} from "react-router-dom";
+import Header from "../../components/Header/Header";
 
 const StreamView = () => {
     let webRTCAdaptor = null;
@@ -90,30 +91,39 @@ const StreamView = () => {
     }
 
     return (
+        <>
+            <Header mySize="1848" />
+            <StyledStreamView>
+                <div className="stream-view-wrap">
+                    <div className="stream-view-box">
+                        <div className="video-view">
+                            <video id="video" autoPlay width="640px" height="480px" controls playsInline></video>
+                        </div>
+                        <div className="user-info">
+                            <div className="left">
+                                <div className="pp">
+                                    <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="" />
+                                </div>
+                                <div className="profile-info">
+                                    <div className="title">Title</div>
+                                    <div className="game">game</div>
+                                    <div className="tags">
+                                        <div className="tag">English</div>
+                                        <div className="tag">Esports</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
 
-        <StyledStreamView>
-            <div className="stream-view">
-                <video id="video" autoPlay width="640px" height="480px" controls playsInline></video>
-            </div>
-            <div className="user-info">
-                <div className="left">
-                    <div className="pp">
-                        <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="" />
-                    </div>
-                    <div className="profile-info">
-                        <div className="title">Title</div>
-                        <div className="game">game</div>
-                        <div className="tags">
-                            <div className="tag">English</div>
-                            <div className="tag">Esports</div>
+                            </div>
                         </div>
                     </div>
+                    <div className="chat-box">
+                        Data channel message
+                    </div>
                 </div>
-                <div>
-
-                </div>
-            </div>
-        </StyledStreamView>
+            </StyledStreamView>
+        </>
     );
 };
 

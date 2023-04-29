@@ -175,7 +175,7 @@ export const StyledChannelsDesktop = styled.div`
     color: ${(props) => props.theme.textColor};
 
     h1 {
-      font-size: 18px;
+      font-size: 30px;
       font-weight: 500;
       padding: 5px 0;
     }

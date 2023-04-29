@@ -1,11 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import WebRTCAdaptor from "../../utils/webrtc_adaptor";
+// import {WebRTCAdaptor} from "@antmedia/webrtc_adaptor/target/StreamApp/js/webrtc_adaptor";
+// import WebRTCAdaptor from '../../utils/webrtc_adaptor'
+import {WebRTCAdaptor} from "../../utils/js/webrtc_adaptor";
 import {useParams} from "react-router-dom";
+import Header from "../../components/Header/Header";
+import {StyledPublishStream} from "./PublishStream.styled";
+import {useSelector} from "react-redux";
+import {getCurrentUser} from "../../utils/auth";
 
 const PublishStream = () => {
     let webRTCAdaptor =null;
+    const {currentUser} = useSelector(state => state.user);
 
-    const [mediaConstraints,setMediaConstraints] = useState({video: true, audio: true});
+    const [streamName, setStreamName] = useState(useParams().streamName);
+    const [mediaConstraints,setMediaConstraints] = useState({video: 'screen', audio: true});
     const [pc_config] = useState({'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]})
     const [sdpConstraints,setSdpConstraints] = useState({OfferToReceiveAudio: false,OfferToReceiveVideo: false})
     const [websocketURL,setWebsocketURL] = useState("wss://tannga.space:5443/WebRTCAppEE/websocket");
@@ -14,6 +22,7 @@ const PublishStream = () => {
     useEffect(() => {
         webRTCAdaptor = initiateWebrtc();
         setIsShow(true);
+        onStartPublishing(streamName);
 
         return () => {
             webRTCAdaptor.stop(streamName);
@@ -21,31 +30,43 @@ const PublishStream = () => {
     },[]);
 
     function initiateWebrtc() {
+        let thiz = this;
         return new WebRTCAdaptor({
             websocket_url: websocketURL,
             mediaConstraints: mediaConstraints,
             peerconnection_config: pc_config,
             sdp_constraints: sdpConstraints,
-            remoteVideoId: "video",
-            isPlayMode: true,
+            localVideoId: "localVideo",
             debug: true,
-            candidateTypes: ["tcp", "udp"],
+            bandwidth:2000,
             callback: function (info, obj) {
                 if (info === "initialized") {
-                    console.log("initialized");
+                    console.log("initialized",obj);
 
                 } else if (info === "publish_started") {
                     //stream is being published
                     console.log("publish started");
-                    alert("Da bat dau stream");
-                    setIsShow(false);
+                    alert("publish started");
 
                 } else if (info === "publish_finished") {
                     //stream is being finished
-                    console.log("Da ket thuc stream");
-                    setIsShow(true);
+                    console.log("publish finished");
 
-                } else if (info === "closed") {
+                }
+                else if (info === "data_channel_opened") {
+
+                    alert("data channel is open");
+
+                }
+
+                else if (info === "data_channel_error") {
+
+                    // handleError(description);
+
+                } else if (info === "data_channel_closed") {
+
+                    console.log("Data channel closed " );
+                }else if (info === "closed") {
                     //console.log("Connection closed");
                     if (typeof obj != "undefined") {
                         console.log("Connection closed: "
@@ -56,7 +77,7 @@ const PublishStream = () => {
 
                 } else if (info === "ice_connection_state_changed") {
                     console.log("iceConnectionState Changed: ", JSON.stringify(obj));
-                } else if (info ==="updated_stats") {
+                } else if (info === "updated_stats") {
                     //obj is the PeerStats which has fields
                     //averageIncomingBitrate - kbits/sec
                     //currentIncomingBitrate - kbits/sec
@@ -98,21 +119,20 @@ const PublishStream = () => {
 
     return (
         <>
-            <div className="Publish">
-                YOU ARE IN PUBLISH PAGE <br />
-                <video id="localVideo" autoPlay controls playsInline></video>
-                <br/>
-                {/*{*/}
-                {/*    isShow ? (*/}
-                {/*        <button*/}
-                {/*            onClick={this.onStartPublishing.bind(this, streamName)}*/}
-                {/*            className="btn btn-primary"*/}
-                {/*            id="start_play_button"> Start*/}
-                {/*            Publish*/}
-                {/*        </button>*/}
-                {/*    ) : null*/}
-                {/*}*/}
-            </div>
+            <StyledPublishStream>
+                <Header mySize="1848" />
+                <div className="publish-wrap">
+                    <div className="livestream-box">
+                        <video id="localVideo" muted autoPlay controls playsInline></video>
+                    </div>
+                    <div className="chat-box">
+                        {getCurrentUser().username}
+                        <ul>
+
+                        </ul>
+                    </div>
+                </div>
+            </StyledPublishStream>
         </>
     );
 };
