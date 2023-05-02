@@ -3,10 +3,13 @@ import {StyledStreamView} from "./StreamView.styled";
 import WebRTCAdaptor from "../../utils/webrtc_adaptor";
 import {useParams} from "react-router-dom";
 import Header from "../../components/Header/Header";
+import {getCurrentUser} from "../../utils/auth";
+import {Button, Input} from "antd";
+import Message from "../../components/Share/Message";
 
 const StreamView = () => {
     let webRTCAdaptor = null;
-
+    const [webRTC, setWebRTC] = useState(null);
     const [mediaConstraints,setMediaConstraints] = useState({video: false, audio: false});
     const [streamName,setStreamName] = useState(useParams().username);
     const [token, setToken] = useState('');
@@ -14,15 +17,23 @@ const StreamView = () => {
     const [sdpConstraints,setSdpConstraints] = useState({OfferToReceiveAudio: true,OfferToReceiveVideo: true})
     const [websocketURL,setWebsocketURL] = useState("wss://tannga.space:5443/WebRTCAppEE/websocket");
     const [isShow, setIsShow] = useState(false);
+    const [inputValue, setInputValue] = useState('');
+    const [chatMessages, setChatMessages] = useState([]);
+    const chatMessageRef = useRef(null);
 
     useEffect(() => {
         webRTCAdaptor = initiateWebrtc();
+        setWebRTC(webRTCAdaptor);
         setIsShow(true);
 
         return () => {
             webRTCAdaptor.stop(streamName);
         }
     },[]);
+
+    useEffect(() => {
+        chatMessageRef.current.scrollIntoView({ behavior: "smooth" });
+    }, [chatMessages])
 
     function initiateWebrtc() {
         return new WebRTCAdaptor({
@@ -66,14 +77,25 @@ const StreamView = () => {
                         + " fractionLost: " + obj.fractionLost
                         + " audio level: " + obj.audioLevel);
 
-                } else if (info === "data_received") {
-                    console.log("Data received: " + obj.event.data + " type: " + obj.event.type + " for stream: " + obj.streamId);
-                } else if (info === "bitrateMeasurement") {
-                    console.log(info + " notification received");
+                }
+                else if (info === "data_channel_opened") {
 
-                    console.log(obj);
+                    console.log("data channel is open");
+
+                }
+                else if (info === "data_channel_error") {
+
+                } else if (info === "data_channel_closed") {
+
+                    console.log("Data channel closed " );
+                }else if (info === "data_received") {
+                    handleDisplayChat(obj.event.data);
+                } else if (info === "bitrateMeasurement") {
+                    // console.log(info + " notification received");
+
+                    // console.log(obj);
                 } else {
-                    console.log(info + " notification received");
+                    // console.log(info + " notification received");
                 }
             },
             callbackError: function (error) {
@@ -88,6 +110,18 @@ const StreamView = () => {
 
     const onStartPlaying = (streamName) => {
         webRTCAdaptor.play(streamName, token);
+    }
+
+    const handleDisplayChat = (message) => {
+        setChatMessages((messages) => [...messages, message]);
+        console.log(chatMessages);
+    }
+    const onEnterChat = (e) => {
+        console.log(e.target.value);
+        e.preventDefault();
+        webRTC.sendData(streamName, `${getCurrentUser().username}: ${e.target.value}`);
+        setChatMessages(messages => [...messages, `${getCurrentUser().username}: ${e.target.value}`]);
+        setInputValue('');
     }
 
     return (
@@ -119,7 +153,27 @@ const StreamView = () => {
                         </div>
                     </div>
                     <div className="chat-box">
-                        Data channel message
+                        <div className="chat-messages" ref={chatMessageRef}>
+                            {chatMessages.map((message, index) => {
+                                const username = message.split(":")[0];
+                                const content = message.split(":")[1];
+                                return (
+                                    <Message username={username} content={content}></Message>
+                                )
+                            })}
+                        </div>
+                        <div className="box-footer">
+                            <Input
+                                placeholder="Nhập tin nhắn"
+                                onPressEnter={onEnterChat}
+                                value={inputValue}
+                                onChange={(event) => setInputValue(event.target.value)}
+                            >
+
+                            </Input>
+                            <Button type="primary" size="large" className="send-button">Gửi</Button>
+                            <Button type="primary" size="large" className="image-button">Ảnh</Button>
+                        </div>
                     </div>
                 </div>
             </StyledStreamView>

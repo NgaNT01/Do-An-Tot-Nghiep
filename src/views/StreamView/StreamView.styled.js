@@ -85,6 +85,35 @@ export const StyledStreamView = styled.div`
       border-radius: 10px;
       margin-left: 10px;
       margin-right: 10px;
+      position: relative;
+
+      .box-header {
+        height: 12%;
+      }
+
+      .chat-messages {
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+        position: absolute;
+        top: 0;
+        height: 800px;
+        width: 100%;
+      }
+
+      .box-footer {
+        display: flex;
+        justify-content: space-around;
+        position: absolute;
+        bottom: 0;
+
+        input {
+          margin: 0 10px 0 10px;
+        }
+        .send-button {
+          margin-right: 10px;
+        }
+      }
     }
   }
   }

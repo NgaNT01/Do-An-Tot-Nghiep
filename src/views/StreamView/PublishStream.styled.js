@@ -3,23 +3,53 @@ import styled from 'styled-components';
 export const StyledPublishStream = styled.div `
   .publish-wrap {
     display: flex;
-    height: 650px;
+    background-color: rgb(232,232,232);
     
     .livestream-box {
-      border: 2px solid blue;
       width: 80%;
-      background-color: black;
+      margin-left: 10px;
+      background-color: rgb(256,256,256);
+      border-radius: 10px;
       
       video {
         width: 100%;
-        height: 645px;
+        height: 700px;
+        background-color: black;
       }
     }
     
     .chat-box {
-      border: 2px solid red;
+      background-color: rgb(256,256,256);
       width: 20%;
-      margin-left: 20px
+      border-radius: 10px;
+      margin-left: 10px;
+      margin-right: 10px;
+      position: relative;
+      
+      .chat-messages {
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+        position: absolute;
+        top: 0;
+        height: 650px;
+        width: 100%;
+      }
+      
+      .box-footer {
+        display: flex;
+        justify-content: space-around;
+        position: absolute;
+        bottom: 0;
+        
+        input {
+          margin: 0 10px 0 10px;
+        }
+        
+        .send-button {
+          margin-right: 10px;
+        }
+      }
     }
   }
 `

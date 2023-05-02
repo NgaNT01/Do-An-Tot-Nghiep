@@ -528,12 +528,12 @@ export class WebRTCAdaptor
 
 			var protocolSupported = false;
 			
-			if (event.candidate.candidate == "") {
+			if (event.candidate.candidate === "") {
 				//event candidate can be received and its value can be "".
 				//don't compare the protocols
 				protocolSupported = true;
 			}
-			else if (typeof event.candidate.protocol == "undefined") {
+			else if (typeof event.candidate.protocol === "undefined") {
 				this.candidateTypes.forEach(element => {
 					if (event.candidate.candidate.toLowerCase().includes(element)) {
 						protocolSupported = true;
@@ -628,7 +628,7 @@ export class WebRTCAdaptor
 				dataView.set(new Uint8Array(rawData), msg.received, length-4);
 				msg.received += length-4;
 
-				if(msg.size == msg.received) {
+				if(msg.size === msg.received) {
 					obj.data = msg.data;
 					this.callback("data_received", obj);
 				}
@@ -681,7 +681,7 @@ export class WebRTCAdaptor
 
 			if (this.dataChannelEnabled){
 				// skip initializing data channel if it is disabled
-				if (dataChannelMode == "publish") {
+				if (dataChannelMode === "publish") {
 					//open data channel if it's publish mode peer connection 
 					const dataChannelOptions = {
 							ordered: true,
@@ -694,7 +694,7 @@ export class WebRTCAdaptor
 						console.warn("CreateDataChannel is not supported");
 					}
 
-				} else if(dataChannelMode == "play") {
+				} else if(dataChannelMode === "play") {
 					//in play mode, server opens the data channel 
 					this.remotePeerConnection[streamId].ondatachannel = ev => {
 						this.initDataChannel(streamId, ev.channel);
@@ -727,7 +727,7 @@ export class WebRTCAdaptor
 
 				//
 				if (!this.isPlayMode && !this.playStreamId.includes(streamId)) {
-					if (this.remotePeerConnection[streamId].iceConnectionState == "connected") {
+					if (this.remotePeerConnection[streamId].iceConnectionState === "connected") {
 
 						this.mediaManager.changeBandwidth(this.mediaManager.bandwidth, streamId).then(() => {
 							console.log("Bandwidth is changed to " + this.mediaManager.bandwidth);
