@@ -66,19 +66,6 @@ const HeaderDesktop = ({ mySize }) => {
             <div className="right">
               <div className="right-icons">
                 <ul>
-                  {/*<li>*/}
-                  {/*  <CgCrown />*/}
-                  {/*</li>*/}
-                  {/*<li>*/}
-                  {/*  <BiArchive />*/}
-                  {/*</li>*/}
-                  {/*<li>*/}
-                  {/*  <BiMessageAlt />*/}
-                  {/*</li>*/}
-                  {/*<li className="bits">*/}
-                  {/*  <BsSuitDiamondFill />*/}
-                  {/*  <span>Get Bits</span>*/}
-                  {/*</li>*/}
                 </ul>
               </div>
             </div>

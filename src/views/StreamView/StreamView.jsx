@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {StyledStreamView} from "./StreamView.styled";
-import WebRTCAdaptor from "../../utils/webrtc_adaptor";
+import {WebRTCAdaptor} from "../../utils/js/webrtc_adaptor";
 import {useParams} from "react-router-dom";
 import Header from "../../components/Header/Header";
 import {getCurrentUser} from "../../utils/auth";

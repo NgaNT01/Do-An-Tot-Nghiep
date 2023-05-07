@@ -45,7 +45,7 @@ const Home = () => {
               boldTitle="Danh mục"
             />
             <ShowMore />
-            <Tags />
+            {/*<Tags />*/}
           </div>
         </div>
       </StyledHome>

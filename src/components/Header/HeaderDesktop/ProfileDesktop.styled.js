@@ -112,7 +112,7 @@ export const StyledProfileDesktop = styled.div`
               align-items: center;
               justify-content: space-between;
 
-              .item {
+              .item,a {
                 display: flex;
                 align-items: center;
                 font-size: 18px;

@@ -167,13 +167,13 @@ export class MediaManager
 
 		// It should be compatible with previous version
 		if (this.mediaConstraints) {
-			if(this.mediaConstraints.video == "camera") {
+			if(this.mediaConstraints.video === "camera") {
 				this.publishMode="camera";
 			}
-			else if(this.mediaConstraints.video == "screen") {
+			else if(this.mediaConstraints.video === "screen") {
 				this.publishMode="screen";
 			}
-			else if(this.mediaConstraints.video == "screen+camera") {
+			else if(this.mediaConstraints.video === "screen+camera") {
 				this.publishMode="screen+camera";
 			}
 		}
@@ -394,7 +394,7 @@ export class MediaManager
 					this.setVideoCameraSource(streamId, mediaConstraints, null, true);		
 				}
 
-				if(this.publishMode == "screen")
+				if(this.publishMode === "screen")
 				{
 					return this.updateVideoTrack(stream, streamId,  onended, true).then(() => {
 						if(audioTracks.length > 0 ){ //system audio share case, then mix it with device audio
@@ -403,7 +403,7 @@ export class MediaManager
 						return this.updateAudioTrack(audioStream, streamId, null);
 					});
 				}
-				else if(this.publishMode == "screen+camera" )
+				else if(this.publishMode === "screen+camera" )
 				{
 					if(audioTracks.length > 0 ){ //system audio share case, then mix it with device audio
 						audioStream = this.mixAudioStreams(stream, audioStream);
@@ -415,7 +415,7 @@ export class MediaManager
 					
 				}
 				else{
-					if(audioConstraint != false && audioConstraint != undefined){
+					if(audioConstraint !== false && audioConstraint !== undefined){
 						stream.addTrack(audioStream.getAudioTracks()[0]);
 					}
 				
@@ -510,7 +510,7 @@ export class MediaManager
 		}
 
 		// Check Media Constraint video value screen or screen + camera
-		if(this.publishMode == "screen+camera" || this.publishMode == "screen"){
+		if(this.publishMode === "screen+camera" || this.publishMode === "screen"){
 			return this.navigatorDisplayMedia(mediaConstraints).then(stream =>{
 				if (this.smallVideoTrack)
 					this.smallVideoTrack.stop();
@@ -843,14 +843,14 @@ export class MediaManager
 	 */
 	switchDesktopCaptureWithCamera(streamId) 
 	{
-		if(typeof this.mediaConstraints.video != "undefined" && this.mediaConstraints.video != false){
+		if(typeof this.mediaConstraints.video !== "undefined" && this.mediaConstraints.video !== false){
 			this.mediaConstraints.video = true
 		}
 
 		this.publishMode = "screen+camera";
 
 		var audioConstraint = false;
-		if (typeof this.mediaConstraints.audio != "undefined" && this.mediaConstraints.audio != false) {
+		if (typeof this.mediaConstraints.audio !== "undefined" && this.mediaConstraints.audio !== false) {
 			audioConstraint = this.mediaConstraints.audio;
 		}
 		return this.getMedia(this.mediaConstraints, audioConstraint, streamId);

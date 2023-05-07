@@ -16,31 +16,24 @@ import { VscSettings } from "react-icons/vsc";
 
 // Components
 import DarkAndStatus from "./DarkAndStatus";
-import {useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {signOut} from "../../../store/user";
 import {getCurrentUser} from "../../../utils/auth";
 
 const ProfileDesktop = () => {
   const [profileStatus, setProfileStatus] = useState(false);
-  const [onlineStatus, setOnlineStatus] = useState(false);
+  const {darkStatus} = useSelector(state => state.site);
 
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const changeStatus = () => {
-    return setOnlineStatus(!onlineStatus);
-  };
 
   const handleLogOut = () => {
     localStorage.removeItem('access_token');
     dispatch(signOut());
     // Điều hướng về trang chu
     history.push('/');
-  }
-
-  const handleMoveToDetailProfile = () => {
-
   }
 
   return (
@@ -70,19 +63,25 @@ const ProfileDesktop = () => {
             <div className="menu-list">
               <ul>
                 <li>
-                  <div className="item" onClick={handleMoveToDetailProfile}>
-                    <FiUserMinus /> <span>Thông tin cá nhân</span>
-                  </div>
+                  <Link to={`/auth/user-profile/${getCurrentUser().username}`}>
+                    <div className="item" style={darkStatus ? {color: '#fff'} : {color: '#000'}}>
+                      <FiUserMinus /> <span>Thông tin cá nhân</span>
+                    </div>
+                  </Link>
                 </li>
                 <li>
-                  <div className="item">
-                    <VscSettings /> <span>Tạo Stream</span>
+                  <Link to>
+                  <div className="item" style={darkStatus ? {color: '#fff'} : {color: '#000'}}>
+                    <VscSettings /> <span>Quản lý phát trực tiếp</span>
                   </div>
+                  </Link>
                 </li>
                 <li>
-                  <div className="item">
+                  <Link to>
+                  <div className="item" style={darkStatus ? {color: '#fff'} : {color: '#000'}}>
                     <MdOutlineDarkMode /> <span>Giao diện tối</span>
                   </div>
+                  </Link>
                   <DarkAndStatus whichStatus="darkmode" />
                 </li>
                 <hr />

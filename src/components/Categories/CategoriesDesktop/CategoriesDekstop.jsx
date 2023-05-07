@@ -3,9 +3,14 @@ import { StyledCategoriesDesktop } from "./CategoryDesktop.styled";
 import { useSelector } from "react-redux";
 
 import CategoryDesktop from "./CategoryDesktop";
+import {useEffect} from "react";
 
 const CategoriesDesktop = ({ title, boldTitle }) => {
-  const { games } = useSelector((state) => state.category);
+  const categories = useSelector((state) => state.category);
+
+  useEffect(() => {
+    console.log(categories);
+  }, [])
 
   return (
     <StyledCategoriesDesktop>
@@ -14,8 +19,8 @@ const CategoriesDesktop = ({ title, boldTitle }) => {
           <span>{boldTitle}</span> {title}
         </h1>
         <div className="list">
-          {games.map((game, index) => {
-            return <CategoryDesktop game={game} key={index} />;
+          {categories.map((category, index) => {
+            return <CategoryDesktop category={category} key={index} />;
           })}
         </div>
       </div>

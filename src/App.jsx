@@ -28,6 +28,7 @@ import LogIn from "./views/Auth/LogIn";
 import PublishStream from "./views/StreamView/PublishStream";
 import SignUp from "./views/Auth/SignUp";
 import {getToken} from "./utils/auth";
+import {UserProfile} from "./views/Auth/UserProfile";
 
 const App = () => {
   const { darkStatus} = useSelector((state) => state.site);
@@ -43,6 +44,7 @@ const App = () => {
                 <Route exact path="/" component={Home} />
                 <Route path="/live/:username" component={StreamView}/>
                 <Route path="/publish/:streamName" component={isLoggedIn || getToken() !== "" ? PublishStream : LogIn}/>
+                <Route path="/auth/user-profile/:username" component={UserProfile}/>
                 <Route path="/auth/sign-in" component={LogIn}/>
                 <Route path="/auth/sign-up" component={SignUp}/>
                 <Route path="/following/" component={Following}>

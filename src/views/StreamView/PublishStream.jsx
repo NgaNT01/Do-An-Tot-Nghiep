@@ -14,7 +14,7 @@ const PublishStream = () => {
     const {currentUser} = useSelector(state => state.user);
 
     const [streamName, setStreamName] = useState(useParams().streamName);
-    const [mediaConstraints,setMediaConstraints] = useState({video: 'camera', audio: true});
+    const [mediaConstraints,setMediaConstraints] = useState({video: 'screen', audio: true});
     const [pc_config] = useState({'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]})
     const [sdpConstraints,setSdpConstraints] = useState({OfferToReceiveAudio: false,OfferToReceiveVideo: false})
     const [websocketURL,setWebsocketURL] = useState("wss://tannga.space:5443/WebRTCAppEE/websocket");
