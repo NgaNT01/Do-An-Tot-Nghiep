@@ -22,6 +22,10 @@ export const StyledStreamView = styled.div`
         display: flex;
         justify-content: space-between;
         padding: 30px 5px 10px 5px;
+        
+        .buttons {
+          display: flex;
+        }
 
         .left {
           display: flex;
@@ -41,6 +45,7 @@ export const StyledStreamView = styled.div`
             padding: 0 10px;
             font-size: 14px;
             color: ${(props) => props.theme.textColor};
+            width: 200px;
 
             .title {
               font-weight: 500;
@@ -86,9 +91,17 @@ export const StyledStreamView = styled.div`
       margin-left: 10px;
       margin-right: 10px;
       position: relative;
-
-      .box-header {
-        height: 12%;
+      
+      .header-box {
+        border-radius: 10px;
+      }
+      
+      .live-chat-banner {
+        margin: auto;
+        width: 50%;
+        padding: 10px;
+        font-weight: bolder;
+        color: #0b7aff;
       }
 
       .chat-messages {
@@ -99,6 +112,7 @@ export const StyledStreamView = styled.div`
         top: 0;
         height: 800px;
         width: 100%;
+        margin-top: 50px;
       }
 
       .box-footer {

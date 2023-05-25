@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {WebRTCAdaptor} from "../../utils/js/webrtc_adaptor";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import Header from "../../components/Header/Header";
 import {StyledPublishStream} from "./PublishStream.styled";
 import {useSelector} from "react-redux";
@@ -12,9 +12,10 @@ const PublishStream = () => {
     let webRTCAdaptor = null;
     const [webRTC,setWebRTC] = useState(null);
     const {currentUser} = useSelector(state => state.user);
+    const history = useHistory();
 
     const [streamName, setStreamName] = useState(useParams().streamName);
-    const [mediaConstraints,setMediaConstraints] = useState({video: 'screen', audio: true});
+    const [mediaConstraints,setMediaConstraints] = useState({video: true, audio: true});
     const [pc_config] = useState({'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]})
     const [sdpConstraints,setSdpConstraints] = useState({OfferToReceiveAudio: false,OfferToReceiveVideo: false})
     const [websocketURL,setWebsocketURL] = useState("wss://tannga.space:5443/WebRTCAppEE/websocket");
@@ -32,6 +33,14 @@ const PublishStream = () => {
 
         return () => {
             webRTCAdaptor.stop(streamName);
+            setChatMessages([]);
+            setInputValue('');
+            setIsShow(false);
+            setWebRTC(null);
+            setMediaConstraints(null);
+            setSdpConstraints(null);
+            setStreamName('');
+            setWebsocketURL('');
         }
     },[]);
 
@@ -128,8 +137,9 @@ const PublishStream = () => {
 
     const onEnterChat = (e) => {
         console.log(e.target.value);
-        webRTC.sendData(streamName, `${getCurrentUser().username}: ${e.target.value}`);
-        setChatMessages(messages => [...messages, `${getCurrentUser().username}: ${e.target.value}`]);
+        let now = new Date();
+        webRTC.sendData(streamName, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${e.target.value}`);
+        setChatMessages(messages => [...messages, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${e.target.value}`]);
         setInputValue('');
     }
 
@@ -142,14 +152,23 @@ const PublishStream = () => {
                     <div className="livestream-box">
                         <video id="localVideo" muted autoPlay controls playsInline></video>
                     </div>
+                    <div className="info-box">
+                        <div className="header-info">Chỉnh sửa thông tin truyền trực tiếp</div>
+                        <div className="info-body">
+                        </div>
+                    </div>
                     <div className="chat-box">
-                        <div className="box-header"></div>
+                        <div className="box-header">
+                            <div className="my-chat">Trò chuyện của tôi</div>
+                        </div>
                         <div className="chat-messages" ref={chatMessageRef}>
                             {chatMessages.map((message, index) => {
-                                const username = message.split(":")[0];
-                                const content = message.split(":")[1];
+                                const time_username = message.split(": ")[0];
+                                const username = time_username.split("] ")[1];
+                                const time = time_username.split("] ")[0];
+                                const content = message.split(": ")[1];
                                 return (
-                                    <Message username={username} content={content}></Message>
+                                    <Message time={time} username={username} content={content}></Message>
                                 )
                             })}
                         </div>

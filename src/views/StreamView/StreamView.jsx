@@ -6,6 +6,7 @@ import Header from "../../components/Header/Header";
 import {getCurrentUser} from "../../utils/auth";
 import {Button, Input} from "antd";
 import Message from "../../components/Share/Message";
+import {ShareAltOutlined, UserOutlined} from "@ant-design/icons";
 
 const StreamView = () => {
     let webRTCAdaptor = null;
@@ -89,7 +90,7 @@ const StreamView = () => {
 
                     console.log("Data channel closed " );
                 }else if (info === "data_received") {
-                    handleDisplayChat(obj.event.data);
+                    handleDisplayChat(obj.data);
                 } else if (info === "bitrateMeasurement") {
                     // console.log(info + " notification received");
 
@@ -119,8 +120,9 @@ const StreamView = () => {
     const onEnterChat = (e) => {
         console.log(e.target.value);
         e.preventDefault();
-        webRTC.sendData(streamName, `${getCurrentUser().username}: ${e.target.value}`);
-        setChatMessages(messages => [...messages, `${getCurrentUser().username}: ${e.target.value}`]);
+        let now = new Date();
+        webRTC.sendData(streamName, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${e.target.value}`);
+        setChatMessages(messages => [...messages, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${e.target.value}`]);
         setInputValue('');
     }
 
@@ -139,12 +141,17 @@ const StreamView = () => {
                                     <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="" />
                                 </div>
                                 <div className="profile-info">
-                                    <div className="title">Title</div>
-                                    <div className="game">game</div>
+                                    <div className="title">hello</div>
+                                    <div className="game">stream dau tien</div>
                                     <div className="tags">
-                                        <div className="tag">English</div>
-                                        <div className="tag">Esports</div>
+                                        <div className="tag">Tiếng Việt</div>
+                                        {/*<div className="tag">Esports</div>*/}
                                     </div>
+                                </div>
+                                <div className="buttons">
+                                    <UserOutlined style={{marginLeft: '800px',marginTop: '14px'}}/> <span style={{marginTop: '14px',marginLeft: '5px'}}>1</span>
+                                    <Button type="primary" size="large" style={{marginLeft: '50px'}}>+ Theo dõi</Button>
+                                    <Button size="large" style={{marginLeft: '10px'}}><ShareAltOutlined/>Chia sẻ</Button>
                                 </div>
                             </div>
                             <div>
@@ -153,12 +160,17 @@ const StreamView = () => {
                         </div>
                     </div>
                     <div className="chat-box">
+                        <div className="header-box">
+                            <div className="live-chat-banner">Trò chuyện LIVE</div>
+                        </div>
                         <div className="chat-messages" ref={chatMessageRef}>
                             {chatMessages.map((message, index) => {
-                                const username = message.split(":")[0];
-                                const content = message.split(":")[1];
+                                const time_username = message.split(": ")[0];
+                                const username = time_username.split("] ")[1];
+                                const time = time_username.split("] ")[0];
+                                const content = message.split(": ")[1];
                                 return (
-                                    <Message username={username} content={content}></Message>
+                                    <Message time={time} username={username} content={content}></Message>
                                 )
                             })}
                         </div>
