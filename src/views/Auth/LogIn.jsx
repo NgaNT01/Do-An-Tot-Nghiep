@@ -23,7 +23,8 @@ const LogIn = () => {
                 'Đăng nhập thành công!',
                 'success'
             )
-            history.push("/")
+            // history.push("/")
+            history.goBack()
         }
         else {
             await Swal.fire({

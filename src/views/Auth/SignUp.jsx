@@ -32,7 +32,7 @@ const SignUp = () => {
                 'Đăng ký thành công!',
                 'success'
             )
-            history.push("/auth/sign-in");
+            history.goBack()
         }
         else {
             await Swal.fire({

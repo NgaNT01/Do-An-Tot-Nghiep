@@ -22,6 +22,8 @@ import {signOut} from "../../../store/user";
 import {getCurrentUser} from "../../../utils/auth";
 import {Button, Form, Input, Modal, Select} from "antd";
 import {InfoCircleOutlined, LockOutlined, MailOutlined, PlayCircleOutlined, UserOutlined} from "@ant-design/icons";
+import {startStream} from "../../../store/streams";
+import Swal from "sweetalert2";
 
 const ProfileDesktop = () => {
   const [profileStatus, setProfileStatus] = useState(false);
@@ -35,8 +37,7 @@ const ProfileDesktop = () => {
   const handleLogOut = () => {
     localStorage.removeItem('access_token');
     dispatch(signOut());
-    // Điều hướng về trang chu
-    history.push('/');
+    // history.push('/');
   }
 
   useEffect(() => {
@@ -58,7 +59,26 @@ const ProfileDesktop = () => {
   };
 
   const onFinish = async (values) => {
-      history.push(`/publish/${getCurrentUser().username}`);
+      const params = {
+        ...values,
+        status: 'broadcasting',
+      };
+      const message = await dispatch(startStream(params));
+    if (message) {
+      await Swal.fire(
+          'Thành công!',
+          'Khởi tạo Live Stream thành công!',
+          'success'
+      )
+    }
+    else {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Ôi không...',
+        text: "Đã có lỗi xảy ra!"
+      })
+    }
+      // history.push(`/publish/${getCurrentUser().username}`);
   }
 
   const options = [

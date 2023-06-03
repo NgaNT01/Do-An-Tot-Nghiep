@@ -128,6 +128,25 @@ export const StyledStreamView = styled.div`
           margin-right: 10px;
         }
       }
+      .box-footer-unlogin {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        z-index: 1000;
+        bottom: 0;
+        margin: auto;
+        width: 100%;
+        padding: 10px;
+        align-items: center;
+        
+        span {
+          margin-bottom: 5px;
+        }
+        
+        .signin-btn {
+          width: 100%
+        }
+      }
     }
   }
   }

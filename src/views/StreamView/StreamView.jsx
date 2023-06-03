@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {StyledStreamView} from "./StreamView.styled";
 import {WebRTCAdaptor} from "../../utils/js/webrtc_adaptor";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import Header from "../../components/Header/Header";
 import {getCurrentUser} from "../../utils/auth";
 import {Button, Input} from "antd";
@@ -16,7 +16,7 @@ const StreamView = () => {
     const [token, setToken] = useState('');
     const [pc_config] = useState({'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]})
     const [sdpConstraints,setSdpConstraints] = useState({OfferToReceiveAudio: true,OfferToReceiveVideo: true})
-    const [websocketURL,setWebsocketURL] = useState("wss://tannga.space:5443/WebRTCAppEE/websocket");
+    const [websocketURL,setWebsocketURL] = useState("ws://178.128.124.146:5080/WebRTCAppEE/websocket");
     const [isShow, setIsShow] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
@@ -110,6 +110,7 @@ const StreamView = () => {
     }
 
     const onStartPlaying = (streamName) => {
+        console.log(webRTC);
         webRTCAdaptor.play(streamName, token);
     }
 
@@ -174,9 +175,9 @@ const StreamView = () => {
                                 )
                             })}
                         </div>
-                        <div className="box-footer">
+                        {getCurrentUser() !== null ? <div className="box-footer">
                             <Input
-                                placeholder="Nhập tin nhắn"
+                                placeholder="Nói chuyện chút nào!"
                                 onPressEnter={onEnterChat}
                                 value={inputValue}
                                 onChange={(event) => setInputValue(event.target.value)}
@@ -185,7 +186,14 @@ const StreamView = () => {
                             </Input>
                             <Button type="primary" size="large" className="send-button">Gửi</Button>
                             <Button type="primary" size="large" className="image-button">Ảnh</Button>
-                        </div>
+                        </div> :
+                        <div className="box-footer-unlogin">
+                            <span style={{fontWeight: 'bolder'}}>Nhớ 8 với những người xem chung nhé</span>
+                            <span style={{fontWeight: 'lighter'}}>Đăng nhập để tham gia trò chuyện</span>
+                            <Link className="signin-btn" to='/auth/sign-in'>
+                                <Button className="signin-btn" type="primary" size="large">Đăng nhập</Button>
+                            </Link>
+                        </div>}
                     </div>
                 </div>
             </StyledStreamView>

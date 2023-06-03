@@ -18,7 +18,7 @@ const PublishStream = () => {
     const [mediaConstraints,setMediaConstraints] = useState({video: true, audio: true});
     const [pc_config] = useState({'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]})
     const [sdpConstraints,setSdpConstraints] = useState({OfferToReceiveAudio: false,OfferToReceiveVideo: false})
-    const [websocketURL,setWebsocketURL] = useState("wss://tannga.space:5443/WebRTCAppEE/websocket");
+    const [websocketURL,setWebsocketURL] = useState("ws://178.128.124.146:5080/WebRTCAppEE/websocket");
     const [isShow, setIsShow] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
@@ -143,6 +143,18 @@ const PublishStream = () => {
         setInputValue('');
     }
 
+    const handleChangeDesktopCamera = () => {
+        webRTC.switchDesktopCaptureWithCamera(streamName);
+    }
+
+    const handleChangeDesktop = () => {
+        webRTC.switchDesktopCapture(streamName);
+    }
+
+    const handleChangeCamera = () => {
+        webRTC.switchVideoCameraCapture(streamName);
+    }
+
 
     return (
         <>
@@ -153,7 +165,11 @@ const PublishStream = () => {
                         <video id="localVideo" muted autoPlay controls playsInline></video>
                     </div>
                     <div className="info-box">
-                        <div className="header-info">Chỉnh sửa thông tin truyền trực tiếp</div>
+                        <div className="header-info">Chỉnh sửa thông tin truyền trực tiếp
+                        <Button type="primary" onClick={handleChangeDesktopCamera} style={{marginRight: '5px'}}>Desktop + Camera</Button>
+                        <Button type="primary" onClick={handleChangeDesktop} style={{marginRight: '5px'}}>Desktop</Button>
+                        <Button type="primary" onClick={handleChangeCamera}>Camera</Button>
+                        </div>
                         <div className="info-body">
                         </div>
                     </div>
