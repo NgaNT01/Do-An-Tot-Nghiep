@@ -3,16 +3,21 @@ import {WebRTCAdaptor} from "../../utils/js/webrtc_adaptor";
 import {useHistory, useParams} from "react-router-dom";
 import Header from "../../components/Header/Header";
 import {StyledPublishStream} from "./PublishStream.styled";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getCurrentUser} from "../../utils/auth";
-import {Button, Input} from "antd";
+import {Button, Form, Input, Select} from "antd";
 import Message from "../../components/Share/Message";
+import {stopStream} from "../../store/streams";
+import {InfoCircleOutlined, PlayCircleOutlined} from "@ant-design/icons";
 
 const PublishStream = () => {
     let webRTCAdaptor = null;
     const [webRTC,setWebRTC] = useState(null);
     const {currentUser} = useSelector(state => state.user);
+    const {currentPublishStream} = useSelector(state => state.stream);
     const history = useHistory();
+    const dispatch = useDispatch();
+    const [form] = Form.useForm();
 
     const [streamName, setStreamName] = useState(useParams().streamName);
     const [mediaConstraints,setMediaConstraints] = useState({video: true, audio: true});
@@ -24,24 +29,41 @@ const PublishStream = () => {
     const [chatMessages, setChatMessages] = useState([]);
     const chatMessageRef = useRef(null);
 
+    const options = [
+        {label: 'Games', value: 'Games'},
+        {label: 'Music', value: 'Music'},
+        {label: 'Sports', value: 'Sports'},
+        {label: 'Movie', value: 'Movie'},
+        {label: 'Dances', value: 'Dances'},
+        {label: 'Idols', value: 'Idols'},
+    ];
+
     useEffect(() => {
 
-        webRTCAdaptor = initiateWebrtc();
-        setWebRTC(webRTCAdaptor);
-        setIsShow(true);
-        onStartPublishing(streamName);
-
-        return () => {
-            webRTCAdaptor.stop(streamName);
-            setChatMessages([]);
-            setInputValue('');
-            setIsShow(false);
-            setWebRTC(null);
-            setMediaConstraints(null);
-            setSdpConstraints(null);
-            setStreamName('');
-            setWebsocketURL('');
-        }
+        // webRTCAdaptor = initiateWebrtc();
+        // setWebRTC(webRTCAdaptor);
+        // setIsShow(true);
+        // onStartPublishing(streamName);
+        //
+        // return () => {
+        //     webRTCAdaptor.stop(streamName);
+        //     setChatMessages([]);
+        //     setInputValue('');
+        //     setIsShow(false);
+        //     setWebRTC(null);
+        //     setMediaConstraints(null);
+        //     setSdpConstraints(null);
+        //     setStreamName('');
+        //     setWebsocketURL('');
+        // }
+        //
+        // return () => {
+        //     const params = {
+        //         streamId: currentPublishStream.streamId,
+        //         streamName: currentPublishStream.streamName
+        //     }
+        //     dispatch(stopStream(params));
+        // }
     },[]);
 
     const handleDisplayChat = (message) => {
@@ -97,11 +119,6 @@ const PublishStream = () => {
                 } else if (info === "ice_connection_state_changed") {
                     console.log("iceConnectionState Changed: ", JSON.stringify(obj));
                 } else if (info === "updated_stats") {
-                    //obj is the PeerStats which has fields
-                    //averageIncomingBitrate - kbits/sec
-                    //currentIncomingBitrate - kbits/sec
-                    //packetsLost - total number of packet lost
-                    //fractionLost - fraction of packet lost
                     console.log("Average incoming kbits/sec: " + obj.averageIncomingBitrate
                         + " Current incoming kbits/sec: " + obj.currentIncomingBitrate
                         + " packetLost: " + obj.packetsLost
@@ -155,6 +172,14 @@ const PublishStream = () => {
         webRTC.switchVideoCameraCapture(streamName);
     }
 
+    const onFinish = () => {
+
+    }
+
+    const handleChange = () => {
+
+    }
+
 
     return (
         <>
@@ -165,12 +190,81 @@ const PublishStream = () => {
                         <video id="localVideo" muted autoPlay controls playsInline></video>
                     </div>
                     <div className="info-box">
-                        <div className="header-info">Chỉnh sửa thông tin truyền trực tiếp
-                        <Button type="primary" onClick={handleChangeDesktopCamera} style={{marginRight: '5px'}}>Desktop + Camera</Button>
-                        <Button type="primary" onClick={handleChangeDesktop} style={{marginRight: '5px'}}>Desktop</Button>
-                        <Button type="primary" onClick={handleChangeCamera}>Camera</Button>
+                        <div className="stream-mode">
+                            <div className="header-info">Chọn chế độ truyền trực tiếp
+                            </div>
+                            <div className="info-body" style={{marginTop: '20px'}}>
+                                <Button type="primary" onClick={handleChangeDesktopCamera} style={{marginRight: '5px',marginLeft: '20px'}}>Desktop + Camera</Button>
+                                <Button type="primary" onClick={handleChangeDesktop} style={{marginRight: '5px'}}>Desktop</Button>
+                                <Button type="primary" onClick={handleChangeCamera}>Camera</Button>
+                            </div>
                         </div>
-                        <div className="info-body">
+                        <div className="modify-stream-info">
+                            <div className="header-info">Chỉnh sửa thông tin truyền trực tiếp</div>
+                            <div className="info-body">
+                                <Form
+                                    name="normal_stream"
+                                    className="signup-form"
+                                    initialValues={{
+                                        remember: true,
+                                    }}
+                                    onFinish={onFinish}
+                                    form={form}
+                                    style={{margin: '10px'}}
+                                >
+                                    <Form.Item
+                                        name="streamName"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Hãy nhập streamName!',
+                                            },
+                                        ]}
+                                    >
+                                        <Input size={"large"} prefix={<PlayCircleOutlined className="site-form-item-icon" />} placeholder={`${currentPublishStream.streamName}`} />
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="description"
+                                        rules={[
+                                            {
+                                                required: false,
+                                            },
+                                        ]}
+                                    >
+                                        <Input
+                                            size={"large"}
+                                            prefix={<InfoCircleOutlined className="site-form-item-icon" />}
+                                            placeholder="Mô tả thông tin stream"
+                                        />
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="categories"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Hãy chọn thể loại stream!',
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            mode="multiple"
+                                            allowClear
+                                            style={{
+                                                width: '100%',
+                                            }}
+                                            placeholder="Chọn thể loại cho stream"
+                                            initialvalues={['Games']}
+                                            onChange={handleChange}
+                                            options={options}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item>
+                                        <Button size={"large"} type="primary" htmlType="submit" className="signup-form-button">
+                                            Lưu
+                                        </Button>
+                                    </Form.Item>
+                                </Form>
+                            </div>
                         </div>
                     </div>
                     <div className="chat-box">

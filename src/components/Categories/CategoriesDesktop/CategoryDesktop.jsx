@@ -4,12 +4,12 @@ import { FaEllipsisV } from "react-icons/fa";
 
 const CategoryDesktop = ({ category }) => {
   let srcImage = "";
-  if (category === "Games") srcImage = "images/categories/games.jpeg";
-  else if (category === "Music") srcImage = "images/categories/music.jpeg";
-  else if (category === "Sports") srcImage = "images/categories/sports.jpeg";
-  else if (category === "Movie") srcImage = "images/categories/creative.jpeg";
-  else if (category === "Dances") srcImage = "images/categories/dances.jpeg";
-  else if (category === "Idols") srcImage = "images/categories/idols.jpeg";
+  if (category.name === "Games") srcImage = "images/categories/games.jpeg";
+  else if (category.name === "Music") srcImage = "images/categories/music.jpeg";
+  else if (category.name === "Sports") srcImage = "images/categories/sports.jpeg";
+  else if (category.name === "Movie") srcImage = "images/categories/creative.jpeg";
+  else if (category.name === "Dances") srcImage = "images/categories/dances.jpeg";
+  else if (category.name === "Idols") srcImage = "images/categories/idols.jpeg";
 
   return (
     <StyledCategoryDesktop>
@@ -18,7 +18,7 @@ const CategoryDesktop = ({ category }) => {
           <img style={{width: '280px',height: '186px'}} src={srcImage} alt="" />
         </div>
         <div className="game-name">
-          <div className="name">{category}</div>
+          <div className="name">{category.name}</div>
           <div className="other-icon">
             <FaEllipsisV />
           </div>

@@ -2,7 +2,7 @@
 import GlobalStyles from "./assets/styles/Global";
 import { ThemeProvider } from "styled-components";
 import { lightTheme, darkTheme } from "./assets/styles/Theme";
-import {Provider} from 'react-redux';
+import {Provider, useDispatch} from 'react-redux';
 
 // React
 import { useEffect, useState } from "react";
@@ -29,10 +29,16 @@ import PublishStream from "./views/StreamView/PublishStream";
 import SignUp from "./views/Auth/SignUp";
 import {getToken} from "./utils/auth";
 import {UserProfile} from "./views/Auth/UserProfile";
+import {getListCategories} from "./store/category";
 
 const App = () => {
   const { darkStatus} = useSelector((state) => state.site);
   const {isLoggedIn} = useSelector(state => state.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getListCategories());
+  },[])
 
   return (
     <Provider store={store}>

@@ -1,16 +1,16 @@
 import { StyledCategoriesDesktop } from "./CategoryDesktop.styled";
 
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import CategoryDesktop from "./CategoryDesktop";
 import {useEffect} from "react";
+import {getListCategories} from "../../../store/category";
 
 const CategoriesDesktop = ({ title, boldTitle }) => {
-  const categories = useSelector((state) => state.category);
+  const {currentListCategories} = useSelector((state) => state.category);
 
   useEffect(() => {
-    console.log(categories);
-  }, [])
+  },[currentListCategories])
 
   return (
     <StyledCategoriesDesktop>
@@ -19,7 +19,7 @@ const CategoriesDesktop = ({ title, boldTitle }) => {
           <span>{boldTitle}</span> {title}
         </h1>
         <div className="list">
-          {categories.map((category, index) => {
+          {currentListCategories.map((category, index) => {
             return <CategoryDesktop category={category} key={index} />;
           })}
         </div>

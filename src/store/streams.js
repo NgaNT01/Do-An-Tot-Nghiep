@@ -2,14 +2,25 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {streamApi} from "../api/streamApi";
 export const startStream = createAsyncThunk('stream/startStream',async (payload) => {
     const response = await streamApi.startStream(payload);
-    console.log(response.data.message);
-    return response.data.message;
+    return response.data;
+});
+
+export const stopStream = createAsyncThunk('stream/stopStream',async (payload) => {
+    const response = await streamApi.stopStream(payload);
+    return response.data;
+});
+
+export const getListBroadcastingStreams = createAsyncThunk('stream/getListBroadcastingStreams',async () => {
+    const response = await streamApi.getListBroadcastingStreams();
+    console.log("stream",response)
+    return response.data;
 });
 
 const initialState = {
     inputSearch: '',
-    currentListUserStreaming: [],
+    currentBroadcastingStreams: [],
     currentListStream: [],
+    currentPublishStream: {},
 }
 
 const streamSlice = createSlice({
@@ -28,6 +39,18 @@ const streamSlice = createSlice({
         }
     },
     extraReducers: {
+        [startStream.pending.type]: () => {},
+        [startStream.fulfilled.type]: (state,action) => {
+            state.currentPublishStream = action.payload;
+        },
+        [stopStream.pending.type]: () => {},
+        [stopStream.fulfilled.type]: (state,action) => {
+            state.currentPublishStream = {};
+        },
+        [getListBroadcastingStreams.pending.type]: () => {},
+        [getListBroadcastingStreams.fulfilled.type]: (state,action) => {
+            state.currentBroadcastingStreams = action.payload;
+        },
     },
 });
 

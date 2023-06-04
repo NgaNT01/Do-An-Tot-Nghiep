@@ -1,18 +1,17 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {categoriesApi} from "../api/categoriesApi";
-export const getListCategories = createAsyncThunk('stream/startStream',async (payload) => {
+export const getListCategories = createAsyncThunk('category/getListCategories',async (payload) => {
     const response = await categoriesApi.getListCategories();
-    console.log(response.data);
     return response.data;
 });
 
 const initialState = {
     inputSearch: '',
-    currentListCategorìes: [],
+    currentListCategories: [],
 }
 
-const userSlice = createSlice({
-    name: "user",
+const categorySlice = createSlice({
+    name: "category",
     initialState,
     reducers: {
         signOut(state) {
@@ -27,9 +26,18 @@ const userSlice = createSlice({
         }
     },
     extraReducers: {
+        [getListCategories.pending.type]: (state,action) => {
+
+        },
+        [getListCategories.fulfilled.type]: (state,action) => {
+            state.currentListCategories = action.payload;
+        },
+        [getListCategories.rejected.type]: (state,action) => {
+
+        },
     },
 });
 
-const {actions,reducer: authReducer } = userSlice;
+const {actions,reducer: categoryReducers } = categorySlice;
 export const {signOut} = actions
-export default authReducer;
+export default categoryReducers;

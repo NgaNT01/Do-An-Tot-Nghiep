@@ -10,7 +10,7 @@ import { FiUsers, FiUserMinus, FiShield, FiTwitch } from "react-icons/fi";
 import { AiOutlineStar } from "react-icons/ai";
 import { BiUser, BiWallet } from "react-icons/bi";
 import { BsInbox, BsFileBarGraph } from "react-icons/bs";
-import { MdOutlineDarkMode, MdLanguage, MdOutlineLogout } from "react-icons/md";
+import { MdOutlineDarkMode, MdLanguage, MdOutlineLogout, MdOutlineAnalytics } from "react-icons/md";
 import { RiSettings2Line, RiArrowRightSLine } from "react-icons/ri";
 import { VscSettings } from "react-icons/vsc";
 
@@ -29,6 +29,7 @@ const ProfileDesktop = () => {
   const [profileStatus, setProfileStatus] = useState(false);
   const {darkStatus} = useSelector(state => state.site);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form] = Form.useForm();
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -63,13 +64,15 @@ const ProfileDesktop = () => {
         ...values,
         status: 'broadcasting',
       };
-      const message = await dispatch(startStream(params));
-    if (message) {
+      const result = await dispatch(startStream(params));
+    if (result) {
       await Swal.fire(
           'Thành công!',
           'Khởi tạo Live Stream thành công!',
           'success'
       )
+      setIsModalOpen(false);
+      form.resetFields();
     }
     else {
       await Swal.fire({
@@ -78,7 +81,7 @@ const ProfileDesktop = () => {
         text: "Đã có lỗi xảy ra!"
       })
     }
-      // history.push(`/publish/${getCurrentUser().username}`);
+      history.push(`/publish/${getCurrentUser().username}`);
   }
 
   const options = [
@@ -128,7 +131,7 @@ const ProfileDesktop = () => {
                 <li>
                   {/*<Link to="/auth/sign-in">*/}
                   <div className="item" style={darkStatus ? {color: '#fff'} : {color: '#000'}} onClick={showModal}>
-                    <VscSettings /> <span>Quản lý phát trực tiếp</span>
+                    <VscSettings /> <span>Bắt đầu phát trực tiếp</span>
                   </div>
                     <Modal title="Nhập thông tin luồng stream" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
                       <Form
@@ -138,6 +141,7 @@ const ProfileDesktop = () => {
                             remember: true,
                           }}
                           onFinish={onFinish}
+                          form={form}
                       >
                         <Form.Item
                             name="streamName"
@@ -204,6 +208,13 @@ const ProfileDesktop = () => {
                       </Form>
                     </Modal>
                   {/*</Link>*/}
+                </li>
+                <li>
+                  <Link to={`/auth/user-profile/${getCurrentUser().username}`}>
+                    <div className="item" style={darkStatus ? {color: '#fff'} : {color: '#000'}}>
+                      <MdOutlineAnalytics /> <span>Thống kê</span>
+                    </div>
+                  </Link>
                 </li>
                 <li>
                   <Link to="/auth/sign-in">

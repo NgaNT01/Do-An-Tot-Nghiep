@@ -25,12 +25,30 @@ export const StyledPublishStream = styled.div `
       border-radius: 10px;
       margin-left: 10px;
       background-color: white;
+      display: flex;
+      flex-direction: column;
       
-      .header-info {
-        background-color: #EFEFF1;
-        font-weight: bolder;
-        color: #00A2E8;
-        padding: 5px;
+      .stream-mode {
+        height: 15%;
+        .header-info {
+          background-color: #EFEFF1;
+          font-weight: bolder;
+          color: #00A2E8;
+          padding: 5px;
+          font-size: 20px;
+        }
+      }
+      
+      .modify-stream-info {
+        margin-top: 10px;
+        height: 85%;
+        .header-info {
+          background-color: #EFEFF1;
+          font-weight: bolder;
+          color: #00A2E8;
+          padding: 5px;
+          font-size: 20px;
+        }
       }
     }
     
@@ -52,6 +70,7 @@ export const StyledPublishStream = styled.div `
           font-weight: bolder;
           color: #00A2E8;
           padding: 5px;
+          font-size: 20px;
         }
       }
       
