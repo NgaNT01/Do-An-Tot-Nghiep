@@ -25,7 +25,7 @@ const PublishStream = () => {
     const [mediaConstraints,setMediaConstraints] = useState({video: true, audio: true});
     const [pc_config] = useState({'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]})
     const [sdpConstraints,setSdpConstraints] = useState({OfferToReceiveAudio: false,OfferToReceiveVideo: false})
-    const [websocketURL,setWebsocketURL] = useState("ws://178.128.124.146:5080/WebRTCAppEE/websocket");
+    const [websocketURL,setWebsocketURL] = useState("ws://188.166.221.237:5080/WebRTCAppEE/websocket");
     const [isShow, setIsShow] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [chatMessages, setChatMessages] = useState([]);

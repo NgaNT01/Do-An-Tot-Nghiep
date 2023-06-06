@@ -1,6 +1,7 @@
 import { StyledCategoryDesktop } from "./CategoryDesktop.styled";
 
 import { FaEllipsisV } from "react-icons/fa";
+import {Link} from "react-router-dom";
 
 const CategoryDesktop = ({ category }) => {
   let srcImage = "";
@@ -13,21 +14,23 @@ const CategoryDesktop = ({ category }) => {
 
   return (
     <StyledCategoryDesktop>
-      <div className="game-box">
-        <div className="game-picture">
-          <img style={{width: '280px',height: '186px'}} src={srcImage} alt="" />
-        </div>
-        <div className="game-name">
-          <div className="name">{category.name}</div>
-          <div className="other-icon">
-            <FaEllipsisV />
+      <Link to={`/category/${category.name}`}>
+        <div className="game-box">
+          <div className="game-picture">
+            <img style={{width: '280px',height: '186px'}} src={srcImage} alt="" />
+          </div>
+          <div className="game-name">
+            <div className="name">{category.name}</div>
+            <div className="other-icon">
+              <FaEllipsisV />
+            </div>
+          </div>
+          <div className="game-viewers">50 người xem</div>
+          <div className="tags">
+            <div className="tag">Tiếng Việt</div>
           </div>
         </div>
-        <div className="game-viewers">50 người xem</div>
-        <div className="tags">
-          <div className="tag">Tiếng Việt</div>
-        </div>
-      </div>
+      </Link>
     </StyledCategoryDesktop>
   );
 };
