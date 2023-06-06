@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {StyledStreamView} from "./StreamView.styled";
 import {WebRTCAdaptor} from "../../utils/js/webrtc_adaptor";
 import {Link, useParams} from "react-router-dom";
@@ -7,6 +7,9 @@ import {getCurrentUser} from "../../utils/auth";
 import {Button, Input} from "antd";
 import Message from "../../components/Share/Message";
 import {ShareAltOutlined, UserOutlined} from "@ant-design/icons";
+import {useDispatch} from "react-redux";
+import {getUserByName} from "../../store/user";
+import {getStreamInfoByUserName} from "../../store/streams";
 
 const StreamView = () => {
     let webRTCAdaptor = null;
@@ -21,12 +24,18 @@ const StreamView = () => {
     const [inputValue, setInputValue] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
     const chatMessageRef = useRef(null);
+    const dispatch = useDispatch();
+    const [streamerInfo, setStreamerInfo] = useState(null);
+    const [streamInfo, setStreamInfo] = useState(null);
 
-    useEffect(() => {
+    useEffect(async () => {
         webRTCAdaptor = initiateWebrtc();
         setWebRTC(webRTCAdaptor);
         setIsShow(true);
-
+        const streamer_info = await dispatch(getUserByName(streamName));
+        setStreamerInfo(streamer_info.payload)
+        const streamInfo = await dispatch(getStreamInfoByUserName(streamName));
+        setStreamInfo(streamInfo.payload);
         return () => {
             webRTCAdaptor.stop(streamName);
         }
@@ -142,10 +151,16 @@ const StreamView = () => {
                                     <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="" />
                                 </div>
                                 <div className="profile-info">
-                                    <div className="title">hello</div>
-                                    <div className="game">stream dau tien</div>
+                                    <div className="title">{streamerInfo === null ? "streamer" : streamerInfo.username}</div>
+                                    <div className="game">{streamInfo === null ? "description" : streamInfo.description}</div>
                                     <div className="tags">
-                                        <div className="tag">Tiếng Việt</div>
+                                        {streamInfo === null ? "category" :
+                                            streamInfo.categories.map((category,index) => {
+                                                return <div className="tag">
+                                                    {category.name}
+                                                </div>
+                                            })}
+
                                         {/*<div className="tag">Esports</div>*/}
                                     </div>
                                 </div>

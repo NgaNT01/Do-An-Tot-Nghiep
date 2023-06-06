@@ -5,10 +5,11 @@ import Header from "../../components/Header/Header";
 import {StyledPublishStream} from "./PublishStream.styled";
 import {useDispatch, useSelector} from "react-redux";
 import {getCurrentUser} from "../../utils/auth";
-import {Button, Form, Input, Select} from "antd";
+import {Button, Form, Input, Select, Modal} from "antd";
 import Message from "../../components/Share/Message";
 import {stopStream} from "../../store/streams";
-import {InfoCircleOutlined, PlayCircleOutlined} from "@ant-design/icons";
+import {ExclamationCircleFilled, InfoCircleOutlined, PlayCircleOutlined} from "@ant-design/icons";
+import Swal from "sweetalert2";
 
 const PublishStream = () => {
     let webRTCAdaptor = null;
@@ -18,6 +19,7 @@ const PublishStream = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const [form] = Form.useForm();
+    const { confirm } = Modal;
 
     const [streamName, setStreamName] = useState(useParams().streamName);
     const [mediaConstraints,setMediaConstraints] = useState({video: true, audio: true});
@@ -44,26 +46,23 @@ const PublishStream = () => {
         // setWebRTC(webRTCAdaptor);
         // setIsShow(true);
         // onStartPublishing(streamName);
-        //
-        // return () => {
-        //     webRTCAdaptor.stop(streamName);
-        //     setChatMessages([]);
-        //     setInputValue('');
-        //     setIsShow(false);
-        //     setWebRTC(null);
-        //     setMediaConstraints(null);
-        //     setSdpConstraints(null);
-        //     setStreamName('');
-        //     setWebsocketURL('');
-        // }
-        //
-        // return () => {
-        //     const params = {
-        //         streamId: currentPublishStream.streamId,
-        //         streamName: currentPublishStream.streamName
-        //     }
-        //     dispatch(stopStream(params));
-        // }
+
+        return () => {
+            const params = {
+                streamId: currentPublishStream.streamId,
+                streamName: currentPublishStream.streamName
+            }
+            dispatch(stopStream(params));
+            webRTCAdaptor.stop(streamName);
+            setChatMessages([]);
+            setInputValue('');
+            setIsShow(false);
+            setWebRTC(null);
+            setMediaConstraints(null);
+            setSdpConstraints(null);
+            setStreamName('');
+            setWebsocketURL('');
+        }
     },[]);
 
     const handleDisplayChat = (message) => {
@@ -180,6 +179,33 @@ const PublishStream = () => {
 
     }
 
+    const handleStopStream = () => {
+        confirm({
+            title: 'Bạn có chắc muốn kết thúc stream?',
+            icon: <ExclamationCircleFilled />,
+            content: 'Nhấn Có để dừng',
+            okText: 'Có',
+            okType: 'danger',
+            cancelText: 'Không',
+            onOk() {
+                const params = {
+                    streamId: currentPublishStream.streamId,
+                    streamName: currentPublishStream.streamName
+                }
+                dispatch(stopStream(params));
+                Swal.fire(
+                    'Thành công!',
+                    'Đã dừng stream!',
+                    'success'
+                )
+                history.push(`/`);
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    }
+
 
     return (
         <>
@@ -234,7 +260,7 @@ const PublishStream = () => {
                                         <Input
                                             size={"large"}
                                             prefix={<InfoCircleOutlined className="site-form-item-icon" />}
-                                            placeholder="Mô tả thông tin stream"
+                                            placeholder={`${currentPublishStream.description}`}
                                         />
                                     </Form.Item>
                                     <Form.Item
@@ -253,19 +279,35 @@ const PublishStream = () => {
                                                 width: '100%',
                                             }}
                                             placeholder="Chọn thể loại cho stream"
-                                            initialvalues={['Games']}
+                                            initialValues={currentPublishStream.categories}
                                             onChange={handleChange}
                                             options={options}
                                         />
                                     </Form.Item>
-                                    <Form.Item>
-                                        <Button size={"large"} type="primary" htmlType="submit" className="signup-form-button">
+                                    <Form.Item style={{float: 'right'}}>
+                                        <Button
+                                            size={"large"}
+                                            type="primary"
+                                            htmlType="submit"
+                                            className="signup-form-button"
+                                        >
                                             Lưu
                                         </Button>
                                     </Form.Item>
                                 </Form>
+
                             </div>
+
                         </div>
+                        <Button
+                            style={{margin: '10px'}}
+                            size="large"
+                            type="primary"
+                            danger
+                            onClick={handleStopStream}
+                        >
+                            Dừng phát trực tiếp
+                        </Button>
                     </div>
                     <div className="chat-box">
                         <div className="box-header">

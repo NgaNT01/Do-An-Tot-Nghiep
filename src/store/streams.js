@@ -12,7 +12,11 @@ export const stopStream = createAsyncThunk('stream/stopStream',async (payload) =
 
 export const getListBroadcastingStreams = createAsyncThunk('stream/getListBroadcastingStreams',async () => {
     const response = await streamApi.getListBroadcastingStreams();
-    console.log("stream",response)
+    return response.data;
+});
+
+export const getStreamInfoByUserName = createAsyncThunk('stream/getStreamInfoByUserName',async (payload) => {
+    const response = await streamApi.getStreamInfoByUserName(payload);
     return response.data;
 });
 

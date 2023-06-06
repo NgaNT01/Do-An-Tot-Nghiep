@@ -19,7 +19,11 @@ const userApi = {
       return axiosClientAnt.get(url);
     },
     getUserById: (params) => {
-        const url = `/user/profile/${params}`;
+        const url = `/auth/user-profile/${params}`;
+        return axiosClient.get(url)
+    },
+    getUserByName: (params) => {
+        const url = `/auth/user-by-name/${params}`;
         return axiosClient.get(url)
     },
     findUser: (params) => {

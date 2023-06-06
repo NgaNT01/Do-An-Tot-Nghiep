@@ -25,6 +25,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const { currentListUser } = useSelector((state) => state.user);
   const { currentListCategories } = useSelector((state) => state.category);
+  const {currentBroadcastingStreams} = useSelector(state => state.stream)
 
   useEffect( () => {dispatch(cleanUsersStreamList());
     // dispatch(getListUsersStreaming());

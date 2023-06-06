@@ -1,12 +1,18 @@
 import { StyledChannelsDesktop } from "./ChannelDesktop.styled";
 
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import ChannelDesktop from "./ChannelDesktop";
+import {useEffect} from "react";
+import {getUserById} from "../../../store/user";
 
 const ChannelsDesktop = ({ channelTitle, video }) => {
   const { currentListUser } = useSelector((state) => state.user);
-  const {currentBroadcastingStreams} = useSelector(state => state.stream)
+  const {currentBroadcastingStreams} = useSelector(state => state.stream);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+  },[])
 
   return (
     <StyledChannelsDesktop>

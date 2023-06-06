@@ -44,8 +44,12 @@ export const getListUsersStreaming = createAsyncThunk('auth/getListUsersStreamin
 
 export const getUserById = createAsyncThunk('auth/getUserById',async (payload, thunkAPI) => {
   const response = await userApi.getUserById(payload);
-  console.log("user",response.data.data);
-  return response.data.data;
+  return response.data;
+});
+
+export const getUserByName = createAsyncThunk('auth/getUserByName',async (payload, thunkAPI) => {
+    const response = await userApi.getUserByName(payload);
+    return response.data;
 });
 
 export const cleanUsersStreamList = createAsyncThunk('auth/cleanUsersStreamList', (payload, thunkAPI) => {
@@ -144,7 +148,6 @@ const userSlice = createSlice({
         },
         [getUserById.fulfilled.type]: (state,action) => {
             state.isLoading = false;
-            state.currentUser = action.payload;
         },
         [getUserById.rejected.type]: (state) => {
             state.isLoading = false;
