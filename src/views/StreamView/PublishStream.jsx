@@ -42,10 +42,10 @@ const PublishStream = () => {
 
     useEffect(() => {
 
-        // webRTCAdaptor = initiateWebrtc();
-        // setWebRTC(webRTCAdaptor);
-        // setIsShow(true);
-        // onStartPublishing(streamName);
+        webRTCAdaptor = initiateWebrtc();
+        setWebRTC(webRTCAdaptor);
+        setIsShow(true);
+        onStartPublishing(streamName);
 
         return () => {
             const params = {

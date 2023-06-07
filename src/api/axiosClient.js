@@ -2,10 +2,10 @@ import axios from "axios";
 import {getToken} from "../utils/auth";
 
 const axiosClient = axios.create({
-    baseURL: 'http://localhost:8080/api',
+    baseURL: 'https://tannga.space:8443/api',
     headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'http://localhost:3000'
+        'Access-Control-Allow-Origin': '*'
     },
 })
 
