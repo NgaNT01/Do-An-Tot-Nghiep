@@ -10,6 +10,7 @@ import {ShareAltOutlined, UserOutlined} from "@ant-design/icons";
 import {useDispatch} from "react-redux";
 import {getUserByName} from "../../store/user";
 import {getStreamInfoByUserName} from "../../store/streams";
+import axios from "axios";
 
 const StreamView = () => {
     let webRTCAdaptor = null;
@@ -27,6 +28,7 @@ const StreamView = () => {
     const dispatch = useDispatch();
     const [streamerInfo, setStreamerInfo] = useState(null);
     const [streamInfo, setStreamInfo] = useState(null);
+    const [webRTCViewerCount, setWebRTCViewerCount] = useState(null);
 
     useEffect(async () => {
         webRTCAdaptor = initiateWebrtc();
@@ -41,9 +43,22 @@ const StreamView = () => {
         }
     },[]);
 
+    // useEffect(() => {
+    //     chatMessageRef.current.scrollIntoView({ behavior: "smooth" });
+    // }, [chatMessages])
+
     useEffect(() => {
-        chatMessageRef.current.scrollIntoView({ behavior: "smooth" });
-    }, [chatMessages])
+        let interval = setInterval(() => {
+            axios.get(`http://188.166.221.237:5080/WebRTCAppEE/rest/v2/broadcasts/${streamName}`).then((res) => {
+                setWebRTCViewerCount(res.data.webRTCViewerCount);
+
+            })
+
+        }, 2000);
+        return () => {
+            clearInterval(interval);
+        };
+    },[])
 
     function initiateWebrtc() {
         return new WebRTCAdaptor({
@@ -165,7 +180,7 @@ const StreamView = () => {
                                     </div>
                                 </div>
                                 <div className="buttons">
-                                    <UserOutlined style={{marginLeft: '800px',marginTop: '14px'}}/> <span style={{marginTop: '14px',marginLeft: '5px'}}>1</span>
+                                    <UserOutlined style={{marginLeft: '780px',marginTop: '14px'}}/> <span style={{marginTop: '10px',marginLeft: '5px'}}>{webRTCViewerCount}</span>
                                     <Button type="primary" size="large" style={{marginLeft: '50px'}}>+ Theo dõi</Button>
                                     <Button size="large" style={{marginLeft: '10px'}}><ShareAltOutlined/>Chia sẻ</Button>
                                 </div>

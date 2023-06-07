@@ -29,7 +29,7 @@ const ChannelDesktop = ({ stream, imageId, video }) => {
                         <img src="../../../../public/images/games/game-elder.jpg" alt="" />
                         <div className={`live ${video ? "invisible" : ""}`}>trực tiếp</div>
                         <div className={`viewers ${video ? "invisible" : ""}`}>
-                            {/*{stream.viewerCount} người xem*/} 3 người xem
+                            {/*{stream.viewerCount} người xem*/}
                         </div>
                         <div className={`video ${video ? "video-visible" : ""}`}>
                             <div className="video-tag top">11:44</div>

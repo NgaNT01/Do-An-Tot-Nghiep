@@ -6,7 +6,7 @@ export const StyledStreamView = styled.div`
     background-color: rgb(232,232,232);
     
     .stream-view-box {
-      width: 80%;
+      width: 75%;
       margin-left: 10px;
       background-color: rgb(256,256,256);
       border-radius: 10px;
@@ -14,7 +14,7 @@ export const StyledStreamView = styled.div`
       .video-view {
         video {
           width: 100%;
-          height: 700px;
+          height: 650px;
           background-color: black;
         }
       }
@@ -86,7 +86,7 @@ export const StyledStreamView = styled.div`
     }
     .chat-box {
       background-color: rgb(256,256,256);
-      width: 20%;
+      width: 25%;
       border-radius: 10px;
       margin-left: 10px;
       margin-right: 10px;

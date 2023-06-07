@@ -71,6 +71,7 @@ export const StyledPublishStream = styled.div `
           color: #00A2E8;
           padding: 5px;
           font-size: 20px;
+          margin-bottom: 5px;
         }
       }
       

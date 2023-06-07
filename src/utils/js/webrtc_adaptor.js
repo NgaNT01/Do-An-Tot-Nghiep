@@ -3,12 +3,6 @@ import {WebSocketAdaptor} from "./websocket_adaptor.js"
 import {MediaManager} from "./media_manager.js" 
 import {SoundMeter} from "./soundmeter.js" 
 
-
-/**
- * This structure is used to handle large size data channel messages (like image)
- * which should be splitted into chunks while sending and receiving.
- * 
-*/
 class ReceivingMessage{
 		constructor(size) {
 		this.size = size;
@@ -17,26 +11,6 @@ class ReceivingMessage{
 	}
 }
 
-/**
- * WebRTCAdaptor Class is interface to the JS SDK of Ant Media Server (AMS). This class manages the signalling, 
- * keeps the states of peers.
- * 
- * This class is used for peer-to-peer signalling,
- * publisher and player signalling and conference. 
- * 
- * Also it is responsible for some room management in conference case.
- * 
- * There are different use cases in AMS. This class is used for all of them.
- * 
- * WebRTC Publish
- * WebRTC Play
- * WebRTC Data Channel Connection
- * WebRTC Conference
- * WebRTC Multitrack Play
- * WebRTC Multitrack Conference
- * WebRTC peer-to-peer session
- * 
- */
 export class WebRTCAdaptor
 {
 	constructor(initialValues){
@@ -1559,7 +1533,6 @@ export class WebRTCAdaptor
 	applyConstraints(streamId, newConstaints) {
 		this.mediaManager.applyConstraints(streamId, newConstaints);
 	}
-
 
 	applyConstraints(newConstaints) {
 		this.mediaManager.applyConstraints(newConstaints);
