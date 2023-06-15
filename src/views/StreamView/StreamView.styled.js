@@ -147,6 +147,11 @@ export const StyledStreamView = styled.div`
           width: 100%
         }
       }
+      em-emoji-picker {
+        position: absolute;
+        right: 0;
+        bottom: 50px;
+      }
     }
   }
   }

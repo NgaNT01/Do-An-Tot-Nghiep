@@ -100,6 +100,12 @@ export const StyledPublishStream = styled.div `
           margin-right: 10px;
         }
       }
+      
+      em-emoji-picker {
+        position: absolute;
+        right: 0;
+        bottom: 50px;
+      }
     }
   }
 `

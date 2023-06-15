@@ -13,6 +13,8 @@ import Swal from "sweetalert2";
 import {MdInsertEmoticon} from "react-icons/all";
 import Icon from '@mdi/react';
 import { mdiEmoticonHappyOutline } from '@mdi/js';
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
 
 const PublishStream = () => {
     let webRTCAdaptor = null;
@@ -33,6 +35,7 @@ const PublishStream = () => {
     const [inputValue, setInputValue] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
     const chatMessageRef = useRef(null);
+    const [showPicker, setShowPicker] = useState(false);
 
     const options = [
         {label: 'Games', value: 'Games'},
@@ -151,6 +154,14 @@ const PublishStream = () => {
 
     }
 
+    const handleEmojiSelect = (emoji) => {
+        setInputValue(inputValue + emoji.native);
+    };
+
+    const togglePicker = () => {
+        setShowPicker(!showPicker);
+    };
+
     const onStartPublishing = (streamName) => {
         webRTCAdaptor.publish(streamName,'');
     }
@@ -161,6 +172,17 @@ const PublishStream = () => {
         webRTC.sendData(streamName, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${e.target.value}`);
         setChatMessages(messages => [...messages, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${e.target.value}`]);
         setInputValue('');
+    }
+
+    const onClickSend = () => {
+        let now = new Date();
+        webRTC.sendData(streamName, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${inputValue}`);
+        setChatMessages(messages => [...messages, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${inputValue}`]);
+        setInputValue('');
+    }
+
+    const handleClickOutsidePicker = () => {
+        setShowPicker(false)
     }
 
     const handleChangeDesktopCamera = () => {
@@ -337,11 +359,32 @@ const PublishStream = () => {
                             >
 
                             </Input>
-                            <Button type="primary" className="send-button" size="large">Gửi</Button>
-                            {/*<Button type="primary" className="image-button" size="large">Ảnh</Button>*/}
-                            {/*<MdInsertEmoticon style={{width: '100px'}}/>*/}
-                            <Icon path={mdiEmoticonHappyOutline} size={1} style={{width: '100px', height: '2.5rem'}} />
+                            <Button
+                                type="primary"
+                                size="large"
+                                className="send-button"
+                                onClick={onClickSend}
+                            >
+                                Gửi
+                            </Button>
+                            <Button
+                                size="large"
+                                onClick={togglePicker}
+                                style={{fontSize: '20px'}}
+                            >
+                                😀
+                            </Button>
                         </div>
+                        {showPicker && (
+                            <Picker
+                                onEmojiSelect={handleEmojiSelect}
+                                emojiSize={24}
+                                showPreview={true}
+                                data={data}
+                                className="picker"
+                                onClickOutside={handleClickOutsidePicker}
+                            />
+                        )}
                     </div>
                 </div>
             </StyledPublishStream>

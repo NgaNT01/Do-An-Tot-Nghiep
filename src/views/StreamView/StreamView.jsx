@@ -13,6 +13,8 @@ import {getStreamInfoByUserName} from "../../store/streams";
 import axios from "axios";
 import Icon from '@mdi/react';
 import { mdiEmoticonHappyOutline } from '@mdi/js';
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
 
 const StreamView = () => {
     let webRTCAdaptor = null;
@@ -26,6 +28,7 @@ const StreamView = () => {
     const [isShow, setIsShow] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
+    const [showPicker, setShowPicker] = useState(false);
     const chatMessageRef = useRef(null);
     const dispatch = useDispatch();
     const [streamerInfo, setStreamerInfo] = useState(null);
@@ -141,6 +144,14 @@ const StreamView = () => {
         webRTCAdaptor.play(streamName, token);
     }
 
+    const handleEmojiSelect = (emoji) => {
+        setInputValue(inputValue + emoji.native);
+    };
+
+    const togglePicker = () => {
+        setShowPicker(!showPicker);
+    };
+
     const handleDisplayChat = (message) => {
         setChatMessages((messages) => [...messages, message]);
         console.log(chatMessages);
@@ -152,6 +163,17 @@ const StreamView = () => {
         webRTC.sendData(streamName, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${e.target.value}`);
         setChatMessages(messages => [...messages, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${e.target.value}`]);
         setInputValue('');
+    }
+
+    const onClickSend = () => {
+        let now = new Date();
+        webRTC.sendData(streamName, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${inputValue}`);
+        setChatMessages(messages => [...messages, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${inputValue}`]);
+        setInputValue('');
+    }
+
+    const handleClickOutsidePicker = () => {
+        setShowPicker(false)
     }
 
     return (
@@ -166,7 +188,9 @@ const StreamView = () => {
                         <div className="user-info">
                             <div className="left">
                                 <div className="pp">
-                                    <img src="/src/assets/images/user-icon-jpg-4.jpg" alt="" />
+                                    {streamerInfo !== null && streamerInfo.avatarUrl !== null ?
+                                        <img src={streamerInfo.avatarUrl} alt="" /> :
+                                        <img src="/src/assets/images/user-icon-jpg-4.jpg" alt="" />}
                                 </div>
                                 <div className="profile-info">
                                     <div className="title">{streamerInfo === null ? "streamer" : streamerInfo.username}</div>
@@ -218,9 +242,21 @@ const StreamView = () => {
                             >
 
                             </Input>
-                            <Button type="primary" size="large" className="send-button">Gửi</Button>
-                            {/*<Button type="primary" size="large" className="image-button">Ảnh</Button>*/}
-                                <Icon path={mdiEmoticonHappyOutline} size={1} style={{width: '100px', height: '2.5rem'}} />
+                            <Button
+                                type="primary"
+                                size="large"
+                                className="send-button"
+                                onClick={onClickSend}
+                            >
+                                Gửi
+                            </Button>
+                            <Button
+                                size="large"
+                                onClick={togglePicker}
+                                style={{fontSize: '20px'}}
+                            >
+                                😀
+                            </Button>
                         </div> :
                         <div className="box-footer-unlogin">
                             <span style={{fontWeight: 'bolder'}}>Nhớ 8 với những người xem chung nhé</span>
@@ -229,6 +265,16 @@ const StreamView = () => {
                                 <Button className="signin-btn" type="primary" size="large">Đăng nhập</Button>
                             </Link>
                         </div>}
+                        {showPicker && (
+                            <Picker
+                                onEmojiSelect={handleEmojiSelect}
+                                emojiSize={24}
+                                showPreview={true}
+                                data={data}
+                                className="picker"
+                                onClickOutside={handleClickOutsidePicker}
+                            />
+                        )}
                     </div>
                 </div>
             </StyledStreamView>
