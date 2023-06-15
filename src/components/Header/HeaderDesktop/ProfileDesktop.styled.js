@@ -4,16 +4,20 @@ export const StyledProfileDesktop = styled.div`
   .profile-box {
     cursor: pointer;
     position: relative;
+    
+    img {
+      border-radius: 999px;
+    }
 
     .profile {
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
       border-radius: 999px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
-      background-color: deeppink;
+      //background-color: deeppink;
       font-size: 22px;
     }
 
@@ -49,7 +53,7 @@ export const StyledProfileDesktop = styled.div`
             width: 40px;
             height: 40px;
             border-radius: 999px;
-            background-color: deeppink;
+            //background-color: deeppink;
             color: #fff;
             display: flex;
             align-items: center;

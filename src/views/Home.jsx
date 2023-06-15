@@ -41,10 +41,10 @@ const Home = () => {
       <StyledHome>
         <div className="home-desktop">
           <div className="home-box">
-            <ChannelsDesktop channelTitle="Các luồng trực tiếp mới nhất" />
+            <ChannelsDesktop currentBroadcastingStreams={currentBroadcastingStreams} channelTitle="Các live stream mới nhất" />
             {/*{currentListUser.length >= 5 ? <ShowMore title="Show more" /> : null}*/}
             <ShowMore title="Show more" />
-            <ChannelsDesktop channelTitle="Top 10 luồng trực tiếp có nhiều lượt xem nhất" />
+            <ChannelsDesktop currentBroadcastingStreams={currentBroadcastingStreams} channelTitle="Top 10 live stream có nhiều lượt xem nhất" />
             <ShowMore title="Show more" />
             <CategoriesDesktop
               title="Chọn danh mục bạn thích"

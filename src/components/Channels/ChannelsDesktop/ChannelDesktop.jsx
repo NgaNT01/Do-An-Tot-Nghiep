@@ -40,7 +40,9 @@ const ChannelDesktop = ({ stream, imageId, video }) => {
                     <div className="channel-info">
                         <div className="left">
                             <div className="pp">
-                                <img src={`https://i.pravatar.cc/5${imageId}`} alt="" />
+                                {currentUser !== null && currentUser.avatarUrl !== null ? <img src={currentUser.avatarUrl} alt="" />
+                                    :
+                                    <img src={`https://i.pravatar.cc/5${imageId}`} alt="" />}
                             </div>
                             <div className="profile-info">
                                 <div className="title">{stream.streamName}</div>

@@ -14,6 +14,10 @@ export const streamApi = {
         const url = '/stream/broadcasting-stream';
         return axiosClient.get(url);
     },
+    getListBroadcastingStreamsByCategory: (params) => {
+        const url = `/stream/stream-by-category/${params}`;
+        return axiosClient.get(url);
+    },
     getStreamInfoByUserName: (params) => {
         const url = `/stream/stream-by-username/${params}`;
         return axiosClient.get(url);

@@ -12,7 +12,8 @@ export const signIn = createAsyncThunk(
       const accessToken = response.data.accessToken;
       const currentUser = {
           username: response.data.username,
-          email: response.data.email
+          email: response.data.email,
+          avatar_url: response.data.avatar_url
       };
       localStorage.setItem('access_token', accessToken);
       localStorage.setItem('current_user',JSON.stringify(currentUser));
@@ -67,7 +68,8 @@ const initialState = {
   isLoading: false,
   inputSearch: '',
   currentListUser: [],
-  currentUser: {}
+  currentUser: {},
+  currentStream: {}
 }
 
 const userSlice = createSlice({

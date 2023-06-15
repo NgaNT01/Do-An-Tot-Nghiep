@@ -15,6 +15,11 @@ export const getListBroadcastingStreams = createAsyncThunk('stream/getListBroadc
     return response.data;
 });
 
+export const getListBroadcastingStreamsByCategory = createAsyncThunk('stream/getListBroadcastingStreamsByCategory',async (payload) => {
+    const response = await streamApi.getListBroadcastingStreamsByCategory(payload);
+    return response.data;
+});
+
 export const getStreamInfoByUserName = createAsyncThunk('stream/getStreamInfoByUserName',async (payload) => {
     const response = await streamApi.getStreamInfoByUserName(payload);
     return response.data;
@@ -23,6 +28,7 @@ export const getStreamInfoByUserName = createAsyncThunk('stream/getStreamInfoByU
 const initialState = {
     inputSearch: '',
     currentBroadcastingStreams: [],
+    currentBroadcastingStreamsByCategory: [],
     currentListStream: [],
     currentPublishStream: {},
 }
@@ -54,6 +60,10 @@ const streamSlice = createSlice({
         [getListBroadcastingStreams.pending.type]: () => {},
         [getListBroadcastingStreams.fulfilled.type]: (state,action) => {
             state.currentBroadcastingStreams = action.payload;
+        },
+        [getListBroadcastingStreamsByCategory.pending.type]: () => {},
+        [getListBroadcastingStreamsByCategory.fulfilled.type]: (state,action) => {
+            state.currentBroadcastingStreamsByCategory = action.payload;
         },
     },
 });

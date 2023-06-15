@@ -25,10 +25,10 @@ const CategoryDesktop = ({ category }) => {
               <FaEllipsisV />
             </div>
           </div>
-          <div className="game-viewers">50 người xem</div>
-          <div className="tags">
-            <div className="tag">Tiếng Việt</div>
-          </div>
+          {/*<div className="game-viewers">50 người xem</div>*/}
+          {/*<div className="tags">*/}
+          {/*  <div className="tag">Tiếng Việt</div>*/}
+          {/*</div>*/}
         </div>
       </Link>
     </StyledCategoryDesktop>

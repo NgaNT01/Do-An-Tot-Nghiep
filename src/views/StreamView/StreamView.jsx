@@ -11,6 +11,8 @@ import {useDispatch} from "react-redux";
 import {getUserByName} from "../../store/user";
 import {getStreamInfoByUserName} from "../../store/streams";
 import axios from "axios";
+import Icon from '@mdi/react';
+import { mdiEmoticonHappyOutline } from '@mdi/js';
 
 const StreamView = () => {
     let webRTCAdaptor = null;
@@ -33,6 +35,7 @@ const StreamView = () => {
     useEffect(async () => {
         webRTCAdaptor = initiateWebrtc();
         setWebRTC(webRTCAdaptor);
+        console.log("adaptor của viewer", webRTCAdaptor);
         setIsShow(true);
         const streamer_info = await dispatch(getUserByName(streamName));
         setStreamerInfo(streamer_info.payload)
@@ -163,7 +166,7 @@ const StreamView = () => {
                         <div className="user-info">
                             <div className="left">
                                 <div className="pp">
-                                    <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="" />
+                                    <img src="/src/assets/images/user-icon-jpg-4.jpg" alt="" />
                                 </div>
                                 <div className="profile-info">
                                     <div className="title">{streamerInfo === null ? "streamer" : streamerInfo.username}</div>
@@ -211,11 +214,13 @@ const StreamView = () => {
                                 onPressEnter={onEnterChat}
                                 value={inputValue}
                                 onChange={(event) => setInputValue(event.target.value)}
+                                style={{width: '300px'}}
                             >
 
                             </Input>
                             <Button type="primary" size="large" className="send-button">Gửi</Button>
-                            <Button type="primary" size="large" className="image-button">Ảnh</Button>
+                            {/*<Button type="primary" size="large" className="image-button">Ảnh</Button>*/}
+                                <Icon path={mdiEmoticonHappyOutline} size={1} style={{width: '100px', height: '2.5rem'}} />
                         </div> :
                         <div className="box-footer-unlogin">
                             <span style={{fontWeight: 'bolder'}}>Nhớ 8 với những người xem chung nhé</span>

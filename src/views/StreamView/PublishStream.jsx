@@ -10,6 +10,9 @@ import Message from "../../components/Share/Message";
 import {stopStream} from "../../store/streams";
 import {ExclamationCircleFilled, InfoCircleOutlined, PlayCircleOutlined} from "@ant-design/icons";
 import Swal from "sweetalert2";
+import {MdInsertEmoticon} from "react-icons/all";
+import Icon from '@mdi/react';
+import { mdiEmoticonHappyOutline } from '@mdi/js';
 
 const PublishStream = () => {
     let webRTCAdaptor = null;
@@ -44,6 +47,7 @@ const PublishStream = () => {
 
         webRTCAdaptor = initiateWebrtc();
         setWebRTC(webRTCAdaptor);
+        console.log("adaptor của stream",webRTCAdaptor);
         setIsShow(true);
         onStartPublishing(streamName);
 
@@ -334,7 +338,9 @@ const PublishStream = () => {
 
                             </Input>
                             <Button type="primary" className="send-button" size="large">Gửi</Button>
-                            <Button type="primary" className="image-button" size="large">Ảnh</Button>
+                            {/*<Button type="primary" className="image-button" size="large">Ảnh</Button>*/}
+                            {/*<MdInsertEmoticon style={{width: '100px'}}/>*/}
+                            <Icon path={mdiEmoticonHappyOutline} size={1} style={{width: '100px', height: '2.5rem'}} />
                         </div>
                     </div>
                 </div>

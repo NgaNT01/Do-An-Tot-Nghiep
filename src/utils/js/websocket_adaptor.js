@@ -47,7 +47,7 @@ export class WebSocketAdaptor
         this.wsConn.onopen = () => {
             if (this.debug) 
             {
-                console.debug("websocket connected");
+                console.log("websocket connected");
             }
     
             this.pingTimerId = setInterval(() => {
@@ -71,7 +71,7 @@ export class WebSocketAdaptor
                 //this command is received first, when publishing so playmode is false
 
                 if (this.debug) {
-                    console.debug("received start command");
+                    console.log("received start command");
                 }
 
                 this.webrtcadaptor.startPublishing(obj.streamId);
@@ -79,8 +79,8 @@ export class WebSocketAdaptor
             else if (obj.command == "takeCandidate") {
 
                 if (this.debug) {
-                    console.debug("received ice candidate for stream id " + obj.streamId);
-                    console.debug(obj.candidate);
+                    console.log("received ice candidate for stream id " + obj.streamId);
+                    console.log(obj.candidate);
                 }
 
                 this.webrtcadaptor.takeCandidate(obj.streamId, obj.label, obj.candidate);
@@ -88,7 +88,7 @@ export class WebSocketAdaptor
             } else if (obj.command == "takeConfiguration") {
 
                 if (this.debug) {
-                    console.debug("received remote description type for stream id: " + obj.streamId + " type: " + obj.type );
+                    console.log("received remote description type for stream id: " + obj.streamId + " type: " + obj.type );
                 }
                 this.webrtcadaptor.takeConfiguration(obj.streamId, obj.sdp, obj.type, obj.idMapping);
                 
@@ -96,7 +96,7 @@ export class WebSocketAdaptor
             }
             else if (obj.command == "stop") {
             	if (this.debug){
-                	console.debug("Stop command received");
+                	console.log("Stop command received");
                 }
                 this.webrtcadaptor.closePeerConnection(obj.streamId);
             }
@@ -143,7 +143,7 @@ export class WebSocketAdaptor
         	this.connecting = false;
             this.connected = false;
             if (this.debug) {
-            	console.debug("connection closed.");
+            	console.log("connection closed.");
             }
             this.clearPingTimer();
             this.callback("closed", event);
@@ -154,7 +154,7 @@ export class WebSocketAdaptor
     clearPingTimer(){
         if (this.pingTimerId != -1) {
             if (this.debug) {
-                console.debug("Clearing ping message timer");
+                console.log("Clearing ping message timer");
             }
             clearInterval(this.pingTimerId);
             this.pingTimerId = -1;
@@ -183,7 +183,7 @@ export class WebSocketAdaptor
         }
         this.wsConn.send(text);
         if (this.debug) {
-        	console.debug("sent message:" +text);
+        	console.log("sent message:" +text);
         }
     }
 

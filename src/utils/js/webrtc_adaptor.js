@@ -640,6 +640,7 @@ export class WebRTCAdaptor
 				if(this.mediaManager.localStream != null) {
 					//AddStream is deprecated thus updated to the addTrack after version 2.4.2.1
 					this.mediaManager.localStream.getTracks().forEach(track => this.remotePeerConnection[streamId].addTrack(track, this.mediaManager.localStream));
+					console.log("add track successfully");
 				}
 			}
 			this.remotePeerConnection[streamId].onicecandidate = event => {
@@ -696,7 +697,10 @@ export class WebRTCAdaptor
 			}
 
 			this.remotePeerConnection[streamId].oniceconnectionstatechange = event => {
-				var obj = {state:this.remotePeerConnection[streamId].iceConnectionState, streamId:streamId};
+				var obj = {
+					state: this.remotePeerConnection[streamId].iceConnectionState,
+					streamId: streamId
+				};
 				this.callback("ice_connection_state_changed",obj);
 
 				//
@@ -783,11 +787,12 @@ export class WebRTCAdaptor
 	 */
 	gotDescription(configuration, streamId)
 	{
+		console.log("Signaling state", this.remotePeerConnection[streamId].signalingState);
 		this.remotePeerConnection[streamId]
 		.setLocalDescription(configuration)
 		.then(responose =>  {
-			console.debug("Set local description successfully for stream Id " + streamId);
-
+			console.log("Set local description successfully for stream Id " + streamId);
+			console.log("Signaling state", this.remotePeerConnection[streamId].signalingState);
 			var jsCmd = {
 					command : "takeConfiguration",
 					streamId : streamId,
@@ -797,8 +802,8 @@ export class WebRTCAdaptor
 			};
 
 			if (this.debug) {
-				console.debug("local sdp: ");
-				console.debug(configuration.sdp);
+				console.log("local sdp: ");
+				console.log(configuration.sdp);
 			}
 
 			this.webSocketAdaptor.send(JSON.stringify(jsCmd));
@@ -840,14 +845,14 @@ export class WebRTCAdaptor
 		})).then(response =>  {
 
 			if (this.debug) {
-				console.debug("set remote description is succesfull with response: " + response + " for stream : "
+				console.log("set remote description is succesfull with response: " + response + " for stream : "
 						+ streamId + " and type: " + type);
-				console.debug(conf);
+				console.log(conf);
 			}
 
 			this.remoteDescriptionSet[streamId] = true;
 			var length = this.iceCandidateList[streamId].length;
-			console.debug("Ice candidate list size to be added: " + length);
+			console.log("Ice candidate list size to be added: " + length);
 			for (var i = 0; i < length; i++) {
 				this.addIceCandidate(streamId, this.iceCandidateList[streamId][i]);
 			}
@@ -873,7 +878,7 @@ export class WebRTCAdaptor
 
 		}).catch((error) => {
 			if (this.debug) {
-				console.error("set remote description is failed with error: " + error);
+				console.log("set remote description is failed with error: " + error);
 			}
 			if(error.toString().indexOf("InvalidAccessError") > -1 || error.toString().indexOf("setRemoteDescription")  > -1){
 				/**
@@ -912,7 +917,7 @@ export class WebRTCAdaptor
 			this.addIceCandidate(streamId, candidate);
 		}
 		else {
-			console.debug("Ice candidate is added to list because remote description is not set yet");
+			console.log("Ice candidate is added to list because remote description is not set yet");
 			this.iceCandidateList[streamId].push(candidate);
 		}
 	};
@@ -951,8 +956,8 @@ export class WebRTCAdaptor
 				}
 			})
 			.catch((error) => {
-				console.error("ice candiate cannot be added for stream id: " + streamId + " error is: " + error  );
-				console.error(candidate);
+				console.log("ice candiate cannot be added for stream id: " + streamId + " error is: " + error  );
+				console.log(candidate);
 			});
 		}
 		else {
@@ -976,6 +981,7 @@ export class WebRTCAdaptor
 		this.remotePeerConnection[streamId].createOffer(this.sdp_constraints)
 		.then(configuration => {
 			this.gotDescription(configuration, streamId);
+			console.log("sdp offer:",configuration);
 		})
 		.catch((error) => {
 			console.error("create offer error for stream id: " + streamId + " error: " + error);
