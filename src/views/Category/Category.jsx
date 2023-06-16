@@ -6,6 +6,7 @@ import {Tabs} from "antd";
 import ChannelsDesktop from "../../components/Channels/ChannelsDesktop/ChannelsDesktop";
 import {useDispatch, useSelector} from "react-redux";
 import {getListBroadcastingStreamsByCategory} from "../../store/streams";
+import Seperate from "../../components/Share/Seperate";
 
 const Category = () => {
     const [categoryName, setCategoryName] = useState(useParams().category);
@@ -64,10 +65,11 @@ const Category = () => {
                         </div>
                     </div>
                 </div>
+                <Seperate/>
                 <div className="content-box">
                     <Tabs
                         defaultActiveKey="1"
-                        size="large"
+                        size="small"
                         tabBarStyle={{fontWeight: 'bold'}}
                         items={items}
                         onChange={onChange}

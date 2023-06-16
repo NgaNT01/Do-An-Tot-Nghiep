@@ -24,7 +24,7 @@ const StreamView = () => {
     const [token, setToken] = useState('');
     const [pc_config] = useState({'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]})
     const [sdpConstraints,setSdpConstraints] = useState({OfferToReceiveAudio: true,OfferToReceiveVideo: true})
-    const [websocketURL,setWebsocketURL] = useState("ws://188.166.221.237:5080/WebRTCAppEE/websocket");
+    const [websocketURL,setWebsocketURL] = useState("wss://baongan.online:5443/WebRTCAppEE/websocket");
     const [isShow, setIsShow] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [chatMessages, setChatMessages] = useState([]);

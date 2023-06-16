@@ -30,7 +30,7 @@ const PublishStream = () => {
     const [mediaConstraints,setMediaConstraints] = useState({video: true, audio: true});
     const [pc_config] = useState({'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]})
     const [sdpConstraints,setSdpConstraints] = useState({OfferToReceiveAudio: false,OfferToReceiveVideo: false})
-    const [websocketURL,setWebsocketURL] = useState("ws://188.166.221.237:5080/WebRTCAppEE/websocket");
+    const [websocketURL,setWebsocketURL] = useState("wss://baongan.online:5443/WebRTCAppEE/websocket");
     const [isShow, setIsShow] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
@@ -356,6 +356,7 @@ const PublishStream = () => {
                                 onPressEnter={onEnterChat}
                                 value={inputValue}
                                 onChange={(event) => setInputValue(event.target.value)}
+                                style={{width: '220px'}}
                             >
 
                             </Input>
@@ -370,9 +371,9 @@ const PublishStream = () => {
                             <Button
                                 size="large"
                                 onClick={togglePicker}
-                                style={{fontSize: '20px'}}
+
                             >
-                                😀
+                                <span style={{marginBottom: '10px',fontSize: '19px'}}>😀</span>
                             </Button>
                         </div>
                         {showPicker && (

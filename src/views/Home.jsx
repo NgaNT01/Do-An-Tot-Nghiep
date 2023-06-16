@@ -20,6 +20,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {BiChevronDown} from "react-icons/bi";
 import {getListCategories} from "../store/category";
 import {getListBroadcastingStreams} from "../store/streams";
+import Seperate from "../components/Share/Seperate";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -42,10 +43,9 @@ const Home = () => {
         <div className="home-desktop">
           <div className="home-box">
             <ChannelsDesktop currentBroadcastingStreams={currentBroadcastingStreams} channelTitle="Các live stream mới nhất" />
-            {/*{currentListUser.length >= 5 ? <ShowMore title="Show more" /> : null}*/}
-            <ShowMore title="Show more" />
+            {currentBroadcastingStreams.length >= 5 ? <ShowMore title="Show more" /> : <Seperate/>}
             <ChannelsDesktop currentBroadcastingStreams={currentBroadcastingStreams} channelTitle="Top 10 live stream có nhiều lượt xem nhất" />
-            <ShowMore title="Show more" />
+            {currentBroadcastingStreams.length >= 5 ? <ShowMore title="Show more" /> : <Seperate/>}
             <CategoriesDesktop
               title="Chọn danh mục bạn thích"
               boldTitle=""

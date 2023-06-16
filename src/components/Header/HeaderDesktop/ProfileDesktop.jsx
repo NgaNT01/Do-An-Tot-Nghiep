@@ -20,8 +20,15 @@ import {Link, useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {signOut} from "../../../store/user";
 import {getCurrentUser} from "../../../utils/auth";
-import {Button, Form, Input, Modal, Select} from "antd";
-import {InfoCircleOutlined, LockOutlined, MailOutlined, PlayCircleOutlined, UserOutlined} from "@ant-design/icons";
+import {Button, Form, Input, Modal, Select, Switch, Upload} from "antd";
+import {
+  InfoCircleOutlined,
+  LockOutlined,
+  MailOutlined,
+  PlayCircleOutlined,
+  UploadOutlined,
+  UserOutlined
+} from "@ant-design/icons";
 import {startStream} from "../../../store/streams";
 import Swal from "sweetalert2";
 
@@ -30,6 +37,7 @@ const ProfileDesktop = () => {
   const {darkStatus} = useSelector(state => state.site);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const [isPrivate,setIsPrivate] = useState(false);
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -64,24 +72,26 @@ const ProfileDesktop = () => {
         ...values,
         status: 'broadcasting',
       };
+      console.log(params);
       const result = await dispatch(startStream(params));
-    if (result) {
+      console.log(result);
+    if (result.payload.streamId) {
       await Swal.fire(
           'Thành công!',
           'Khởi tạo Live Stream thành công!',
           'success'
       )
+      history.push(`/publish/${getCurrentUser().username}`);
       setIsModalOpen(false);
       form.resetFields();
     }
-    else {
+    else if (result.payload.message){
       await Swal.fire({
         icon: 'error',
-        title: 'Ôi không...',
-        text: "Đã có lỗi xảy ra!"
+        title: 'Cảnh báo!',
+        text: "Bạn đang phát trực tuyến"
       })
     }
-      history.push(`/publish/${getCurrentUser().username}`);
   }
 
   const options = [
@@ -94,6 +104,18 @@ const ProfileDesktop = () => {
   ];
   const handleChange = (value) => {
   };
+
+  const handleChangeSwitch = (e) => {
+    setIsPrivate(e);
+  }
+
+  const handleBeforeUpload = () => {
+
+  }
+
+  const handleUpload = () => {
+
+  }
 
   return (
     <StyledProfileDesktop>
@@ -150,6 +172,12 @@ const ProfileDesktop = () => {
                   </div>
                     <Modal title="Nhập thông tin stream" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
                       <Form
+                          labelCol={{
+                            span: 6,
+                          }}
+                          wrapperCol={{
+                            span: 16,
+                          }}
                           name="normal_stream"
                           className="signup-form"
                           initialValues={{
@@ -157,8 +185,10 @@ const ProfileDesktop = () => {
                           }}
                           onFinish={onFinish}
                           form={form}
+                          size="large"
                       >
                         <Form.Item
+                            label="Tên stream: "
                             name="streamName"
                             rules={[
                               {
@@ -170,6 +200,7 @@ const ProfileDesktop = () => {
                           <Input size={"large"} prefix={<PlayCircleOutlined className="site-form-item-icon" />} placeholder="Nhập tên stream" />
                         </Form.Item>
                         <Form.Item
+                            label="Mô tả: "
                             name="description"
                             rules={[
                               {
@@ -184,6 +215,7 @@ const ProfileDesktop = () => {
                           />
                         </Form.Item>
                         <Form.Item
+                            label="Danh mục: "
                             name="categories"
                             rules={[
                               {
@@ -204,19 +236,62 @@ const ProfileDesktop = () => {
                               options={options}
                           />
                         </Form.Item>
-                        {/*<Form.Item*/}
-                        {/*    name="email"*/}
-                        {/*    rules={[*/}
-                        {/*      {*/}
-                        {/*        required: true,*/}
-                        {/*        message: 'Hãy nhập Email!',*/}
-                        {/*      },*/}
-                        {/*    ]}*/}
-                        {/*>*/}
-                        {/*  <Input size={"large"} prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" />*/}
-                        {/*</Form.Item>*/}
+                        <Form.Item
+                            label="Thumbnail: "
+                            name="thumbnail"
+                            rules={[
+                              {
+                                required: true,
+                                message: 'Hãy upload ảnh!',
+                              },
+                            ]}
+                        >
+                          <Upload beforeUpload={handleBeforeUpload} onChange={handleUpload}>
+                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                          </Upload>
+                        </Form.Item>
+                        <Form.Item
+                            label="Chế độ riêng tư: "
+                            rules={[
+                              {
+                                required: true,
+                                message: 'Vui lòng chọn chế độ!',
+                              },
+                            ]}
+                        >
+                          <Switch
+                              checkedChildren="Riêng tư"
+                              unCheckedChildren="Công khai"
+                              onChange={handleChangeSwitch}
+                              size="large"
+                          />
+                        </Form.Item>
+                        {isPrivate && (
+                            <Form.Item
+                                label="Mã truy cập: "
+                                name="accessCode"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'Hãy nhập mã truy cập!',
+                                  },
+                                ]}
+                            >
+                              <Input
+                                  size="large"
+                                  prefix={<LockOutlined className="site-form-item-icon" />}
+                                  placeholder="Mã truy cập"
+                              />
+                            </Form.Item>
+                        )}
                         <Form.Item>
-                          <Button size={"large"} type="primary" htmlType="submit" className="signup-form-button">
+                          <Button
+                              size="large"
+                              type="primary"
+                              htmlType="submit"
+                              className="signup-form-button"
+                              style={{marginLeft: '330px'}}
+                          >
                             Live Stream
                           </Button>
                         </Form.Item>
