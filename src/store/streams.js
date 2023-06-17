@@ -25,6 +25,11 @@ export const getStreamInfoByUserName = createAsyncThunk('stream/getStreamInfoByU
     return response.data;
 });
 
+export const getAllStream = createAsyncThunk('stream/getAllStream',async () => {
+    const response = await streamApi.getAllStream();
+    return response.data;
+});
+
 const initialState = {
     inputSearch: '',
     currentBroadcastingStreams: [],

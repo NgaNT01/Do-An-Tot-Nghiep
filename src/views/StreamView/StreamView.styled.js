@@ -22,6 +22,25 @@ export const StyledStreamView = styled.div`
         display: flex;
         justify-content: space-between;
         padding: 30px 5px 10px 5px;
+        position: relative;
+        
+        .share-dialog {
+          position: absolute;
+          right: 0;
+          bottom: 130px;
+          background-color: white;
+          border-radius: 10px;
+          padding: 10px 30px 10px 30px;
+          box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+          width: 400px;
+          
+          svg {
+            background-color: white;
+            margin-right: 10px;
+            margin-left: 5px;
+            cursor: pointer;
+          }
+        }
         
         .buttons {
           display: flex;

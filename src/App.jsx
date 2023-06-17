@@ -36,6 +36,7 @@ const App = () => {
   const { darkStatus} = useSelector((state) => state.site);
   const {isLoggedIn} = useSelector(state => state.user);
   const dispatch = useDispatch();
+  const [profileStatus, setProfileStatus] = useState(false)
 
   useEffect(() => {
     dispatch(getListCategories());

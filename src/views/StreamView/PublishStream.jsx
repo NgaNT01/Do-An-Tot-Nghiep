@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getCurrentUser} from "../../utils/auth";
 import {Button, Form, Input, Select, Modal} from "antd";
 import Message from "../../components/Share/Message";
-import {stopStream} from "../../store/streams";
+import {getAllStream, stopStream} from "../../store/streams";
 import {ExclamationCircleFilled, InfoCircleOutlined, PlayCircleOutlined} from "@ant-design/icons";
 import Swal from "sweetalert2";
 import {MdInsertEmoticon} from "react-icons/all";
@@ -47,7 +47,6 @@ const PublishStream = () => {
     ];
 
     useEffect(() => {
-
         webRTCAdaptor = initiateWebrtc();
         setWebRTC(webRTCAdaptor);
         console.log("adaptor của stream",webRTCAdaptor);
@@ -162,8 +161,11 @@ const PublishStream = () => {
         setShowPicker(!showPicker);
     };
 
-    const onStartPublishing = (streamName) => {
-        webRTCAdaptor.publish(streamName,'');
+    const onStartPublishing = async (streamName) => {
+        const result = await dispatch(getAllStream());
+        const listStream = result.payload;
+        const prevStreamId = listStream[listStream.length - 1].streamId;
+        webRTCAdaptor.publish(`${streamName}_${prevStreamId}`,'');
     }
 
     const onEnterChat = (e) => {

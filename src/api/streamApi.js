@@ -21,5 +21,9 @@ export const streamApi = {
     getStreamInfoByUserName: (params) => {
         const url = `/stream/stream-by-username/${params}`;
         return axiosClient.get(url);
+    },
+    getAllStream: () => {
+        const url = '/stream/get-all-stream';
+        return axiosClient.get(url);
     }
 }

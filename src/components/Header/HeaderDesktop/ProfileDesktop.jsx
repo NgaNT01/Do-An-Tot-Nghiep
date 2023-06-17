@@ -122,7 +122,7 @@ const ProfileDesktop = () => {
       <div className="profile-box">
         <div
           className="profile"
-          onClick={() => setProfileStatus(!profileStatus)}
+          onClick={(e) => {e.stopPropagation();setProfileStatus(!profileStatus);}}
         >
           {/*<BiUser />*/}
           {getCurrentUser().avatar_url !== null ?
