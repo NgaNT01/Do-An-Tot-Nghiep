@@ -18,6 +18,7 @@ const ChannelDesktop = ({ stream, imageId, video }) => {
     useEffect(async () => {
         const result = await dispatch(getUserById(stream.userId));
         setCurrentUser(result.payload);
+        console.log("stream",stream);
     },[])
 
   return (
@@ -26,7 +27,10 @@ const ChannelDesktop = ({ stream, imageId, video }) => {
                 <div className="channel-box">
                     <div className="live-screen">
 
-                        <img src="../../../../public/images/games/game-elder.jpg" alt="" />
+
+                        {stream !== null ? <img src={stream.thumbnail} alt="" />
+                            :
+                            <img src="../../../../public/images/games/game-elder.jpg" alt="" />}
                         <div className={`live ${video ? "invisible" : ""}`}>trực tiếp</div>
                         <div className={`viewers ${video ? "invisible" : ""}`}>
                             {/*{stream.viewerCount} người xem*/}

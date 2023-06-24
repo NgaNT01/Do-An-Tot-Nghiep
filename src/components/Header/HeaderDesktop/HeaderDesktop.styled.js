@@ -28,95 +28,59 @@ export const StyledHeaderDesktop = styled.header`
       .left {
         display: block;
         height: 100%;
-
-        ul {
-          display: flex;
-          height: 100%;
-
-          li {
-            width: 100%;
-            height: 100%;
-            display: block;
-            margin: 0 15px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 500;
-
-            .link {
-              color: ${(props) => props.theme.textColor};
-            }
-
-            .item {
-              height: 100%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              transition: 0.3s;
-
-              .logo {
-                font-size: 30px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: ${(props) => props.theme.color};
-                transition: 0.3s;
-                fill: #fff;
-                stroke: #fff;
-                position: relative;
-                z-index: 4;
-                overflow: hidden;
-
-                .logo-bg {
-                  z-index: -1;
-                  width: 19px;
-                  height: 20px;
-                  position: absolute;
-                  top: 1px;
-                  background-color: #fff;
-                  border-bottom-right-radius: 8px;
-                }
-              }
-
-              .item-icon {
-                width: 26px;
-                height: 26px;
-                padding: 6px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                transition: 0.3s;
-                border-radius: 5px;
-
-                &:hover {
-                  background-color: ${(props) => props.theme.hover};
-                }
-              }
-            }
-
-            &:hover {
-              .item {
-                .logo {
-                  transform: translate(2px, -2px);
-                }
-              }
-              .link {
-                color: ${(props) => props.theme.color};
-              }
-            }
-          }
-          .active {
-            border-bottom: 2px solid ${(props) => props.theme.color};
-
-            .link {
-              color: ${(props) => props.theme.color};
-            }
-          }
+        text-align: center;
+        
+        span {
+          margin-left: 20px;
+          line-height: 60px;
+          font-weight: bold;
         }
+        
       }
 
       .bottom {
         flex: 1;
+        
+        .search {
+          max-width: 600px;
+          width: 100%;
+          height: 35px;
+          background-color: ${(props) => props.theme.soft}31;
+          border-radius: 5px;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          margin: 0 0 0 600px;
+
+          input {
+            flex: 1;
+            background-color: transparent;
+            height: 100%;
+            padding: 0 10px;
+            font-size: 15px;
+            color: ${(props) => props.theme.textColor};
+            transition: 0.2s;
+            border: 2px solid transparent;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+
+            &:focus {
+              background-color: ${(props) => props.theme.headerDesktop};
+              border: 2px solid ${(props) => props.theme.color};
+            }
+          }
+
+          .search-icon {
+            width: 40px;
+            height: 100%;
+            background-color: ${(props) => props.theme.border};
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+          }
+        }
 
         .search-bar {
           max-width: 600px;
@@ -127,7 +91,7 @@ export const StyledHeaderDesktop = styled.header`
           overflow: hidden;
           display: flex;
           align-items: center;
-          margin: 0 0 0 600px;
+          margin: 0 0 0 500px;
 
           input {
             flex: 1;

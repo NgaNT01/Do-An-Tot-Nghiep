@@ -3,11 +3,12 @@ import {useDispatch, useSelector} from "react-redux";
 import VideoDesktop from "./VideoDesktop";
 import {StyledVideosDesktop} from "./VideoDesktop.styled";
 
-const VideosDesktop = ({ title, currentBroadcastingStreams }) => {
+const VideosDesktop = ({ title, currentListRecords }) => {
     // const {currentBroadcastingStreams} = useSelector(state => state.stream);
     const dispatch = useDispatch();
 
     useEffect(() => {
+        console.log(currentListRecords);
     },[])
 
     return (
@@ -15,12 +16,17 @@ const VideosDesktop = ({ title, currentBroadcastingStreams }) => {
 
             <div className="channels-box">
                 {title && <h1>{title}</h1>}
-                {currentBroadcastingStreams.length === 0 ? <div style={{marginTop: '20px',marginLeft: '20px',fontSize: '20px'}}>Hiện chưa có livestream nào đươc phát</div> :
+                {currentListRecords.length === 0 ? <div style={{marginTop: '20px',marginLeft: '20px',fontSize: '20px'}}>Hiện chưa có video</div> :
                     <div className="list">
-                        {currentBroadcastingStreams.map((stream, index) => {
-                            if (index < 6)
+                        {currentListRecords.map((record, index) => {
+                            if (index < 60)
                                 return (
                                     <VideoDesktop
+                                        key={index}
+                                        url={record.recordUrl}
+                                        name={record.recordName}
+                                        startTime={record.startTime}
+                                        streamId={record.streamId}
                                     />
                                 );
                         })}

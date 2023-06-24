@@ -20,7 +20,7 @@ import {Link, useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {signOut} from "../../../store/user";
 import {getCurrentUser} from "../../../utils/auth";
-import {Button, Form, Input, Modal, Select, Switch, Upload} from "antd";
+import {Button, Form, Input, Modal, Select, Switch, Upload, message} from "antd";
 import {
   InfoCircleOutlined,
   LockOutlined,
@@ -31,6 +31,7 @@ import {
 } from "@ant-design/icons";
 import {startStream} from "../../../store/streams";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 const ProfileDesktop = () => {
   const [profileStatus, setProfileStatus] = useState(false);
@@ -38,6 +39,8 @@ const ProfileDesktop = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   const [isPrivate,setIsPrivate] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [selectedFileName, setSelectedFileName] = useState(null)
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -72,26 +75,29 @@ const ProfileDesktop = () => {
         ...values,
         status: 'broadcasting',
       };
-      console.log(params);
+      delete params.thumbnail
+      params.stringThumbnail = selectedFile;
+      params.fileName = selectedFileName.replace(/\s/g, "");
+
       const result = await dispatch(startStream(params));
       console.log(result);
-    if (result.payload.streamId) {
-      await Swal.fire(
-          'Thành công!',
-          'Khởi tạo Live Stream thành công!',
-          'success'
-      )
+      if (result.payload.streamId) {
+        await Swal.fire(
+            'Thành công!',
+            'Khởi tạo Live Stream thành công!',
+            'success'
+        )
       history.push(`/publish/${getCurrentUser().username}`);
       setIsModalOpen(false);
       form.resetFields();
-    }
-    else if (result.payload.message){
-      await Swal.fire({
-        icon: 'error',
-        title: 'Cảnh báo!',
-        text: "Bạn đang phát trực tuyến"
-      })
-    }
+      }
+      else if (result.payload.message){
+        await Swal.fire({
+          icon: 'error',
+          title: 'Cảnh báo!',
+          text: "Bạn đang phát trực tuyến"
+        })
+      }
   }
 
   const options = [
@@ -109,12 +115,18 @@ const ProfileDesktop = () => {
     setIsPrivate(e);
   }
 
-  const handleBeforeUpload = () => {
+  const onFileChange = (e) => {
+    setSelectedFileName(e.target.files[0].name);
 
-  }
+    let reader = new FileReader();
 
-  const handleUpload = () => {
+    reader.onload = function(event) {
+      let base64String = event.target.result.split(',')[1];
+      setSelectedFile(base64String)
+    };
 
+    // Đọc nội dung của file và chuyển đổi thành chuỗi base64
+    reader.readAsDataURL(e.target.files[0]);
   }
 
   return (
@@ -241,14 +253,12 @@ const ProfileDesktop = () => {
                             name="thumbnail"
                             rules={[
                               {
-                                required: true,
+                                required: false,
                                 message: 'Hãy upload ảnh!',
                               },
                             ]}
                         >
-                          <Upload beforeUpload={handleBeforeUpload} onChange={handleUpload}>
-                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                          </Upload>
+                          <Input type="file" onChange={onFileChange} />
                         </Form.Item>
                         <Form.Item
                             label="Chế độ riêng tư: "
@@ -299,19 +309,21 @@ const ProfileDesktop = () => {
                     </Modal>
                   {/*</Link>*/}
                 </li>
+                <Link to={`/statistic`}>
                 <li>
-                  <Link to={`/auth/user-profile/${getCurrentUser().username}`}>
+
                     <div className="item" style={darkStatus ? {color: '#fff'} : {color: '#000'}}>
                       <MdOutlineAnalytics /> <span>Thống kê</span>
                     </div>
-                  </Link>
+
                 </li>
+                </Link>
                 <li>
-                  <Link to="/auth/sign-in">
+
                   <div className="item" style={darkStatus ? {color: '#fff'} : {color: '#000'}} >
                     <MdOutlineDarkMode /> <span>Giao diện tối</span>
                   </div>
-                  </Link>
+
                   <DarkAndStatus whichStatus="darkmode" />
                 </li>
                 <hr />

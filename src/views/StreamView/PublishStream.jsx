@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getCurrentUser} from "../../utils/auth";
 import {Button, Form, Input, Select, Modal} from "antd";
 import Message from "../../components/Share/Message";
-import {getAllStream, stopStream} from "../../store/streams";
+import {getAllStream, getStreamInfoByUserName, stopStream} from "../../store/streams";
 import {ExclamationCircleFilled, InfoCircleOutlined, PlayCircleOutlined} from "@ant-design/icons";
 import Swal from "sweetalert2";
 import {MdInsertEmoticon} from "react-icons/all";
@@ -27,7 +27,7 @@ const PublishStream = () => {
     const { confirm } = Modal;
 
     const [streamName, setStreamName] = useState(useParams().streamName);
-    const [mediaConstraints,setMediaConstraints] = useState({video: true, audio: true});
+    const [mediaConstraints,setMediaConstraints] = useState({video: {width: {min:1280, ideal: 1920 }, height: {min:720, ideal: 1080 }}, audio: true});
     const [pc_config] = useState({'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]})
     const [sdpConstraints,setSdpConstraints] = useState({OfferToReceiveAudio: false,OfferToReceiveVideo: false})
     const [websocketURL,setWebsocketURL] = useState("wss://baongan.online:5443/WebRTCAppEE/websocket");
@@ -84,7 +84,7 @@ const PublishStream = () => {
             sdp_constraints: sdpConstraints,
             localVideoId: "localVideo",
             debug: true,
-            bandwidth:2000,
+            bandwidth:20000,
             callback: function (info, obj) {
                 if (info === "initialized") {
                     console.log("initialized",obj);
@@ -168,17 +168,21 @@ const PublishStream = () => {
         webRTCAdaptor.publish(`${streamName}_${prevStreamId}`,'');
     }
 
-    const onEnterChat = (e) => {
+    const onEnterChat = async (e) => {
         console.log(e.target.value);
         let now = new Date();
-        webRTC.sendData(streamName, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${e.target.value}`);
+        const result = await dispatch(getStreamInfoByUserName(streamName));
+        const streamId = result.payload.streamId;
+        webRTC.sendData(`${streamName}_${streamId}`, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${e.target.value}`);
         setChatMessages(messages => [...messages, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${e.target.value}`]);
         setInputValue('');
     }
 
-    const onClickSend = () => {
+    const onClickSend = async () => {
         let now = new Date();
-        webRTC.sendData(streamName, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${inputValue}`);
+        const result = await dispatch(getStreamInfoByUserName(streamName));
+        const streamId = result.payload.streamId;
+        webRTC.sendData(`${streamName}_${streamId}`, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${inputValue}`);
         setChatMessages(messages => [...messages, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${inputValue}`]);
         setInputValue('');
     }
@@ -187,16 +191,22 @@ const PublishStream = () => {
         setShowPicker(false)
     }
 
-    const handleChangeDesktopCamera = () => {
-        webRTC.switchDesktopCaptureWithCamera(streamName);
+    const handleChangeDesktopCamera = async () => {
+        const result = await dispatch(getStreamInfoByUserName(streamName));
+        const streamId = result.payload.streamId;
+        webRTC.switchDesktopCaptureWithCamera(`${streamName}_${streamId}`);
     }
 
-    const handleChangeDesktop = () => {
-        webRTC.switchDesktopCapture(streamName);
+    const handleChangeDesktop = async () => {
+        const result = await dispatch(getStreamInfoByUserName(streamName));
+        const streamId = result.payload.streamId;
+        webRTC.switchDesktopCapture(`${streamName}_${streamId}`);
     }
 
-    const handleChangeCamera = () => {
-        webRTC.switchVideoCameraCapture(streamName);
+    const handleChangeCamera = async () => {
+        const result = await dispatch(getStreamInfoByUserName(streamName));
+        const streamId = result.payload.streamId;
+        webRTC.switchVideoCameraCapture(`${streamName}_${streamId}`);
     }
 
     const onFinish = () => {

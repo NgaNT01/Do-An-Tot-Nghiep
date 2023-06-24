@@ -78,10 +78,11 @@ const StreamView = () => {
     // }, [chatMessages])
 
     useEffect(() => {
-        let interval = setInterval(() => {
-            axios.get(`https://baongan.online:5443/WebRTCAppEE/rest/v2/broadcasts/${streamName}`).then((res) => {
+        let interval = setInterval(async () => {
+            const result = await dispatch(getStreamInfoByUserName(streamName));
+            const streamId = result.payload.streamId;
+            axios.get(`https://baongan.online:5443/WebRTCAppEE/rest/v2/broadcasts/${streamName}_${streamId}`).then((res) => {
                 setWebRTCViewerCount(res.data.webRTCViewerCount);
-
             })
 
         }, 2000);
@@ -108,7 +109,7 @@ const StreamView = () => {
                 } else if (info === "play_started") {
                     //joined the stream
                     console.log("play started");
-
+                    onGetStreamInfo(streamName);
 
                 } else if (info === "play_finished") {
                     //leaved the stream
@@ -121,7 +122,17 @@ const StreamView = () => {
                             + JSON.stringify(obj));
                     }
                 } else if (info === "streamInformation") {
+                    let streamResolutions = new Array();
 
+                    obj["streamInfo"].forEach(function(entry) {
+                        //It's needs to both of VP8 and H264. So it can be duplicate
+                        if(!streamResolutions.includes(entry["streamHeight"])){
+                            streamResolutions.push(entry["streamHeight"]);
+
+                        }// Got resolutions from server response and added to an array.
+
+                    });
+                    console.log("hehe",streamResolutions)
 
                 } else if (info === "ice_connection_state_changed") {
                     console.log("iceConnectionState Changed: ", JSON.stringify(obj));
@@ -163,6 +174,13 @@ const StreamView = () => {
         });
     }
 
+    const onGetStreamInfo = async (streamName) => {
+        const result = await dispatch(getStreamInfoByUserName(streamName));
+        const streamId = result.payload.streamId;
+        console.log("stream info");
+        webRTC.getStreamInfo(`${streamName}_${streamId}`);
+    }
+
     const onDisplayShareDialog = (e) => {
         e.stopPropagation();
         setIsDisplayShareDialog(!isDisplayShareDialog);
@@ -186,18 +204,22 @@ const StreamView = () => {
         setChatMessages((messages) => [...messages, message]);
         console.log(chatMessages);
     }
-    const onEnterChat = (e) => {
+    const onEnterChat = async (e) => {
         console.log(e.target.value);
         e.preventDefault();
         let now = new Date();
-        webRTC.sendData(streamName, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${e.target.value}`);
+        const result = await dispatch(getStreamInfoByUserName(streamName));
+        const streamId = result.payload.streamId;
+        webRTC.sendData(`${streamName}_${streamId}`, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${e.target.value}`);
         setChatMessages(messages => [...messages, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${e.target.value}`]);
         setInputValue('');
     }
 
-    const onClickSend = () => {
+    const onClickSend = async () => {
         let now = new Date();
-        webRTC.sendData(streamName, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${inputValue}`);
+        const result = await dispatch(getStreamInfoByUserName(streamName));
+        const streamId = result.payload.streamId;
+        webRTC.sendData(`${streamName}_${streamId}`, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${inputValue}`);
         setChatMessages(messages => [...messages, `[${now.toLocaleTimeString()}] ${getCurrentUser().username}: ${inputValue}`]);
         setInputValue('');
     }
@@ -212,6 +234,13 @@ const StreamView = () => {
 
     const onFollow = () => {
         setIsFollowed(!isFollowed);
+    }
+
+    const onForceStreamQuality = async () => {
+        const result = await dispatch(getStreamInfoByUserName(streamName));
+        const streamId = result.payload.streamId;
+        webRTC.forceStreamQuality(`${streamName}_${streamId}`,480);
+        webRTC.getStreamInfo(`${streamName}_${streamId}`);
     }
 
     return (

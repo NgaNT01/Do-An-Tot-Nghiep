@@ -17,7 +17,7 @@ import {useSelector} from "react-redux";
 import {Button} from "antd";
 import {getCurrentUser, getToken} from "../../../utils/auth";
 
-const HeaderDesktop = ({ mySize }) => {
+const HeaderDesktop = ({title, mySize }) => {
   const { pathname } = useLocation();
   const {isLoggedIn} = useSelector(state => state.user);
 
@@ -26,6 +26,9 @@ const HeaderDesktop = ({ mySize }) => {
       <>
         <div className="header-box">
           <header>
+            <div className="left">
+              <span style={{fontSize: '35px'}}>{title}</span>
+            </div>
             {/*<div className="left">*/}
             {/*  <ul>*/}
             {/*    <li>*/}
@@ -56,7 +59,7 @@ const HeaderDesktop = ({ mySize }) => {
             {/*  </ul>*/}
             {/*</div>*/}
             <div className="bottom">
-              <div className="search-bar">
+              <div className={title ? "search-bar":"search"}>
                 <input type="text" placeholder="Tìm kiếm" />
                 <div className="search-icon">
                   <BiSearch />

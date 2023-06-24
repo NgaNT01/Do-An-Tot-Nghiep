@@ -7,14 +7,18 @@ import ChannelsDesktop from "../../components/Channels/ChannelsDesktop/ChannelsD
 import {useDispatch, useSelector} from "react-redux";
 import {getListBroadcastingStreamsByCategory} from "../../store/streams";
 import Seperate from "../../components/Share/Seperate";
+import VideosDesktop from "../../components/Videos/VideosDesktop";
+import {getListRecordByCategory} from "../../store/record_video";
 
 const Category = () => {
     const [categoryName, setCategoryName] = useState(useParams().category);
     const {currentBroadcastingStreamsByCategory} = useSelector(state => state.stream);
+    const {listRecordByCategory} = useSelector(state => state.record);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(getListBroadcastingStreamsByCategory(categoryName));
+        dispatch(getListRecordByCategory(categoryName));
     },[])
 
 
@@ -38,7 +42,7 @@ const Category = () => {
         {
             key: '2',
             label: <span style={{fontSize: '1.6rem'}}>Video</span>,
-            children: `Content of Tab Pane 2`,
+            children: <VideosDesktop currentListRecords={listRecordByCategory}/>,
         },
     ];
 

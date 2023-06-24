@@ -1,10 +1,10 @@
 import HeaderDesktop from "./HeaderDesktop/HeaderDesktop";
 
-const Header = ({ mySize }) => {
+const Header = ({title, mySize }) => {
   return (
     <>
         <div className="header">
-            <HeaderDesktop mySize={mySize} />
+            <HeaderDesktop title={title} mySize={mySize} />
         </div>
         <div style={{padding: '55px 15px 15px 75px'}}></div></>
   );

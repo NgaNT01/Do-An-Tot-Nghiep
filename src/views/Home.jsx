@@ -38,7 +38,7 @@ const Home = () => {
 
   return (
     <>
-      <Header mySize="1848" />
+      <Header title="Trang chủ" mySize="1848" />
       <StyledHome>
         <div className="home-desktop">
           <div className="home-box">

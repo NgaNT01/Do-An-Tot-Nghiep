@@ -4,6 +4,7 @@ import siteReducers from "./site";
 import authReducer from "./user";
 import categoryReducers from "./category";
 import streamReducer from "./streams";
+import recordReducer from "./record_video";
 
 export default configureStore({
   reducer: {
@@ -11,5 +12,6 @@ export default configureStore({
     user: authReducer,
     category: categoryReducers,
     stream: streamReducer,
+    record: recordReducer,
   },
 });

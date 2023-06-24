@@ -39,7 +39,7 @@ const initialState = {
 }
 
 const streamSlice = createSlice({
-    name: "user",
+    name: "stream",
     initialState,
     reducers: {
         signOut(state) {
