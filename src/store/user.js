@@ -63,13 +63,18 @@ export const findUser = createAsyncThunk('auth/findUser',async (payload) => {
   return response.data.data;
 });
 
+export const getAllUserByUsername = createAsyncThunk('auth/getAllUserByUsername',async (payload) => {
+    const response = await userApi.getAllUserByUsername(payload);
+    return response.data;
+})
+
 const initialState = {
   isLoggedIn: false,
   isLoading: false,
   inputSearch: '',
   currentListUser: [],
   currentUser: {},
-  currentStream: {}
+  currentStream: {},
 }
 
 const userSlice = createSlice({
@@ -163,6 +168,13 @@ const userSlice = createSlice({
         },
         [findUser.rejected.type]: (state) => {
             state.isLoading = false;
+        },
+        [getAllUserByUsername.pending.type]: (state) => {
+            state.isLoading = true;
+        },
+        [getAllUserByUsername.fulfilled.type]: (state, action) => {
+            state.isLoading = false;
+            state.currentListUser = action.payload;
         },
     },
 });

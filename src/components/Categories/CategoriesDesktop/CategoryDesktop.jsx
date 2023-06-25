@@ -21,9 +21,9 @@ const CategoryDesktop = ({ category }) => {
           </div>
           <div className="game-name">
             <div className="name">{category.name}</div>
-            <div className="other-icon">
-              <FaEllipsisV />
-            </div>
+            {/*<div className="other-icon">*/}
+            {/*  <FaEllipsisV />*/}
+            {/*</div>*/}
           </div>
           {/*<div className="game-viewers">50 người xem</div>*/}
           {/*<div className="tags">*/}

@@ -13,6 +13,7 @@ export const getRecordByStreamId = createAsyncThunk('stream/getRecordByStreamId'
 
 const initialState = {
     listRecordByCategory: [],
+    isLoading: false
 }
 
 const recordSlice = createSlice({
@@ -23,9 +24,18 @@ const recordSlice = createSlice({
     extraReducers: {
         [getListRecordByCategory.rejected.type]: () => {},
         [getListRecordByCategory.fulfilled.type]: (state,action) => {
+            state.isLoading = false
             state.listRecordByCategory = action.payload;
         },
-        [getListRecordByCategory.pending.type]: () => {},
+        [getListRecordByCategory.pending.type]: (state) => {
+            state.isLoading = true
+        },
+        [getRecordByStreamId.pending.type]: (state) => {
+            state.isLoading = true;
+        },
+        [getRecordByStreamId.fulfilled.type]: (state,action) => {
+            state.isLoading = false;
+        },
     },
 });
 

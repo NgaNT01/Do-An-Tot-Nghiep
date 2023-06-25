@@ -1,7 +1,7 @@
 import { StyledHeaderDesktop } from "./HeaderDesktop.styled";
 
 //React
-import { Link } from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 // React icons
@@ -13,13 +13,28 @@ import { CgCrown } from "react-icons/cg";
 // Components
 import ProfileDesktop from "./ProfileDesktop";
 import SideBar from "./SideBar";
-import {useSelector} from "react-redux";
-import {Button} from "antd";
+import {useDispatch, useSelector} from "react-redux";
+import {Button, Input} from "antd";
 import {getCurrentUser, getToken} from "../../../utils/auth";
+import {getAllUserByUsername} from "../../../store/user";
+import {useState} from "react";
 
 const HeaderDesktop = ({title, mySize }) => {
   const { pathname } = useLocation();
   const {isLoggedIn} = useSelector(state => state.user);
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const [searchKeyword, setSearchKeyword] = useState('');
+
+  const onHandleSearch = async (e) => {
+    await dispatch(getAllUserByUsername(searchKeyword))
+    history.push(`/search/term=${searchKeyword}`)
+    setSearchKeyword('')
+  }
+
+  const onChangeSearch = (e) => {
+    setSearchKeyword(e.target.value)
+  }
 
   return (
     <StyledHeaderDesktop>
@@ -60,7 +75,13 @@ const HeaderDesktop = ({title, mySize }) => {
             {/*</div>*/}
             <div className="bottom">
               <div className={title ? "search-bar":"search"}>
-                <input type="text" placeholder="Tìm kiếm" />
+                <Input
+                    value={searchKeyword}
+                    type="text"
+                    placeholder="Tìm kiếm"
+                    onPressEnter={onHandleSearch}
+                    onChange={onChangeSearch}
+                />
                 <div className="search-icon">
                   <BiSearch />
                 </div>

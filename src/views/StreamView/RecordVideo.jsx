@@ -20,16 +20,18 @@ const RecordVideo = () => {
         <>
             <Header mySize="1848" />
             <StyledRecordVideo>
-                <video
-                    src="https://ngant01.sgp1.digitaloceanspaces.com/streams/tannga_3.mp4"
-                    autoPlay
-                    width="640px"
-                    height="480px"
-                    controls
-                    playsInline
-                >
+                <div className="video-box">
+                    <video
+                        src={recordUrl}
+                        autoPlay
+                        controls
+                        playsInline
+                        width="1536px"
+                        height="700px"
+                    >
 
-                </video>
+                    </video>
+                </div>
             </StyledRecordVideo>
         </>
     );

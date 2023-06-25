@@ -33,6 +33,7 @@ import {getListCategories} from "./store/category";
 import Category from "./views/Category/Category";
 import RecordVideo from "./views/StreamView/RecordVideo";
 import Statistic from "./views/StreamView/Statistic";
+import SearchResult from "./views/SearchResult/SearchResult";
 
 const App = () => {
   const { darkStatus} = useSelector((state) => state.site);
@@ -57,6 +58,7 @@ const App = () => {
                 <Route path="/publish/:streamName" component={isLoggedIn || getToken() !== "" ? PublishStream : LogIn}/>
                 <Route path="/category/:category" component={Category}/>
                 <Route path="/auth/user-profile/:username" component={UserProfile}/>
+                <Route path="/search/term=:keyword" component={SearchResult}/>
                 <Route path="/statistic" component={Statistic}/>
                 <Route path="/auth/sign-in" component={LogIn}/>
                 <Route path="/auth/sign-up" component={SignUp}/>

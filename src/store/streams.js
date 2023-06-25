@@ -36,6 +36,7 @@ const initialState = {
     currentBroadcastingStreamsByCategory: [],
     currentListStream: [],
     currentPublishStream: {},
+    isLoading: false,
 }
 
 const streamSlice = createSlice({
@@ -54,20 +55,32 @@ const streamSlice = createSlice({
         }
     },
     extraReducers: {
-        [startStream.pending.type]: () => {},
+        [startStream.pending.type]: (state) => {
+            state.isLoading = true;
+        },
         [startStream.fulfilled.type]: (state,action) => {
+            state.isLoading = false
             state.currentPublishStream = action.payload;
         },
-        [stopStream.pending.type]: () => {},
+        [stopStream.pending.type]: (state) => {
+            state.isLoading = false
+        },
         [stopStream.fulfilled.type]: (state,action) => {
+            state.isLoading = false
             state.currentPublishStream = {};
         },
-        [getListBroadcastingStreams.pending.type]: () => {},
+        [getListBroadcastingStreams.pending.type]: (state) => {
+            state.isLoading = true;
+        },
         [getListBroadcastingStreams.fulfilled.type]: (state,action) => {
+            state.isLoading = false
             state.currentBroadcastingStreams = action.payload;
         },
-        [getListBroadcastingStreamsByCategory.pending.type]: () => {},
+        [getListBroadcastingStreamsByCategory.pending.type]: (state) => {
+            state.isLoading = true
+        },
         [getListBroadcastingStreamsByCategory.fulfilled.type]: (state,action) => {
+            state.isLoading = false
             state.currentBroadcastingStreamsByCategory = action.payload;
         },
     },

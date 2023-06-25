@@ -9,6 +9,15 @@ html {
 body {
   background: ${(props) => props.theme.body};
   color: ${(props) => props.theme.text};
+
+  .react-loading {
+    display: inline-block;
+    position: fixed !important;
+    top: 35% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%);
+  }
+  
 }
 body::-webkit-scrollbar {
   width: 5px;

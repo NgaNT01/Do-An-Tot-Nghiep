@@ -33,6 +33,10 @@ const userApi = {
     updateUserInfo: (payload) => {
         const url = `/user/update-info`;
         return axiosClient.put(url,payload);
+    },
+    getAllUserByUsername: (payload) => {
+        const url = `/auth/all-user-by-name/${payload}`
+        return axiosClient.get(url)
     }
 }
 

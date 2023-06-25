@@ -63,9 +63,16 @@ const Category = () => {
                     <div className="header-content">
                         <h1>{categoryName}</h1>
                         <div style={{marginTop: '15px'}}>
-                            <span style={{marginRight: '20px',fontSize: '22px'}}>2 kênh trực tiếp</span>
-                            <span style={{marginRight: '20px',marginTop: '5px', fontSize: '25px', fontWeight: 'bolder'}}>&#10072;</span>
-                            <span style={{marginRight: '10px',fontSize: '22px'}}>3 video clip</span>
+                            <span
+                                style={{marginRight: '20px',fontSize: '22px'}}
+                            >
+                                {currentBroadcastingStreamsByCategory.length} kênh trực tiếp
+                            </span>
+                            <span
+                                style={{marginRight: '20px',marginTop: '5px', fontSize: '25px', fontWeight: 'bolder'}}
+                            >&#10072;
+                            </span>
+                            <span style={{marginRight: '10px',fontSize: '22px'}}>{listRecordByCategory.length} video clip</span>
                         </div>
                     </div>
                 </div>

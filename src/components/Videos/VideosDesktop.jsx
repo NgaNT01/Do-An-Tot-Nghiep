@@ -2,10 +2,12 @@ import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import VideoDesktop from "./VideoDesktop";
 import {StyledVideosDesktop} from "./VideoDesktop.styled";
+import ReactLoading from "react-loading";
 
 const VideosDesktop = ({ title, currentListRecords }) => {
     // const {currentBroadcastingStreams} = useSelector(state => state.stream);
     const dispatch = useDispatch();
+    const {isLoading} = useSelector(state => state.record)
 
     useEffect(() => {
         console.log(currentListRecords);
@@ -25,13 +27,18 @@ const VideosDesktop = ({ title, currentListRecords }) => {
                                         key={index}
                                         url={record.recordUrl}
                                         name={record.recordName}
+                                        thumbnailUrl={record.thumbnailUrl}
                                         startTime={record.startTime}
+                                        endTime={record.endTime}
                                         streamId={record.streamId}
                                     />
                                 );
                         })}
                     </div>
                 }
+                <div className="react-loading">
+                    {isLoading === true ? <ReactLoading  type="spinningBubbles" color="#622DF7"/> : <div/>}
+                </div>
             </div>
         </StyledVideosDesktop>
     );
