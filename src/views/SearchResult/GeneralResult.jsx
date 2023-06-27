@@ -4,8 +4,9 @@ import ChannelsDesktop from "../../components/Channels/ChannelsDesktop/ChannelsD
 import UsersDesktop from "../../components/Users/UsersDesktop";
 import {useDispatch, useSelector} from "react-redux";
 import {getAllUserByUsername} from "../../store/user";
+import VideosDesktop from "../../components/Videos/VideosDesktop";
 
-const GeneralResult = ({currentListUser}) => {
+const GeneralResult = ({currentListUser, currentListStream, currentListRecord}) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -14,18 +15,18 @@ const GeneralResult = ({currentListUser}) => {
 
     return (
         <div>
-            {currentListUser.length > 0 ?
+            {currentListUser.length || currentListStream.length > 0 || currentListRecord.length > 0 ?
                 <StyledGeneralResult>
-                    <div className="live-box">
+                    {currentListStream.length > 0 ? <div className="live-box">
                         <div className="title-bar">
                             <div className="title">Trực tiếp</div>
                             <div className="more"></div>
                         </div>
                         <div className="list live-list">
-                            {/*<ChannelsDesktop/>*/}
+                            <ChannelsDesktop currentBroadcastingStreams={currentListStream}/>
                         </div>
-                    </div>
-                    <div className="user-box">
+                    </div> : <div/>}
+                    {currentListUser.length > 0 ? <div className="user-box">
                         <div className="title-bar">
                             <div className="title">User</div>
                             <div className="more"></div>
@@ -33,14 +34,16 @@ const GeneralResult = ({currentListUser}) => {
                         <div className="list user-list">
                             <UsersDesktop currentListUsers={currentListUser}/>
                         </div>
-                    </div>
-                    <div className="video-box">
+                    </div> : <div/>}
+                    {currentListRecord.length > 0 ? <div className="video-box">
                         <div className="title-bar">
                             <div className="title">Video</div>
                             <div className="more"></div>
                         </div>
-                        <div className="list video-list"></div>
-                    </div>
+                        <div className="list video-list">
+                            <VideosDesktop currentListRecords={currentListRecord}/>
+                        </div>
+                    </div> : <div/>}
                 </StyledGeneralResult> :
                 <StyledGeneralResult>
                     <span>Chưa có phát trực tiếp nào</span>

@@ -9,16 +9,22 @@ import GeneralResult from "./GeneralResult";
 import {useDispatch, useSelector} from "react-redux";
 import {getAllUserByUsername} from "../../store/user";
 import UsersDesktop from "../../components/Users/UsersDesktop";
+import {getAllStreamByName} from "../../store/streams";
+import {getAllRecordByName} from "../../store/record_video";
 
 const SearchResult = () => {
     const {keyword} = useParams();
     const [searchKeyword, setSearchKeyword] = useState(keyword);
     const dispatch = useDispatch();
     const {currentListUser} = useSelector(state => state.user)
+    const {currentListStream} = useSelector(state => state.stream)
+    const {currentListRecord} = useSelector(state => state.record)
 
     useEffect(async () => {
         setSearchKeyword(keyword);
         await dispatch(getAllUserByUsername(keyword))
+        await dispatch(getAllStreamByName(keyword))
+        await dispatch(getAllRecordByName(keyword))
     }, [keyword]);
 
     const onChange = (key) => {
@@ -28,12 +34,16 @@ const SearchResult = () => {
         {
             key: '1',
             label: <span style={{fontSize: '20px'}}>Chung</span>,
-            children: <GeneralResult currentListUser={currentListUser}/>,
+            children: <GeneralResult
+                currentListRecord={currentListRecord}
+                currentListUser={currentListUser}
+                currentListStream={currentListStream}
+            />,
         },
         {
             key: '2',
             label: <span style={{fontSize: '20px'}}>Trực tiếp</span>,
-            children: <div/>,
+            children: <ChannelsDesktop currentBroadcastingStreams={currentListStream}/>,
         },
         {
             key: '3',
@@ -43,7 +53,7 @@ const SearchResult = () => {
         {
             key: '4',
             label: <span style={{fontSize: '20px'}}>Video</span>,
-            children: <div/>,
+            children: <VideosDesktop currentListRecords={currentListRecord}/>,
         },
     ];
 

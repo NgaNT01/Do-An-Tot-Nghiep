@@ -9,5 +9,9 @@ export const recordApi = {
     findRecordByStreamId: (payload) => {
         const url = `/record-video/record-by-streamid/${payload}`;
         return axiosClient.get(url);
+    },
+    getAllRecordByName: (payload) => {
+        const url = `/record-video/all-record-by-name/${payload}`
+        return axiosClient.get(url)
     }
 }

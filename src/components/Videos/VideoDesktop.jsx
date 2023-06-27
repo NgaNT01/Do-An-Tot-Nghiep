@@ -60,7 +60,7 @@ const VideoDesktop = ({url,name,startTime,endTime,thumbnailUrl,streamId}) => {
             <Link to={`/video/${streamId}`}>
                 <div className="channel-box">
                     <div className="live-screen">
-                        <img style={{width: '328px',height: '210px'}} src={thumbnailUrl} alt="" />
+                        <img style={{width: '330px',height: '210px'}} src={thumbnailUrl} alt="" />
                         {/*<div className={`live ${video ? "invisible" : ""}`}>trực tiếp</div>*/}
                         {/*<div className={`viewers ${video ? "invisible" : ""}`}>*/}
                         {/*    /!*{stream.viewerCount} người xem*!/*/}

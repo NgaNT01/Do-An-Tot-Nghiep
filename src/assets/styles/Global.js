@@ -18,6 +18,14 @@ body {
     transform: translate(-50%, -50%);
   }
   
+  .ant-layout {
+    .ant-layout-sider {
+      width: 500px !important;
+      max-width: 500px !important;
+      min-width: 300px !important;
+    }
+  }
+  
 }
 body::-webkit-scrollbar {
   width: 5px;

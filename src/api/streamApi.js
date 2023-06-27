@@ -26,5 +26,8 @@ export const streamApi = {
         const url = '/stream/get-all-stream';
         return axiosClient.get(url);
     },
-
+    getAllStreamByName: (payload) => {
+        const url = `/stream/all-stream-by-name/${payload}`
+        return axiosClient.get(url)
+    }
 }

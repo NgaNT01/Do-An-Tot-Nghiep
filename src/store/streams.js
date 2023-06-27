@@ -30,6 +30,11 @@ export const getAllStream = createAsyncThunk('stream/getAllStream',async () => {
     return response.data;
 });
 
+export const getAllStreamByName = createAsyncThunk('stream/getAllStreamByName',async () => {
+    const response = await streamApi.getAllStreamByName();
+    return response.data;
+});
+
 const initialState = {
     inputSearch: '',
     currentBroadcastingStreams: [],
@@ -82,6 +87,13 @@ const streamSlice = createSlice({
         [getListBroadcastingStreamsByCategory.fulfilled.type]: (state,action) => {
             state.isLoading = false
             state.currentBroadcastingStreamsByCategory = action.payload;
+        },
+        [getAllStreamByName.pending.type]: (state) => {
+            state.isLoading = true;
+        },
+        [getAllStreamByName.fulfilled.type]: (state,action) => {
+            state.isLoading = false
+            state.currentListStream = action.payload
         },
     },
 });

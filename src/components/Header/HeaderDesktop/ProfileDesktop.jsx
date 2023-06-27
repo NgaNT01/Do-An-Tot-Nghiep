@@ -175,7 +175,7 @@ const ProfileDesktop = () => {
                 <li>
                   <Link to={`/auth/user-profile/${getCurrentUser().username}`}>
                     <div className="item" style={darkStatus ? {color: '#fff'} : {color: '#000'}}>
-                      <FiUserMinus /> <span>Thông tin cá nhân</span>
+                      <FiUserMinus /> <span>Trung tâm cá nhân</span>
                     </div>
                   </Link>
                 </li>

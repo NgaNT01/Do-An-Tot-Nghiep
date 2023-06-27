@@ -29,13 +29,21 @@ const Home = () => {
   const { currentListCategories } = useSelector((state) => state.category);
   const {currentBroadcastingStreams} = useSelector(state => state.stream)
 
-  useEffect( () => {dispatch(cleanUsersStreamList());
+  useEffect(  () => {dispatch(cleanUsersStreamList());
     // dispatch(getListUsersStreaming());
-    dispatch(getListBroadcastingStreams());
+    handleDispatchAction(getListBroadcastingStreams());
     return () => {
 
     }
   },[])
+
+  // useEffect(() => {
+  //   handleDispatchAction(getListBroadcastingStreams());
+  // } , [currentBroadcastingStreams])
+
+  const handleDispatchAction = async (action) => {
+    await dispatch(action);
+  }
 
   return (
     <>
