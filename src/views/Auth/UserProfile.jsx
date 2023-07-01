@@ -5,6 +5,9 @@ import {Button, Layout, message, Upload, Menu, theme} from "antd";
 const {Content, Footer, Sider } = Layout;
 import {UploadOutlined,LaptopOutlined, NotificationOutlined, UserOutlined, HeartFilled, YoutubeOutlined} from "@ant-design/icons";
 import UsersDesktop from "../../components/Users/UsersDesktop";
+import {Redirect, useHistory, useParams} from "react-router-dom";
+import {getCurrentUser} from "../../utils/auth";
+import MyInformation from "../MyProfile/MyInformation";
 
 
 export const UserProfile = () => {
@@ -12,11 +15,19 @@ export const UserProfile = () => {
         token: { colorBgContainer },
     } = theme.useToken();
     const [selectedKey, setSelectedKey] = useState('1');
+    const {username} = useParams();
+    const history = useHistory();
+
+    useEffect(() => {
+        if (getCurrentUser().username !== username) {
+            history.push("/")
+        }
+    }, [])
 
     const renderContent = () => {
         switch (selectedKey) {
             case '1':
-                return <span>Nội dung 1</span>;
+                return <MyInformation/>;
             case '2':
                 return <span>Nội dung 2</span>;
             case '3':
@@ -43,7 +54,7 @@ export const UserProfile = () => {
         return {
             key: `${key}`,
             icon: <span style={{width: '20px'}}>{React.createElement(icon)}</span>,
-            label: <span style={{fontSize: '20px'}}>{label}</span>,
+            label: <span style={{fontSize: '20px',color: '#5A5A5A'}}>{label}</span>,
         };
     });
 

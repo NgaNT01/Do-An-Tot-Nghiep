@@ -13,7 +13,8 @@ export const signIn = createAsyncThunk(
       const currentUser = {
           username: response.data.username,
           email: response.data.email,
-          avatar_url: response.data.avatar_url
+          avatar_url: response.data.avatar_url,
+          id: response.data.id,
       };
       localStorage.setItem('access_token', accessToken);
       localStorage.setItem('current_user',JSON.stringify(currentUser));

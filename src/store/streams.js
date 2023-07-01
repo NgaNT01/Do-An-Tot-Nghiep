@@ -30,8 +30,8 @@ export const getAllStream = createAsyncThunk('stream/getAllStream',async () => {
     return response.data;
 });
 
-export const getAllStreamByName = createAsyncThunk('stream/getAllStreamByName',async () => {
-    const response = await streamApi.getAllStreamByName();
+export const getAllStreamByName = createAsyncThunk('stream/getAllStreamByName',async (payload) => {
+    const response = await streamApi.getAllStreamByName(payload);
     return response.data;
 });
 

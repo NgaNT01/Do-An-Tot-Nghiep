@@ -46,7 +46,7 @@ const GeneralResult = ({currentListUser, currentListStream, currentListRecord}) 
                     </div> : <div/>}
                 </StyledGeneralResult> :
                 <StyledGeneralResult>
-                    <span>Chưa có phát trực tiếp nào</span>
+                    <span style={{fontSize: '22px'}}>Chưa có phát trực tiếp nào</span>
                 </StyledGeneralResult>
             }
         </div>

@@ -27,13 +27,14 @@ import store from "./store";
 import LogIn from "./views/Auth/LogIn";
 import PublishStream from "./views/StreamView/PublishStream";
 import SignUp from "./views/Auth/SignUp";
-import {getToken} from "./utils/auth";
+import {getCurrentUser, getToken} from "./utils/auth";
 import {UserProfile} from "./views/Auth/UserProfile";
 import {getListCategories} from "./store/category";
 import Category from "./views/Category/Category";
 import RecordVideo from "./views/StreamView/RecordVideo";
 import Statistic from "./views/StreamView/Statistic";
 import SearchResult from "./views/SearchResult/SearchResult";
+import {ProtectedUserProfileRoute} from "./views/Auth/ProtectedUserProfileRoute";
 
 const App = () => {
   const { darkStatus} = useSelector((state) => state.site);

@@ -28,9 +28,9 @@ const ChannelDesktop = ({ stream, imageId, video }) => {
                     <div className="live-screen">
 
 
-                        {stream !== null ? <img src={stream.thumbnailUrl} alt="" />
+                        {stream !== null ? <img style={{width: '300px',height: '200px'}} src={stream.thumbnailUrl} alt="" />
                             :
-                            <img src="../../../../public/images/games/game-elder.jpg" alt="" />}
+                            <img style={{width: '330px',height: '210px'}} src="../../../../public/images/games/game-elder.jpg" alt="" />}
                         <div className={`live ${video ? "invisible" : ""}`}>trực tiếp</div>
                         <div className={`viewers ${video ? "invisible" : ""}`}>
                             {/*{stream.viewerCount} người xem*/}
