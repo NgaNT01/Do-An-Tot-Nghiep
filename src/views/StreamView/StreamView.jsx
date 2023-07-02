@@ -4,12 +4,12 @@ import {WebRTCAdaptor} from "../../utils/js/webrtc_adaptor";
 import {Link, useParams} from "react-router-dom";
 import Header from "../../components/Header/Header";
 import {getCurrentUser} from "../../utils/auth";
-import {Button, Input} from "antd";
+import {Button, Input, Modal} from "antd";
 import Message from "../../components/Share/Message";
-import {HeartOutlined, LinkOutlined, ShareAltOutlined, UserOutlined} from "@ant-design/icons";
+import {ExclamationCircleFilled, HeartOutlined, LinkOutlined, ShareAltOutlined, UserOutlined} from "@ant-design/icons";
 import {useDispatch} from "react-redux";
 import {getUserByName} from "../../store/user";
-import {getStreamInfoByUserName} from "../../store/streams";
+import {getStreamInfoByUserName, stopStream} from "../../store/streams";
 import axios from "axios";
 import Icon from '@mdi/react';
 import { mdiEmoticonHappyOutline } from '@mdi/js';
@@ -37,6 +37,8 @@ import {
     WorkplaceShareButton
 } from "react-share";
 import {AiFillHeart, BsHeart, BsHeartFill} from "react-icons/all";
+import {checkFollow, follow, unfollow} from "../../store/follow";
+import Swal from "sweetalert2";
 
 const StreamView = () => {
     let webRTCAdaptor = null;
@@ -59,15 +61,51 @@ const StreamView = () => {
     const [noStreamMessage, setNoStreamMessage] = useState(null);
     const [webRTCViewerCount, setWebRTCViewerCount] = useState(null);
     const [isDisplayShareDialog, setIsDisplayShareDialog] = useState(false);
-    const [isFollowed,setIsFollowed] = useState(false);
+    const [isFollowed,setIsFollowed] = useState(null);
+    const {confirm} = Modal;
 
-    useEffect(async () => {
+    useEffect(() => {
         webRTCAdaptor = initiateWebrtc();
         setWebRTC(webRTCAdaptor);
         console.log("adaptor của viewer", webRTCAdaptor);
         setIsShow(true);
-        const streamer_info = await dispatch(getUserByName(streamName));
-        setStreamerInfo(streamer_info.payload)
+
+
+        return () => {
+            webRTCAdaptor.stop(streamName);
+        }
+    },[]);
+
+    useEffect(async () => {
+        try {
+            const streamer_info = await dispatch(getUserByName(streamName));
+            setStreamerInfo(streamer_info.payload)
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }, [])
+
+    useEffect(async () => {
+        if (streamerInfo !== null) {
+            const payload = {
+                followerId: getCurrentUser().id,
+                followingId: streamerInfo.userId
+            }
+            console.log("payload",payload)
+            try {
+                const is_followed_req = await dispatch(checkFollow(payload))
+                console.log("is follow",is_followed_req);
+                if (is_followed_req.payload.message === "Chua follow") setIsFollowed(false);
+                else if (is_followed_req.payload.message === "Da follow") setIsFollowed(true);
+            }
+            catch (e) {
+                console.log(e)
+            }
+        }
+    }, [streamerInfo])
+
+    useEffect(async () => {
         try {
             const result = await dispatch(getStreamInfoByUserName(streamName));
             if (result.payload.streamId) {
@@ -80,32 +118,27 @@ const StreamView = () => {
         catch (e) {
             console.log(e)
         }
-        return () => {
-            webRTCAdaptor.stop(streamName);
-        }
-    },[]);
+    }, [])
 
     useEffect(() => {
         setStreamName(username);
     }, [username])
 
-    // useEffect(() => {
-    //     chatMessageRef.current.scrollIntoView({ behavior: "smooth" });
-    // }, [chatMessages])
-
     useEffect(() => {
-        let interval = setInterval(async () => {
-            const result = await dispatch(getStreamInfoByUserName(streamName));
-            const streamId = result.payload.streamId;
-            axios.get(`https://baongan.online:5443/WebRTCAppEE/rest/v2/broadcasts/${streamName}_${streamId}`).then((res) => {
-                setWebRTCViewerCount(res.data.webRTCViewerCount);
-            })
 
-        }, 2000);
+            let interval = setInterval(async () => {
+                const result = await dispatch(getStreamInfoByUserName(streamName));
+                const streamId = result.payload.streamId;
+                axios.get(`https://baongan.online:5443/WebRTCAppEE/rest/v2/broadcasts/${streamName}_${streamId}`).then((res) => {
+                    setWebRTCViewerCount(res.data.webRTCViewerCount);
+                })
+
+            }, 2000);
+
         return () => {
             clearInterval(interval);
         };
-    },[])
+    },[streamInfo])
 
     function initiateWebrtc() {
         return new WebRTCAdaptor({
@@ -185,7 +218,7 @@ const StreamView = () => {
 
                 console.log("error callback: " + JSON.stringify(error));
                 // alert(JSON.stringify(error));
-                alert("stream nay khong ton tai");
+                // alert("stream nay khong ton tai");
             }
         });
     }
@@ -248,8 +281,47 @@ const StreamView = () => {
         setIsDisplayShareDialog(false)
     }
 
-    const onFollow = () => {
-        setIsFollowed(!isFollowed);
+    const onFollow = async () => {
+        const payload = {
+            followerId: getCurrentUser().id,
+            followingId: streamerInfo.userId
+        }
+        const follow_req = await dispatch(follow(payload))
+        await Swal.fire(
+            'Thành công!',
+            `Đã theo dõi ${streamerInfo.username}`,
+            'success'
+        )
+        setIsFollowed(true);
+    }
+
+    const onUnFollow = () => {
+        confirm({
+            title: 'Bạn có chắc muốn hủy theo dõi?',
+            icon: <ExclamationCircleFilled />,
+            content: 'Nhấn Có để hủy',
+            okText: 'Có',
+            okType: 'danger',
+            cancelText: 'Không',
+            onOk() {handleOkUnfollow()},
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    }
+
+    const handleOkUnfollow = async () => {
+        const payload = {
+            followerId: getCurrentUser().id,
+            followingId: streamerInfo.userId
+        }
+        await dispatch(unfollow(payload));
+        await Swal.fire(
+            'Thành công!',
+            'Đã hủy theo dõi!',
+            'success'
+        )
+        setIsFollowed(false)
     }
 
     const onForceStreamQuality = async () => {
@@ -266,7 +338,15 @@ const StreamView = () => {
                 <div className="stream-view-wrap" onClick={handleClickOutsideScreen}>
                     <div className="stream-view-box">
                         <div className="video-view">
-                            <video id="video" autoPlay width="640px" height="480px" controls playsInline></video>
+                            {streamInfo ? <video id="video" autoPlay width="640px" height="480px" controls playsInline></video> :
+                                <video id="video" autoPlay width="640px" height="480px"></video>
+                            }
+                            {streamInfo === null ? <div className="offline-banner">
+                                <div className="offline-banner-box">
+                                    NGOẠI TUYẾN
+                                </div>
+                             {streamerInfo !== null ? <span className="offline-banner-text">  {streamerInfo.username} đang ngoại tuyến.</span> : <span></span>}
+                            </div> : <span></span>}
                         </div>
                         <div className="user-info">
                             <div className="left">
@@ -293,9 +373,9 @@ const StreamView = () => {
                                     </div>
                                 </div>
                                 <div className="buttons">
-                                    <UserOutlined style={{marginLeft: '780px',marginTop: '14px'}}/> <span style={{marginTop: '10px',marginLeft: '5px'}}>{webRTCViewerCount}</span>
+                                    {streamInfo ? <UserOutlined style={{marginLeft: '780px',marginTop: '14px'}}/> : <span/>} <span style={{marginTop: '10px',marginLeft: '5px'}}>{webRTCViewerCount}</span>
 
-                                    {isFollowed ? <Button onClick={onFollow} type="primary" size="large" style={{marginLeft: '50px'}}>
+                                    {isFollowed ? <Button onClick={onUnFollow} type="primary" size="large" style={{marginLeft: '30px'}}>
                                         <BsHeartFill style={{marginRight: '5px',marginBottom: '-3px'}}/> Đã theo dõi
                                     </Button> :
                                     <Button onClick={onFollow} type="primary" size="large" style={{marginLeft: '50px'}}>

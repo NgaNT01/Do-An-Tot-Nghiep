@@ -145,6 +145,15 @@ const userSlice = createSlice({
         [getListUsersStreaming.rejected.type]: (state) => {
             state.isLoading = false;
         },
+        [getUserByName.pending.type]: (state,action) => {
+            state.isLoading = true;
+        },
+        [getUserByName.fulfilled.type]: (state,action) => {
+            state.isLoading = false;
+        },
+        [getUserByName.rejected.type]: (state,action) => {
+            state.isLoading = false;
+        },
         [cleanUsersStreamList.pending.type]: (state) => {
             state.currentListUser = [];
         },

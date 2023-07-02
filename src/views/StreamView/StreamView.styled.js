@@ -17,6 +17,26 @@ export const StyledStreamView = styled.div`
           height: 650px;
           background-color: black;
         }
+        
+        .offline-banner {
+          position: absolute;
+          top: 35%;
+          left: 25%;
+          color: white;
+
+          .offline-banner-box {
+            background-color: white;
+            color: black;
+            padding: 5px;
+            border-radius: 10px;
+            width: 33%;
+            font-weight: bold;
+          }
+
+          .offline-banner-text {
+            font-size: 2rem;
+          }
+        }
       }
       .user-info {
         display: flex;

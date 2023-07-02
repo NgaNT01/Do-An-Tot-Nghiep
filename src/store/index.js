@@ -5,6 +5,7 @@ import authReducer from "./user";
 import categoryReducers from "./category";
 import streamReducer from "./streams";
 import recordReducer from "./record_video";
+import followReducer from "./follow";
 
 export default configureStore({
   reducer: {
@@ -13,5 +14,6 @@ export default configureStore({
     category: categoryReducers,
     stream: streamReducer,
     record: recordReducer,
+    follow: followReducer,
   },
 });

@@ -42,6 +42,7 @@ const MyInformation = () => {
             <div className="information">
                 <ul>
                     <li>ID :   <span>{getCurrentUser().id}</span></li>
+                    <li>Tên tài khoản :   <span>{getCurrentUser().username}</span></li>
                     <li>Địa chỉ Email :  <span>{getCurrentUser().email}</span></li>
                     <li>Giới tính :  <span>Chưa rõ</span> <EditOutlined style={{fontSize: '20px'}}/></li>
                     <li>Ngày sinh :  <span>Chưa rõ</span> <EditOutlined style={{fontSize: '20px'}}/></li>

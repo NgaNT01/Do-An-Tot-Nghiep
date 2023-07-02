@@ -8,9 +8,14 @@ import UsersDesktop from "../../components/Users/UsersDesktop";
 import {Redirect, useHistory, useParams} from "react-router-dom";
 import {getCurrentUser} from "../../utils/auth";
 import MyInformation from "../MyProfile/MyInformation";
+import {useDispatch, useSelector} from "react-redux";
+import {getListFollowing} from "../../store/follow";
 
 
 export const UserProfile = () => {
+    const dispatch = useDispatch();
+    const {currentListFollowing} = useSelector(state => state.follow);
+
     const {
         token: { colorBgContainer },
     } = theme.useToken();
@@ -24,12 +29,16 @@ export const UserProfile = () => {
         }
     }, [])
 
+    useEffect(async () => {
+        await dispatch(getListFollowing(getCurrentUser().id))
+    }, [])
+
     const renderContent = () => {
         switch (selectedKey) {
             case '1':
                 return <MyInformation/>;
             case '2':
-                return <span>Nội dung 2</span>;
+                return currentListFollowing !== null ? <UsersDesktop currentListUsers={currentListFollowing}/> : <span/>;
             case '3':
                 return <span>Nội dung 3</span>;
             default:

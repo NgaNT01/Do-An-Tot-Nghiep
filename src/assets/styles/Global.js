@@ -9,6 +9,10 @@ html {
 body {
   background: ${(props) => props.theme.body};
   color: ${(props) => props.theme.text};
+  
+  .anticon {
+    align-items: normal;
+  }
 
   .react-loading {
     display: inline-block;
