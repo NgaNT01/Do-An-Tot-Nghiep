@@ -24,6 +24,7 @@ export const StyledUserDesktop = styled.div`
     width: 230px;
     height: 280px;
     margin: 8px 16px 16px 16px;
+    border-radius: 999px;
     display: flex;
     flex-direction: column;
     .username {

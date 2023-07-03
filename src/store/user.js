@@ -69,6 +69,11 @@ export const getAllUserByUsername = createAsyncThunk('auth/getAllUserByUsername'
     return response.data;
 })
 
+export const updateAvatar = createAsyncThunk('auth/updateAvatar',async (payload) => {
+    const response = await userApi.updateAvatar(payload);
+    return response.data;
+})
+
 const initialState = {
   isLoggedIn: false,
   isLoading: false,
@@ -185,6 +190,15 @@ const userSlice = createSlice({
         [getAllUserByUsername.fulfilled.type]: (state, action) => {
             state.isLoading = false;
             state.currentListUser = action.payload;
+        },
+        [updateAvatar.pending.type]: (state) => {
+            state.isLoading = true;
+        },
+        [updateAvatar.fulfilled.type]: (state, action) => {
+            state.isLoading = false;
+        },
+        [updateAvatar.rejected.type]: (state, action) => {
+            state.isLoading = false;
         },
     },
 });

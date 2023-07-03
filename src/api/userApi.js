@@ -37,6 +37,10 @@ const userApi = {
     getAllUserByUsername: (payload) => {
         const url = `/auth/all-user-by-name/${payload}`
         return axiosClient.get(url)
+    },
+    updateAvatar: (payload) => {
+        const url = '/auth/upload-avatar'
+        return axiosClient.post(url,payload)
     }
 }
 

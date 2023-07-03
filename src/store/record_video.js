@@ -16,10 +16,21 @@ export const getAllRecordByName = createAsyncThunk('record/getAllRecordByName',a
     return response.data;
 });
 
+export const getAllRecordByUserId = createAsyncThunk('record/getAllRecordByUserId',async (param) => {
+    const response = await recordApi.getAllRecordByUserId(param);
+    return response.data;
+});
+
+export const downloadByUrl = createAsyncThunk('record/downloadByUrl',async (payload) => {
+    const response = await recordApi.downloadRecordByUrl(payload);
+    return response.data;
+});
+
 const initialState = {
     listRecordByCategory: [],
     currentListRecord: [],
-    isLoading: false
+    isLoading: false,
+    currentMyListRecord: []
 }
 
 const recordSlice = createSlice({
@@ -48,6 +59,25 @@ const recordSlice = createSlice({
         [getAllRecordByName.fulfilled.type]: (state,action) => {
             state.isLoading = false;
             state.currentListRecord = action.payload
+        },
+        [getAllRecordByUserId.pending.type]: (state) => {
+            state.isLoading = true;
+        },
+        [getAllRecordByUserId.fulfilled.type]: (state,action) => {
+            state.isLoading = false;
+            state.currentMyListRecord = action.payload;
+        },
+        [getAllRecordByUserId.rejected.type]: (state) => {
+            state.isLoading = false;
+        },
+        [downloadByUrl.pending.type]: (state) => {
+            state.isLoading = true;
+        },
+        [downloadByUrl.fulfilled.type]: (state) => {
+            state.isLoading = false;
+        },
+        [downloadByUrl.rejected.type]: (state) => {
+            state.isLoading = false;
         },
     },
 });

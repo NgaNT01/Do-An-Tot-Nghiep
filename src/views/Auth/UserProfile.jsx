@@ -10,11 +10,14 @@ import {getCurrentUser} from "../../utils/auth";
 import MyInformation from "../MyProfile/MyInformation";
 import {useDispatch, useSelector} from "react-redux";
 import {getListFollowing} from "../../store/follow";
+import {getAllRecordByUserId} from "../../store/record_video";
+import MyVideos from "../MyProfile/MyVideos";
 
 
 export const UserProfile = () => {
     const dispatch = useDispatch();
     const {currentListFollowing} = useSelector(state => state.follow);
+    const {currentMyListRecord} = useSelector(state => state.record);
 
     const {
         token: { colorBgContainer },
@@ -31,6 +34,7 @@ export const UserProfile = () => {
 
     useEffect(async () => {
         await dispatch(getListFollowing(getCurrentUser().id))
+        await dispatch(getAllRecordByUserId(getCurrentUser().id))
     }, [])
 
     const renderContent = () => {
@@ -40,7 +44,7 @@ export const UserProfile = () => {
             case '2':
                 return currentListFollowing !== null ? <UsersDesktop currentListUsers={currentListFollowing}/> : <span/>;
             case '3':
-                return <span>Nội dung 3</span>;
+                return currentMyListRecord !== null ? <MyVideos currentListRecords={currentMyListRecord}/> : <span/>;
             default:
                 return null;
         }
