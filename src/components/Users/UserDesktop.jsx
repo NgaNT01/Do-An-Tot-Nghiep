@@ -3,7 +3,7 @@ import {StyledUserDesktop} from "./UserDesktop.styled";
 import {getCurrentUser} from "../../utils/auth";
 import {Link} from "react-router-dom";
 
-const UserDesktop = ({userId, username, avatarUrl}) => {
+const UserDesktop = ({userId, username, avatarUrl,followerCount}) => {
     return (
         <div>
             <Link to={`/live/${username}`}>
@@ -24,7 +24,7 @@ const UserDesktop = ({userId, username, avatarUrl}) => {
                         <div className="username">
                             <span>{username}</span>
                         </div>
-                        <div className="follow-count">30 người theo dõi</div>
+                        <div className="follow-count">{followerCount} người theo dõi</div>
                     </div>
                 </StyledUserDesktop>
             </Link>

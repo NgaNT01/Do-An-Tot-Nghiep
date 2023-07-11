@@ -41,6 +41,10 @@ const userApi = {
     updateAvatar: (payload) => {
         const url = '/auth/upload-avatar'
         return axiosClient.post(url,payload)
+    },
+    getStatisticInfo: (payload) => {
+        const url = '/stream/statistic'
+        return axiosClient.post(url,payload);
     }
 }
 

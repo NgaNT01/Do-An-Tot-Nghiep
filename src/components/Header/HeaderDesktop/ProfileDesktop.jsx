@@ -48,10 +48,15 @@ const ProfileDesktop = () => {
   const dispatch = useDispatch();
 
 
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
     localStorage.removeItem('access_token');
-    dispatch(signOut());
-    // history.push('/');
+    await dispatch(signOut());
+    await Swal.fire(
+        'Thành công!',
+        'Đăng xuất thành công!',
+        'success'
+    )
+    history.push('/');
   }
 
   useEffect(() => {
@@ -262,40 +267,40 @@ const ProfileDesktop = () => {
                         >
                           <Input type="file" onChange={onFileChange} />
                         </Form.Item>
-                        <Form.Item
-                            label="Chế độ riêng tư: "
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Vui lòng chọn chế độ!',
-                              },
-                            ]}
-                        >
-                          <Switch
-                              checkedChildren="Riêng tư"
-                              unCheckedChildren="Công khai"
-                              onChange={handleChangeSwitch}
-                              size="large"
-                          />
-                        </Form.Item>
-                        {isPrivate && (
-                            <Form.Item
-                                label="Mã truy cập: "
-                                name="accessCode"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: 'Hãy nhập mã truy cập!',
-                                  },
-                                ]}
-                            >
-                              <Input
-                                  size="large"
-                                  prefix={<LockOutlined className="site-form-item-icon" />}
-                                  placeholder="Mã truy cập"
-                              />
-                            </Form.Item>
-                        )}
+                        {/*<Form.Item*/}
+                        {/*    label="Chế độ riêng tư: "*/}
+                        {/*    rules={[*/}
+                        {/*      {*/}
+                        {/*        required: true,*/}
+                        {/*        message: 'Vui lòng chọn chế độ!',*/}
+                        {/*      },*/}
+                        {/*    ]}*/}
+                        {/*>*/}
+                        {/*  <Switch*/}
+                        {/*      checkedChildren="Riêng tư"*/}
+                        {/*      unCheckedChildren="Công khai"*/}
+                        {/*      onChange={handleChangeSwitch}*/}
+                        {/*      size="large"*/}
+                        {/*  />*/}
+                        {/*</Form.Item>*/}
+                        {/*{isPrivate && (*/}
+                        {/*    <Form.Item*/}
+                        {/*        label="Mã truy cập: "*/}
+                        {/*        name="accessCode"*/}
+                        {/*        rules={[*/}
+                        {/*          {*/}
+                        {/*            required: true,*/}
+                        {/*            message: 'Hãy nhập mã truy cập!',*/}
+                        {/*          },*/}
+                        {/*        ]}*/}
+                        {/*    >*/}
+                        {/*      <Input*/}
+                        {/*          size="large"*/}
+                        {/*          prefix={<LockOutlined className="site-form-item-icon" />}*/}
+                        {/*          placeholder="Mã truy cập"*/}
+                        {/*      />*/}
+                        {/*    </Form.Item>*/}
+                        {/*)}*/}
                         <Form.Item>
                           <Button
                               size="large"

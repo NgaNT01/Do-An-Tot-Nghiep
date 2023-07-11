@@ -49,7 +49,7 @@ const StreamView = () => {
     const [token, setToken] = useState('');
     const [pc_config] = useState({'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]})
     const [sdpConstraints,setSdpConstraints] = useState({OfferToReceiveAudio: true,OfferToReceiveVideo: true})
-    const [websocketURL,setWebsocketURL] = useState("wss://baongan.online:5443/WebRTCAppEE/websocket");
+    const [websocketURL,setWebsocketURL] = useState("wss://maelewis.store:5443/WebRTCAppEE/websocket");
     const [isShow, setIsShow] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [chatMessages, setChatMessages] = useState([]);
@@ -129,7 +129,7 @@ const StreamView = () => {
             let interval = setInterval(async () => {
                 const result = await dispatch(getStreamInfoByUserName(streamName));
                 const streamId = result.payload.streamId;
-                axios.get(`https://baongan.online:5443/WebRTCAppEE/rest/v2/broadcasts/${streamName}_${streamId}`).then((res) => {
+                axios.get(`https://maelewis.store:5443/WebRTCAppEE/rest/v2/broadcasts/${streamName}_${streamId}`).then((res) => {
                     setWebRTCViewerCount(res.data.webRTCViewerCount);
                 })
 

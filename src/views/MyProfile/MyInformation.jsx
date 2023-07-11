@@ -77,14 +77,14 @@ const MyInformation = () => {
                 <Input className="input-avatar" type="file" onChange={onChangeAvatar}/>
             </div>
             <div className="information">
-                <ul>
+                {getCurrentUser() !== null ? <ul>
                     <li>ID :   <span>{getCurrentUser().id}</span></li>
                     <li>Tên tài khoản :   <span>{getCurrentUser().username}</span></li>
                     <li>Địa chỉ Email :  <span>{getCurrentUser().email}</span></li>
                     <li>Giới tính :  <span>Chưa rõ</span> <EditOutlined style={{fontSize: '20px'}}/></li>
                     <li>Ngày sinh :  <span>Chưa rõ</span> <EditOutlined style={{fontSize: '20px'}}/></li>
                     <li>Điện thoại di động :  <span>Chưa liên kết</span> <a style={{color: 'blue'}}>Đi đến liên kết</a></li>
-                </ul>
+                </ul> : <span/>}
             </div>
         </StyledMyInformation>
     );

@@ -28,6 +28,7 @@ const UsersDesktop = ({currentListUsers}) => {
                                             userId={user.userId}
                                             username={user.username}
                                             avatarUrl={user.avatarUrl}
+                                            followerCount={user.followerCount}
                                         />
                                     );
                             })}

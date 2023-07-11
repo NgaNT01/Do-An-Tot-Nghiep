@@ -29,5 +29,9 @@ export const streamApi = {
     getAllStreamByName: (payload) => {
         const url = `/stream/all-stream-by-name/${payload}`
         return axiosClient.get(url)
+    },
+    playStream: (params) => {
+        const url = `/stream/play-stream/${params}`
+        return axiosClient.post(url);
     }
 }

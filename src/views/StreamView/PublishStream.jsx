@@ -30,7 +30,7 @@ const PublishStream = () => {
     const [mediaConstraints,setMediaConstraints] = useState({video: {width: {min:1280, ideal: 1920 }, height: {min:720, ideal: 1080 }}, audio: true});
     const [pc_config] = useState({'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]})
     const [sdpConstraints,setSdpConstraints] = useState({OfferToReceiveAudio: false,OfferToReceiveVideo: false})
-    const [websocketURL,setWebsocketURL] = useState("wss://baongan.online:5443/WebRTCAppEE/websocket");
+    const [websocketURL,setWebsocketURL] = useState("wss://maelewis.store:5443/WebRTCAppEE/websocket");
     const [isShow, setIsShow] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [chatMessages, setChatMessages] = useState([]);

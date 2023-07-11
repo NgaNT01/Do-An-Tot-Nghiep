@@ -35,6 +35,11 @@ export const getAllStreamByName = createAsyncThunk('stream/getAllStreamByName',a
     return response.data;
 });
 
+export const playStream = createAsyncThunk('stream/playStream',async (payload) => {
+    const response = await streamApi.playStream(payload);
+    return response.data;
+});
+
 const initialState = {
     inputSearch: '',
     currentBroadcastingStreams: [],

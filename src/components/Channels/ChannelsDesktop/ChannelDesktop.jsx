@@ -6,11 +6,13 @@ import {useDispatch} from "react-redux";
 import {cleanUsersStreamList, getUserById} from "../../../store/user";
 import React, {useEffect, useState} from "react";
 import {unwrapResult} from "@reduxjs/toolkit";
+import {playStream} from "../../../store/streams";
 
 const ChannelDesktop = ({ stream, imageId, video }) => {
     const dispatch = useDispatch();
-    const onCleanListUser = () => {
+    const onCleanListUser = async () => {
         dispatch(cleanUsersStreamList());
+        const result = dispatch(playStream(stream.streamId))
     }
 
     const [currentUser, setCurrentUser] = useState(null);

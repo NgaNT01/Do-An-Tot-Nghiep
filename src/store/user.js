@@ -74,6 +74,11 @@ export const updateAvatar = createAsyncThunk('auth/updateAvatar',async (payload)
     return response.data;
 })
 
+export const getStatisticInfo = createAsyncThunk('auth/getStatisticInfo',async (payload) => {
+    const response = await userApi.getStatisticInfo(payload);
+    return response.data;
+})
+
 const initialState = {
   isLoggedIn: false,
   isLoading: false,
